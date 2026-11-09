@@ -1,0 +1,251 @@
+/* VIORA - capa de modernización visual (no se carga en login/registro) */
+:root {
+    --m-bg: #f3f6f4;
+    --m-panel: #ffffff;
+    --m-texto: #0f1f19;
+    --m-tenue: #66756e;
+    --m-borde: #e3e9e5;
+    --m-primario: #0f382b;
+    --m-primario-2: #185743;
+    --m-acento: #10b981;
+    --m-radio: 14px;
+    --m-sombra: 0 1px 2px rgba(15, 56, 43, .04), 0 6px 20px rgba(15, 56, 43, .06);
+    --m-sombra-h: 0 2px 4px rgba(15, 56, 43, .06), 0 14px 32px rgba(15, 56, 43, .12);
+    --fondo: var(--m-bg);
+    --borde: var(--m-borde);
+    --sombra: var(--m-sombra);
+}
+
+body {
+    font-family: "Inter", "Segoe UI", system-ui, -apple-system, Roboto, Helvetica, Arial, sans-serif;
+    background: radial-gradient(1200px 500px at 100% -10%, #dff3e8 0%, transparent 60%), var(--m-bg);
+    background-attachment: fixed;
+    color: var(--m-texto);
+}
+
+.diseño main {
+    padding: 28px 36px;
+    animation: m-entrada .35s ease both;
+}
+
+@keyframes m-entrada {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: none; }
+}
+
+/* ---- Barra lateral ---- */
+.barra-lateral {
+    background: linear-gradient(180deg, #ffffff 0%, #f7fbf9 100%);
+    border-right: 1px solid var(--m-borde);
+    box-shadow: 4px 0 24px rgba(15, 56, 43, .05);
+    font-family: inherit;
+}
+
+.barra-lateral .marca {
+    background: linear-gradient(145deg, #0a2a20 0%, #0f382b 50%, #1b6b52 100%);
+    border-radius: 0 0 24px 24px;
+    box-shadow: 0 10px 24px rgba(15, 56, 43, .25);
+}
+
+.barra-lateral .marca__nombre {
+    font-family: inherit;
+    font-weight: 800;
+    letter-spacing: 6px;
+}
+
+.barra-lateral .menu__enlace,
+.barra-lateral .desplegable_bar__resumen {
+    border-radius: 12px;
+    transition: background .2s, color .2s, transform .2s, box-shadow .2s;
+}
+
+.barra-lateral .menu__enlace:hover,
+.barra-lateral .desplegable_bar__resumen:hover {
+    background: #eaf6f0;
+    transform: translateX(3px);
+}
+
+.barra-lateral .menu__enlace.activo {
+    background: linear-gradient(90deg, #0f382b, #1b6b52);
+    color: #fff;
+    border-left: 0;
+    padding-left: 13px;
+    box-shadow: 0 6px 16px rgba(15, 56, 43, .28);
+}
+
+.barra-lateral .menu__enlace.activo .menu__icono {
+    color: #fff;
+}
+
+.barra-lateral .cerrar-sesion {
+    border-radius: 12px;
+}
+
+/* ---- Cabeceras de página ---- */
+.diseño main > header,
+.contenido__superior {
+    padding-left: 28px;
+    padding-right: 24px;
+    background: var(--m-panel);
+    border: 1px solid var(--m-borde);
+    border-radius: 18px;
+    box-shadow: var(--m-sombra);
+    position: relative;
+    overflow: hidden;
+}
+
+.diseño main > header::before,
+.contenido__superior::before {
+    content: "";
+    position: absolute;
+    inset: 0 auto 0 0;
+    width: 5px;
+    background: linear-gradient(180deg, var(--m-acento), var(--m-primario));
+}
+
+.diseño main h1,
+.diseño main .titulo {
+    letter-spacing: -.5px;
+    font-weight: 800;
+    color: var(--m-texto);
+}
+
+/* ---- Tarjetas y paneles ---- */
+.tarjeta,
+.panel-grafico,
+.diseño main section,
+.diseño main [class*="panel"],
+.diseño main [class*="card"],
+.diseño main [class*="resumen"] > div {
+    border-radius: var(--m-radio);
+}
+
+.tarjeta,
+.panel-grafico {
+    border: 1px solid var(--m-borde);
+    box-shadow: var(--m-sombra);
+}
+
+.tarjeta:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--m-sombra-h);
+}
+
+.tarjeta__icono {
+    background: linear-gradient(135deg, #d9f5e7, #b7ebd0);
+    color: #0b6b48;
+    border-radius: 12px;
+}
+
+/* ---- Botones ---- */
+.diseño main button,
+.diseño main .btn,
+.diseño main [class*="btn"],
+.diseño main a.boton,
+.diseño main input[type="submit"] {
+    font-family: inherit;
+    border-radius: 10px;
+    transition: transform .15s, box-shadow .2s, background .2s, filter .2s;
+}
+
+.diseño main button:not(:disabled):hover,
+.diseño main [class*="btn"]:hover,
+.diseño main input[type="submit"]:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 16px rgba(15, 56, 43, .18);
+    filter: brightness(1.04);
+}
+
+.diseño main button:active,
+.diseño main [class*="btn"]:active {
+    transform: translateY(0);
+}
+
+/* ---- Formularios ---- */
+.diseño main input:not([type="checkbox"]):not([type="radio"]):not([type="submit"]):not([type="button"]),
+.diseño main select,
+.diseño main textarea {
+    font-family: inherit;
+    border: 1px solid #d5ded9;
+    border-radius: 10px;
+    background: #fbfdfc;
+    transition: border-color .2s, box-shadow .2s, background .2s;
+}
+
+.diseño main input:focus,
+.diseño main select:focus,
+.diseño main textarea:focus {
+    outline: 0;
+    border-color: var(--m-acento);
+    background: #fff;
+    box-shadow: 0 0 0 4px rgba(16, 185, 129, .15);
+}
+
+.diseño main label {
+    font-weight: 600;
+    color: #2b3d35;
+}
+
+/* ---- Tablas ---- */
+.diseño main table {
+    border-collapse: separate;
+    border-spacing: 0;
+    width: 100%;
+}
+
+.diseño main thead th,
+.diseño main table th {
+    background: #f1f7f4;
+    color: #34493f;
+    font-size: 11.5px;
+    letter-spacing: .6px;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-bottom: 1px solid var(--m-borde);
+}
+
+.diseño main table td {
+    border-bottom: 1px solid #eef2ef;
+}
+
+.diseño main tbody tr {
+    transition: background .15s;
+}
+
+.diseño main tbody tr:hover {
+    background: #f4faf7;
+}
+
+/* ---- Etiquetas de estado ---- */
+.diseño main [class*="badge"],
+.diseño main [class*="estado"],
+.diseño main [class*="chip"],
+.diseño main .indicador {
+    border-radius: 999px;
+}
+
+/* ---- Modales ---- */
+.modal-backdrop,
+[class*="modal"][class*="backdrop"],
+[class*="overlay"] {
+    backdrop-filter: blur(4px);
+}
+
+.modal {
+    border-radius: 20px;
+    box-shadow: 0 30px 70px rgba(10, 42, 32, .35);
+}
+
+/* ---- Scroll ---- */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-thumb { background: #c5d7ce; border-radius: 10px; border: 2px solid transparent; background-clip: padding-box; }
+::-webkit-scrollbar-thumb:hover { background: #9cb8aa; background-clip: padding-box; border: 2px solid transparent; }
+
+@media (max-width: 900px) {
+    .diseño main { padding: 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .diseño main { animation: none; }
+    * { transition: none !important; }
+}

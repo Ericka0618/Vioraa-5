@@ -1,0 +1,141 @@
+
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, .35);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 60;
+        }
+
+        .modal-backdrop.is-open {
+            display: flex;
+        }
+
+        .modal {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, .25);
+            width: min(760px, 96vw);
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal__header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 14px 20px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .modal__title {
+            margin: 0;
+            font-size: 18px;
+            font-weight: 800;
+            color: #111827;
+        }
+
+        .modal__body {
+            padding: 20px;
+        }
+
+        .modal__footer {
+            display: flex;
+            gap: 10px;
+            justify-content: flex-end;
+            padding: 14px 20px;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .formulario-modal {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 16px;
+        }
+
+        .formulario-modal .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            min-width: 0;
+        }
+
+        .formulario-modal .campo-completo {
+            grid-column: 1 / -1;
+        }
+
+        .formulario-modal label {
+            font-size: 13px;
+            font-weight: 700;
+            color: #6b7280;
+        }
+
+        .formulario-modal input,
+        .formulario-modal select,
+        .formulario-modal textarea {
+            box-sizing: border-box;
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fff;
+        }
+
+        .formulario-modal input:focus,
+        .formulario-modal select:focus,
+        .formulario-modal textarea:focus {
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, .20);
+            outline: none;
+        }
+
+        .formulario-modal textarea {
+            min-height: 85px;
+            resize: vertical;
+        }
+
+        .mensaje-error {
+            color: #b91c1c;
+            margin: 12px 0 0;
+            font-size: 13px;
+        }
+
+        .tabla-contenedor {
+            width: 100%;
+            overflow-x: auto;
+        }
+
+        .tabla__acciones {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .btn-primario:disabled {
+            opacity: .65;
+            cursor: wait;
+        }
+
+        @media (max-width: 600px) {
+            .formulario-modal {
+                grid-template-columns: 1fr;
+            }
+
+            .formulario-modal .campo-completo {
+                grid-column: auto;
+            }
+
+            .modal__footer {
+                flex-direction: column-reverse;
+            }
+
+            .modal__footer button {
+                width: 100%;
+            }
+        }

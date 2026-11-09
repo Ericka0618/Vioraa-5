@@ -1,0 +1,195 @@
+.cb {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 9999;
+  font-family: inherit;
+}
+
+.cb__burbuja {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 60px;
+  height: 60px;
+  border: 0;
+  border-radius: 50%;
+  background: #0f291e;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, .28);
+  transition: transform .2s, box-shadow .2s;
+}
+
+.cb__burbuja:hover {
+  transform: scale(1.07);
+  box-shadow: 0 8px 26px rgba(0, 0, 0, .34);
+}
+
+.cb__burbuja:focus-visible {
+  outline: 3px solid #10b981;
+  outline-offset: 3px;
+}
+
+.cb__burbuja--oculta {
+  display: none;
+}
+
+.cb__ventana {
+  display: flex;
+  flex-direction: column;
+  width: 380px;
+  max-width: calc(100vw - 32px);
+  height: 540px;
+  max-height: calc(100vh - 48px);
+  background: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .25);
+  overflow: hidden;
+}
+
+.cb__ventana[hidden] {
+  display: none;
+}
+
+.cb__cabecera {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  background: #0f291e;
+  color: #fff;
+}
+
+.cb__cabecera strong {
+  display: block;
+  font-size: 15px;
+}
+
+.cb__cabecera span {
+  font-size: 12px;
+  opacity: .75;
+}
+
+.cb__acciones {
+  display: flex;
+  gap: 6px;
+}
+
+.cb__acciones button {
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, .12);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+}
+
+.cb__acciones button:hover {
+  background: rgba(255, 255, 255, .25);
+}
+
+.cb__mensajes {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 16px;
+  overflow-y: auto;
+  background: #f9fafb;
+}
+
+.cb__mensaje {
+  max-width: 85%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 14px;
+  line-height: 1.5;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+.cb__mensaje--asistente {
+  align-self: flex-start;
+  background: #fff;
+  color: #111827;
+  border: 1px solid #e5e7eb;
+  border-bottom-left-radius: 4px;
+}
+
+.cb__mensaje--usuario {
+  align-self: flex-end;
+  background: #0f291e;
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+.cb__mensaje--pendiente {
+  color: #6b7280;
+  font-style: italic;
+}
+
+.cb__mensaje--error {
+  background: #fef2f2;
+  border-color: #fecaca;
+  color: #b91c1c;
+}
+
+.cb__formulario {
+  display: flex;
+  align-items: flex-end;
+  gap: 8px;
+  padding: 12px;
+  border-top: 1px solid #e5e7eb;
+  background: #fff;
+}
+
+.cb__formulario textarea {
+  flex: 1;
+  min-height: 40px;
+  max-height: 110px;
+  padding: 9px 12px;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font: inherit;
+  font-size: 14px;
+  color: #111827;
+  resize: none;
+  outline: 0;
+}
+
+.cb__formulario textarea:focus {
+  border-color: #0f6b4b;
+  box-shadow: 0 0 0 3px rgba(15, 107, 75, .09);
+}
+
+.cb__formulario button {
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 10px;
+  background: #0f291e;
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.cb__formulario button:disabled,
+.cb__formulario textarea:disabled {
+  opacity: .6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .cb {
+    right: 16px;
+    bottom: 16px;
+  }
+
+  .cb__ventana {
+    height: calc(100vh - 32px);
+  }
+}

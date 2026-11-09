@@ -1,0 +1,41 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Dependencies
+/vendor/
+node_modules/
+
+# Cache
+.cache/
+*.cache
+
+# Uploads (can be large)
+Viora/uploads/*
+!Viora/uploads/.gitkeep
+
+# Sensitive documents
+viora_documentos_privados/
+
+# Composer
+composer.lock
+
+# XAMPP specific
+.htaccess
+config.inc.php
