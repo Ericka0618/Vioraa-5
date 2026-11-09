@@ -2,6 +2,7 @@
 .env
 .env.local
 .env.*.local
+.env.production
 
 # IDE
 .vscode/
@@ -9,22 +10,28 @@
 *.swp
 *.swo
 *~
+*.iml
 
 # OS
 .DS_Store
 Thumbs.db
+.directory
 
 # Logs
 *.log
 logs/
+debug.log
 
 # Dependencies
 /vendor/
 node_modules/
+composer.lock
 
-# Cache
+# Cache and temporary
 .cache/
 *.cache
+.tmp/
+tmp/
 
 # Uploads (can be large)
 Viora/uploads/*
@@ -32,10 +39,54 @@ Viora/uploads/*
 
 # Sensitive documents
 viora_documentos_privados/
-
-# Composer
-composer.lock
+*.backup
+*.bak
 
 # XAMPP specific
 .htaccess
 config.inc.php
+php-errors.log
+
+# Docker
+.docker/
+*.dockerfile
+
+# GCP and Cloud
+.gcloud/
+credentials.json
+application_default_credentials.json
+
+# Database
+*.sql
+!bd/viora.sql
+
+# Node/npm (if any)
+package-lock.json
+yarn.lock
+
+# Python (if any)
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+
+# Backup directories
+*_BACKUP/
+*_backup/
+backups/
+
+# IDE generated
+.project
+.classpath
+.c9/
+
+# MacOS
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+

@@ -1,0 +1,80 @@
+steps:
+  # Step 1: Build Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'build'
+    args:
+      - 'build'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/vioraa-5:$SHORT_SHA'
+      - '-t'
+      - 'gcr.io/$PROJECT_ID/vioraa-5:latest'
+      - '-f'
+      - 'Dockerfile'
+      - '.'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+
+  # Step 2: Push image to Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    id: 'push'
+    args:
+      - 'push'
+      - 'gcr.io/$PROJECT_ID/vioraa-5:$SHORT_SHA'
+    waitFor:
+      - 'build'
+
+  # Step 3: Deploy to Cloud Run
+  - name: 'gcr.io/cloud-builders/gke-deploy'
+    id: 'deploy'
+    args:
+      - run
+      - --filename=.
+      - '--image=gcr.io/$PROJECT_ID/vioraa-5:$SHORT_SHA'
+      - '--location=us-central1'
+      - '--cluster=vioraa-cluster'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+    waitFor:
+      - 'push'
+
+  # Alternative: Deploy directly to Cloud Run (simpler option)
+  - name: 'gcr.io/cloud-builders/gcloud'
+    id: 'deploy-run'
+    args:
+      - 'run'
+      - 'deploy'
+      - 'vioraa-5'
+      - '--image=gcr.io/$PROJECT_ID/vioraa-5:$SHORT_SHA'
+      - '--region=us-central1'
+      - '--platform=managed'
+      - '--allow-unauthenticated'
+      - '--set-env-vars=GEMINI_API_KEY=$_GEMINI_API_KEY,ECF_API_KEY=$_ECF_API_KEY,DB_HOST=$_DB_HOST,DB_USER=$_DB_USER,DB_PASSWORD=$_DB_PASSWORD,DB_NAME=$_DB_NAME'
+      - '--memory=1Gi'
+      - '--cpu=1'
+      - '--timeout=3600'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=us-central1'
+
+# Images to push
+images:
+  - 'gcr.io/$PROJECT_ID/vioraa-5:$SHORT_SHA'
+  - 'gcr.io/$PROJECT_ID/vioraa-5:latest'
+
+# Build timeout
+timeout: '3600s'
+
+# Substitutions for environment variables
+substitutions:
+  _GEMINI_API_KEY: 'placeholder-gemini-key'
+  _ECF_API_KEY: 'placeholder-ecf-key'
+  _DB_HOST: 'cloudsql-proxy'
+  _DB_USER: 'viora_user'
+  _DB_PASSWORD: 'placeholder-db-password'
+  _DB_NAME: 'viora'
+
+options:
+  machineType: 'N1_HIGHCPU_8'
+  logging: CLOUD_LOGGING_ONLY
+
+onFailure:
+  - NOTIFY

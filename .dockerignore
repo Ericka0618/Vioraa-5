@@ -1,0 +1,60 @@
+# Git
+.git
+.gitignore
+.gitattributes
+
+# GitHub
+.github
+
+# Documentation
+README.md
+GCP_SETUP.md
+*.md
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Backups and versions
+*.bak
+*.backup
+*_BACKUP
+
+# Docker
+Dockerfile
+docker-compose.yml
+.dockerignore
+
+# Logs
+*.log
+logs/
+
+# Node/npm (if any)
+node_modules/
+package-lock.json
+
+# Composer
+composer.lock
+vendor/
+
+# Tests
+tests/
+test/
+*.test.php
+
+# Cache
+.cache/
+.tmp/
+viora_documentos_privados/
