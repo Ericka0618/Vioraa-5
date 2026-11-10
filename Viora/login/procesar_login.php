@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -89,6 +88,7 @@ if ($rol === 'Cliente') {
         FROM suscripcion
         WHERE usuario_id = ?
           AND estado = 'Activo'
+          AND (fecha_proximo_pago IS NULL OR fecha_proximo_pago > UTC_TIMESTAMP())
         LIMIT 1
     ");
 

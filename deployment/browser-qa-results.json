@@ -1,0 +1,80 @@
+[
+  {
+    "test": "Public login valid HTTPS in Chrome",
+    "passed": true
+  },
+  {
+    "test": "Administrator browser login",
+    "passed": true
+  },
+  {
+    "test": "Browser module condominio",
+    "passed": true
+  },
+  {
+    "test": "Browser module edificio",
+    "passed": true
+  },
+  {
+    "test": "Browser module apartamento",
+    "passed": true
+  },
+  {
+    "test": "Browser module catalogo",
+    "passed": true
+  },
+  {
+    "test": "Browser module solicitudes",
+    "passed": true
+  },
+  {
+    "test": "Browser module contratos",
+    "passed": true
+  },
+  {
+    "test": "Browser module mantenimiento_mensual",
+    "passed": true
+  },
+  {
+    "test": "Browser module reparaciones",
+    "passed": true
+  },
+  {
+    "test": "Browser module facturacion",
+    "passed": true
+  },
+  {
+    "test": "Browser module consulta_facturas",
+    "passed": true
+  },
+  {
+    "test": "Browser module cxc_clientes",
+    "passed": true
+  },
+  {
+    "test": "Condominium edit button AJAX on Linux",
+    "passed": true
+  },
+  {
+    "test": "Condominium save form with CSRF",
+    "passed": true
+  },
+  {
+    "test": "Client browser login",
+    "passed": true
+  },
+  {
+    "test": "Client menu excludes admin configuration",
+    "passed": true
+  },
+  {
+    "test": "No browser JavaScript exceptions",
+    "passed": true,
+    "details": []
+  },
+  {
+    "test": "No missing local browser resources",
+    "passed": true,
+    "details": []
+  }
+]

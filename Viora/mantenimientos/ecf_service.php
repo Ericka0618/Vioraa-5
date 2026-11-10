@@ -450,6 +450,9 @@ function ecf_lineas_entrada(array $entrada): array
 
 function ecf_post(array $cfg, string $ruta, array $datos): array
 {
+    if (getenv('ECF_ENABLED') !== 'true') {
+        throw new RuntimeException('La emision fiscal esta deshabilitada hasta su autorizacion y validacion.');
+    }
     $ch = curl_init($cfg['base_url'] . $ruta);
 
     curl_setopt_array($ch, [

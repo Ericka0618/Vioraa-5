@@ -1,10 +1,10 @@
 <?php
 
 // La API Key se lee de la variable de entorno GEMINI_API_KEY.
-// Para desarrollo local, crea un archivo .env con: GEMINI_API_KEY=tu_clave_aqui
+// Produccion: /etc/viora/environment.json. No guardar claves en el repositorio.
 return [
     'api_key' => getenv('GEMINI_API_KEY') ?: '',
-    'model' => 'gemini-flash-lite-latest',
+    'model' => getenv('GEMINI_MODEL') ?: 'gemini-flash-lite-latest',
     'base_url' => 'https://generativelanguage.googleapis.com/v1beta/models/',
     'timeout' => 30,
     'max_caracteres_mensaje' => 2000,

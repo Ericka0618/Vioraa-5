@@ -4,6 +4,7 @@ session_start();
 header('Content-Type: application/json; charset=utf-8');
 
 require_once '../conf/conexion.php';
+require_once __DIR__ . '/../conf/require_admin.php';
 
 try {
     if (empty($_SESSION['logged_in'])) {

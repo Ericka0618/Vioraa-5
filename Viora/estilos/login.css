@@ -29,7 +29,7 @@ body {
 .info-panel {
   flex: 1;
   /* Reemplaza 'tu-imagen.jpg' por la ruta de la foto del edificio */
-  background: linear-gradient(rgba(15, 56, 43, 0.2), rgba(15, 56, 43, 0.7)), url('tu-imagen.jpg') center/cover no-repeat;
+  background: linear-gradient(rgba(15, 56, 43, 0.2), rgba(15, 56, 43, 0.7)), url('../imagenes/viora.jpg') center/cover no-repeat;
   color: white;
   padding: 40px;
   display: flex;

@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -8,9 +7,9 @@ if (empty($_SESSION['registro_pendiente_usuario'])) {
 }
 
 // Credenciales públicas de PayPal Sandbox
-$paypalClientId = 'AXZCX5UfKFxdjFeLPYrYnFEsgMUYCKJKY1a-jo_if_oAsI4zE3sCjL4Qru1qyKujD3d-kdGJXmBZarB8';
+$paypalClientId = getenv('PAYPAL_CLIENT_ID') ?: '';
 
-$paypalPlanId = 'P-2GW66466MT116720LNLIDS2A';
+$paypalPlanId = getenv('PAYPAL_PLAN_ID') ?: '';
 
 // Comprobar que los identificadores estén configurados
 $configurado =
@@ -234,7 +233,8 @@ paypal.Buttons({
 
     createSubscription: function(data, actions) {
         return actions.subscription.create({
-            plan_id: <?= json_encode($paypalPlanId) ?>
+            plan_id: <?= json_encode($paypalPlanId) ?>,
+            custom_id: <?= json_encode('viora-user-' . (int)$_SESSION['registro_pendiente_usuario']) ?>
         });
     },
 

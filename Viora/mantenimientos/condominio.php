@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../conf/conexion.php';
+require_once __DIR__ . '/../conf/require_admin.php';
 
 // Proteger la página
 if (empty($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
@@ -11,6 +12,10 @@ if (empty($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 $nombre = $_SESSION['nombre_usuario'] ?? 'Usuario';
 $usuario = $_SESSION['usuario'] ?? '';
 $menuActivo = 'condominios';
+if (empty($_SESSION['csrf_condominio'])) { $_SESSION['csrf_condominio'] = bin2hex(random_bytes(32)); }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !hash_equals($_SESSION['csrf_condominio'], (string)($_POST['csrf'] ?? ''))) {
+    http_response_code(403); exit('Formulario no valido.');
+}
 
 /* =========================================
    ENDPOINT AJAX: GET, CREATE Y UPDATE
@@ -184,14 +189,14 @@ if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
 /* =========================================
    ELIMINAR CONDOMINIO
 ========================================= */
-if (isset($_GET['eliminar'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['eliminar'])) {
 
-    $idEliminar = (int)$_GET['eliminar'];
+    $idEliminar = (int)$_POST['eliminar'];
 
     if ($idEliminar <= 0) {
         echo "<script>
             alert('ID de condominio inválido.');
-            location='Condominio.php';
+            location='condominio.php';
         </script>";
         exit;
     }
@@ -207,14 +212,14 @@ if (isset($_GET['eliminar'])) {
 
         echo "<script>
             alert('Condominio eliminado correctamente.');
-            location='Condominio.php';
+            location='condominio.php';
         </script>";
         exit;
 
     } catch (Throwable $e) {
         echo "<script>
             alert('No se pudo eliminar el condominio. Puede tener registros relacionados.');
-            location='Condominio.php';
+            location='condominio.php';
         </script>";
         exit;
     }
@@ -360,13 +365,13 @@ if (!$result) {
                                         ✎
                                     </button>
 
-                                    <a href="Condominio.php?eliminar=<?= (int)$row['id_condominios'] ?>"
+                                    <form method="post" action="condominio.php" style="display:inline" onsubmit="return confirm('¿Seguro que deseas eliminar este condominio?');"><input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf_condominio'], ENT_QUOTES, 'UTF-8') ?>"><input type="hidden" name="eliminar" value="<?= (int)$row['id_condominios'] ?>"><button type="submit"
                                        class="btn-icono btn-icono--eliminar"
                                        title="Eliminar"
                                        aria-label="Eliminar condominio"
-                                       onclick="return confirm('¿Seguro que deseas eliminar este condominio?');">
+                                       >
                                         🗑️
-                                    </a>
+                                    </button></form>
 
                                 </td>
                             </tr>
@@ -413,7 +418,7 @@ if (!$result) {
             </button>
         </div>
 
-        <form id="frmCondominio">
+        <form id="frmCondominio"><input type="hidden" name="csrf" value="<?= htmlspecialchars($_SESSION['csrf_condominio'], ENT_QUOTES, 'UTF-8') ?>">
 
             <div class="modal__body">
 
@@ -588,12 +593,13 @@ document.querySelectorAll('.btn-edit').forEach(btn => {
     btn.addEventListener('click', async () => {
 
         const fd = new FormData();
+        fd.append('csrf', <?= json_encode($_SESSION['csrf_condominio']) ?>);
         fd.append('ajax', '1');
         fd.append('action', 'get');
         fd.append('id', btn.dataset.id);
 
         try {
-            const respuesta = await fetch('Condominio.php', {
+            const respuesta = await fetch('condominio.php', {
                 method: 'POST',
                 body: fd
             });
@@ -636,7 +642,7 @@ frm.addEventListener('submit', async e => {
     btnSave.textContent = 'Guardando...';
 
     try {
-        const respuesta = await fetch('Condominio.php', {
+        const respuesta = await fetch('condominio.php', {
             method: 'POST',
             body: fd
         });

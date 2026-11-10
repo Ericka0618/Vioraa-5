@@ -2,6 +2,7 @@
 // Consulta de visitas a inmuebles: visitas solicitadas por clientes desde el catálogo.
 if (session_status() === PHP_SESSION_NONE) session_start();
 require_once __DIR__ . '/../conf/conexion.php';
+require_once __DIR__ . '/../conf/require_admin.php';
 
 if (empty($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) { header('Location: ../login/login.php'); exit; }
 

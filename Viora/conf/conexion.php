@@ -1,16 +1,18 @@
 <?php
-
-$db_host = getenv('DB_HOST') ?: 'localhost';
-$db_user = getenv('DB_USER') ?: 'root';
-$db_password = getenv('DB_PASSWORD') ?: '';
-$db_name = getenv('DB_NAME') ?: 'viora';
-
-$conexion = new mysqli($db_host, $db_user, $db_password, $db_name);
-
-if ($conexion->connect_errno) {
-    die("Error de conexión: " . $conexion->connect_error);
+if (is_readable('/etc/viora/bootstrap.php')) {
+    require_once '/etc/viora/bootstrap.php';
 }
-
-$conexion->set_charset("utf8");
-
-?>
+mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
+try {
+    $conexion = new mysqli(
+        getenv('DB_HOST') ?: 'localhost',
+        getenv('DB_USER') ?: 'root',
+        getenv('DB_PASSWORD') ?: '',
+        getenv('DB_NAME') ?: 'viora'
+    );
+    $conexion->set_charset('utf8mb4');
+} catch (mysqli_sql_exception $error) {
+    error_log('VIORA database connection failed: ' . $error->getCode());
+    http_response_code(503);
+    exit('Servicio temporalmente no disponible.');
+}

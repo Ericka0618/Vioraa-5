@@ -50,7 +50,7 @@ body {
             rgba(15, 56, 43, 0.2),
             rgba(15, 56, 43, 0.7)
         ),
-        url('tu-imagen.jpg') center/cover no-repeat;
+        url('../imagenes/viora.jpg') center/cover no-repeat;
 
     background-color: #91a69e;
 

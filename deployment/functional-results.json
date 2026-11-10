@@ -1,0 +1,347 @@
+{
+  "functional": [
+    {
+      "test": "Administrator real login",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Registration redirects to subscription",
+      "passed": true,
+      "detail": "302 suscripcion.php"
+    },
+    {
+      "test": "New registration inactive and hashed",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Unpaid registration cannot login",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Invalid PayPal subscription rejected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Anonymous PayPal callback rejected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Active user without subscription cannot login",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Subscribed Client real login",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied roles",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied usuarios",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied condominio",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied edificio",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied apartamento",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied clientes",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied solicitudes",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied contratos",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied mantenimiento_mensual",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied reparaciones",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied facturacion",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied cxc_clientes",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied consulta_facturas",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client denied consulta_cobros",
+      "passed": true,
+      "detail": "403"
+    },
+    {
+      "test": "Client own module catalogo",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client own module administrar_solicitudes",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client own module administrar_propiedad",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client own module solicitar_reparacion",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied write guardar_factura",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied write registrar_pago",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied write reenviar_ecf",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied write emitir_nota_credito",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Create condominium",
+      "passed": true,
+      "detail": "{\"ok\": true, \"msg\": \"Condominio registrado correctamente.\"}"
+    },
+    {
+      "test": "Edit condominium",
+      "passed": true,
+      "detail": "{\"ok\": true, \"msg\": \"Condominio actualizado correctamente.\"}"
+    },
+    {
+      "test": "Create building",
+      "passed": true,
+      "detail": "{\"ok\": true, \"msg\": \"Edificio registrado correctamente.\"}"
+    },
+    {
+      "test": "Edit building",
+      "passed": true,
+      "detail": "{\"ok\": true, \"msg\": \"Edificio actualizado correctamente.\"}"
+    },
+    {
+      "test": "Create apartment with image",
+      "passed": true,
+      "detail": "{\"ok\": true, \"msg\": \"Apartamento registrado.\"}"
+    },
+    {
+      "test": "Uploaded apartment image HTTPS",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Catalog includes test apartment",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Catalog CSRF rejected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client rental request",
+      "passed": true,
+      "detail": "{\"ok\": true, \"msg\": \"Solicitud enviada correctamente.\", \"tipo\": \"operacion\", \"operacion\": \"Alquiler\"}"
+    },
+    {
+      "test": "Approve rental request",
+      "passed": true,
+      "detail": "{\"ok\": true, \"msg\": \"Estado actualizado correctamente.\", \"contrato_url\": \"contratos.php?solicitud=13\"}"
+    },
+    {
+      "test": "Create contract with private PDF",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Contract PDF download",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Client denied contract PDF",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Create invoice",
+      "passed": true,
+      "detail": "{\"success\": true, \"message\": \"Factura guardada correctamente\", \"id_facturas\": 15, \"numero_documento\": \"FAC-26BE0398DCBF11F1B32742010A800002\", \"subtota"
+    },
+    {
+      "test": "Invoice amount with ITBIS",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Duplicate billing rejected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Invoice PDF",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Partial invoice payment",
+      "passed": true,
+      "detail": "{\"success\": true, \"message\": \"Pago registrado correctamente\", \"id_pagos\": 9, \"estado\": \"Parcial\", \"saldo_pendiente\": 1198}"
+    },
+    {
+      "test": "Receivable balance updated",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Final invoice payment",
+      "passed": true,
+      "detail": "{\"success\": true, \"message\": \"Pago registrado correctamente\", \"id_pagos\": 10, \"estado\": \"Pagada\", \"saldo_pendiente\": 0}"
+    },
+    {
+      "test": "Invoice settled zero balance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Overpayment rejected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Generate monthly maintenance",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Monthly maintenance idempotent",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Missing Gemini key fails safely",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "Logout clears access",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "additional": [
+    {
+      "test": "Wrong password rejected",
+      "passed": true
+    },
+    {
+      "test": "SQL injection login rejected",
+      "passed": true
+    },
+    {
+      "test": "Disabled account rejected",
+      "passed": true
+    },
+    {
+      "test": "Expired subscription rejected",
+      "passed": true
+    },
+    {
+      "test": "Cancelled local subscription rejected",
+      "passed": true
+    },
+    {
+      "test": "Client maintenance request",
+      "passed": true
+    },
+    {
+      "test": "Maintenance request persisted",
+      "passed": true
+    },
+    {
+      "test": "Administrator repair state update",
+      "passed": true
+    },
+    {
+      "test": "Client sees own repair state",
+      "passed": true
+    },
+    {
+      "test": "GET cannot delete condominium",
+      "passed": true
+    },
+    {
+      "test": "CSRF missing cannot change condominium",
+      "passed": true
+    },
+    {
+      "test": "Anonymous contract PDF denied",
+      "passed": true
+    },
+    {
+      "test": "Invalid PDF id rejected",
+      "passed": true
+    },
+    {
+      "test": "Monthly maintenance completed",
+      "passed": true
+    }
+  ],
+  "production_integrity": {
+    "unchanged": true,
+    "before_sha256": "c41fb8fa3ab22329df20016bb6978184d3424facf827599ed9bc0144d8acdb59",
+    "after_sha256": "c41fb8fa3ab22329df20016bb6978184d3424facf827599ed9bc0144d8acdb59"
+  }
+}

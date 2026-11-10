@@ -20,7 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 $config = require __DIR__ . '/../conf/gemini.php';
 
 if ($config['api_key'] === '') {
-    responder_json(500, ['error' => 'El chatbot no está configurado. Defina la variable de entorno GEMINI_API_KEY y reinicie Apache.']);
+    responder_json(503, ['error' => 'El asistente no esta disponible temporalmente.']);
 }
 
 $entrada = json_decode(file_get_contents('php://input') ?: '', true);
@@ -159,13 +159,14 @@ function llamar_gemini(array $config, array $payload): array
     curl_close($ch);
 
     if ($respuestaRaw === false) {
-        responder_json(502, ['error' => 'No se pudo conectar con el servicio de IA: ' . $errorCurl]);
+        responder_json(502, ['error' => 'No se pudo conectar con el servicio de IA.']);
     }
 
     $datos = json_decode($respuestaRaw, true);
     if ($codigoHttp !== 200) {
         $detalle = $datos['error']['message'] ?? 'Error desconocido.';
-        responder_json(502, ['error' => "El servicio de IA respondió con error ($codigoHttp): $detalle"]);
+        error_log('VIORA Gemini upstream HTTP ' . $codigoHttp);
+        responder_json(502, ['error' => 'El servicio de IA no esta disponible temporalmente.']);
     }
     return is_array($datos) ? $datos : [];
 }

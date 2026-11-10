@@ -62,11 +62,11 @@ if (
 // 3. CONFIGURACIÓN
 // ========================================
 
-$planEsperado = 'P-2GW66466MT116720LNLIDS2A';
+$planEsperado = getenv('PAYPAL_PLAN_ID') ?: '';
 
 $rutaConexion = __DIR__ . '/../conf/conexion.php';
 
-$rutaConfig = 'C:/xampp/paypal_private/paypal_config.php';
+$rutaConfig = __DIR__ . '/../conf/paypal_config.php';
 
 if (!is_file($rutaConexion)) {
     responder(500, 'No se encontró la conexión de MySQL.');
@@ -225,6 +225,10 @@ try {
         $token
     );
 
+    // Vincular el pago aprobado a la cuenta que inicio este registro.
+    if (($suscripcion['custom_id'] ?? '') !== 'viora-user-' . $idUsuario) {
+        responder(409, 'La suscripcion no corresponde a este registro.');
+    }
     // Comprobar identificador.
     if (
         ($suscripcion['id'] ?? '') !==
