@@ -34,3 +34,5 @@ La VM `servidor-viora` y su base original permanecen intactas. La copia a Cloud 
 PayPal esta fijado al endpoint Sandbox. `ECF_ENABLED=false` bloquea emision fiscal. Falta la clave de Gemini: ejecutar `python deployment/set-gemini-secret.py` en una consola local con entrada oculta; despues ejecutar nuevamente el workflow desde GitHub Actions para cargar la version nueva del secreto. No compartir claves por chat ni guardarlas en Git.
 
 Se omitieron las pruebas funcionales de Cloud Run por instruccion del usuario. Consultar `deployment/CLOUD_RUN_REPORT.md` para las comprobaciones anteriores y el estado final del despliegue.
+
+URL de produccion: https://viora-6ikx2ezlba-uc.a.run.app/login/login.php

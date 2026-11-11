@@ -20,3 +20,5 @@ PayPal permanece en Sandbox y la emision fiscal deshabilitada. Gemini requiere c
 4. Abrir `http://localhost:8080`.
 
 Los volumenes de Compose conservan MySQL, subidas y documentos. No ejecutar `docker compose down -v` si se necesita conservarlos.
+
+URL de produccion: https://viora-6ikx2ezlba-uc.a.run.app/login/login.php

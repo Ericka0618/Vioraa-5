@@ -1,0 +1,17 @@
+{
+  "project": "viora-514300",
+  "region": "us-central1",
+  "service": "viora",
+  "url": "https://viora-6ikx2ezlba-uc.a.run.app",
+  "ready": true,
+  "revision": "viora-00001-k9s",
+  "github_run": "https://github.com/Ericka0618/Vioraa-5/actions/runs/42939791653",
+  "github_conclusion": "success",
+  "cloud_build": "1380b7d4-a68b-4c9c-8198-5769aa1c26b0",
+  "cloud_build_status": "SUCCESS",
+  "functional_tests": "omitted_per_user_request",
+  "paypal": "sandbox",
+  "ecf_enabled": false,
+  "gemini": "missing_api_key",
+  "original_vm_modified": false
+}
