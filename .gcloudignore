@@ -4,10 +4,12 @@
 bd/
 viora_documentos_privados/
 Viora/uploads/**
-deployment/**
-!deployment/runtime.php
-!deployment/mysql-session.php
-!deployment/cloudbuild-verify.yaml
+deployment/*_backup
+deployment/*.py
+deployment/*.ps1
+deployment/*.md
+deployment/*.json
+deployment/*.sql
 **/*.sql
 **/*.bak
 **/*.backup
