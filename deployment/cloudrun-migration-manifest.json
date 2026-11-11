@@ -1,0 +1,8 @@
+{
+  "source_instance": "servidor-viora",
+  "source_database": "viora",
+  "target_instance": "viora-staging-db",
+  "target_database": "viora_staging",
+  "snapshot_sha256": "cc0cd44b7e6f4cbdfa2ce3ef6e1d0972c7cd74aba911053eafe5e0f5abafbf82",
+  "source_modified": false
+}
