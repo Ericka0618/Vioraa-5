@@ -1,0 +1,14 @@
+.git/
+.github/
+.env*
+bd/
+viora_documentos_privados/
+Viora/uploads/**
+deployment/**
+!deployment/runtime.php
+!deployment/mysql-session.php
+!deployment/cloudbuild-verify.yaml
+**/*.sql
+**/*.bak
+**/*.backup
+gha-creds-*.json

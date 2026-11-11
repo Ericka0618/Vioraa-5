@@ -8,7 +8,9 @@ try {
         getenv('DB_HOST') ?: 'localhost',
         getenv('DB_USER') ?: 'root',
         getenv('DB_PASSWORD') ?: '',
-        getenv('DB_NAME') ?: 'viora'
+        getenv('DB_NAME') ?: 'viora',
+        (int)(getenv('DB_PORT') ?: 3306),
+        getenv('DB_SOCKET') ?: null
     );
     $conexion->set_charset('utf8mb4');
 } catch (mysqli_sql_exception $error) {

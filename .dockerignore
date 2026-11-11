@@ -58,3 +58,10 @@ test/
 .cache/
 .tmp/
 viora_documentos_privados/
+
+bd/
+deployment/*_backup/
+**/*.sql
+Viora/uploads/**
+gha-creds-*.json
+.env*

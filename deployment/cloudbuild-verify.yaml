@@ -1,0 +1,28 @@
+steps:
+- name: gcr.io/cloud-builders/docker
+  id: build
+  args:
+  - build
+  - -t
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/viora/web:${_IMAGE_TAG}
+  - .
+- name: gcr.io/cloud-builders/docker
+  id: verify-container
+  entrypoint: bash
+  args:
+  - -euc
+  - "image=\"${_REGION}-docker.pkg.dev/$PROJECT_ID/viora/web:${_IMAGE_TAG}\"\ndocker run --rm --entrypoint php \"$$image\" -r 'foreach ([\"mysqli\",\"pdo_mysql\",\"mbstring\",\"curl\",\"zip\",\"gd\",\"dom\",\"fileinfo\"] as $$e) { if (!extension_loaded($$e)) { fwrite(STDERR, $$e); exit(1); } }'\ndocker run --rm --entrypoint sh \"$$image\" -c 'find /var/www/html /etc/viora -name \"*.php\" -exec php -l {} \\; > /tmp/lint.log; if grep -E \"(Parse error|Errors parsing)\" /tmp/lint.log; then exit 1; fi; apache2ctl -t'\ndocker run -d --name viora-check \"$$image\"\ntrap 'docker rm -f viora-check >/dev/null' EXIT\nfor attempt in $$(seq 1 30); do\n  if docker exec viora-check curl -fsS http://localhost:8080/healthz.php; then exit 0; fi\n  sleep 1\ndone\nexit 1\n"
+- name: gcr.io/cloud-builders/docker
+  id: push
+  args:
+  - push
+  - ${_REGION}-docker.pkg.dev/$PROJECT_ID/viora/web:${_IMAGE_TAG}
+images:
+- ${_REGION}-docker.pkg.dev/$PROJECT_ID/viora/web:${_IMAGE_TAG}
+substitutions:
+  _REGION: us-central1
+  _IMAGE_TAG: manual
+serviceAccount: projects/$PROJECT_ID/serviceAccounts/viora-build@$PROJECT_ID.iam.gserviceaccount.com
+options:
+  logging: CLOUD_LOGGING_ONLY
+timeout: 1800s

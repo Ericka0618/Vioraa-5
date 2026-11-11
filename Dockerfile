@@ -1,48 +1,17 @@
-# Use official PHP runtime as base image
-FROM php:8.2-apache
-
-# Set working directory
+FROM php:8.3-apache-bookworm
 WORKDIR /var/www/html
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
-    mysql-client \
-    curl \
-    git \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
-
-# Install PHP extensions
-RUN docker-php-ext-install \
-    mysqli \
-    pdo \
-    pdo_mysql \
-    && docker-php-ext-enable mysqli pdo pdo_mysql
-
-# Enable Apache modules
-RUN a2enmod rewrite && a2enmod headers
-
-# Configure Apache
+RUN apt-get update && apt-get install -y --no-install-recommends curl ca-certificates libcurl4-openssl-dev libonig-dev libzip-dev libpng-dev libjpeg62-turbo-dev libfreetype6-dev libxml2-dev \
+ && docker-php-ext-configure gd --with-freetype --with-jpeg \
+ && docker-php-ext-install -j2 mysqli pdo_mysql mbstring curl zip gd dom \
+ && a2enmod rewrite headers \
+ && sed -i 's/Listen 80/Listen 8080/' /etc/apache2/ports.conf \
+ && rm -rf /var/lib/apt/lists/*
 COPY apache-config.conf /etc/apache2/sites-available/000-default.conf
-RUN a2ensite 000-default
-
-# Set PHP configuration
 COPY php.ini /usr/local/etc/php/conf.d/custom.ini
-
-# Copy application code
+COPY deployment/runtime.php deployment/mysql-session.php /etc/viora/
 COPY Viora/ /var/www/html/
-
-# Set proper permissions
-RUN chown -R www-data:www-data /var/www/html && \
-    chmod -R 755 /var/www/html && \
-    chmod -R 775 /var/www/html/uploads
-
-# Expose port
+RUN mkdir -p /var/www/html/uploads/apartamentos /var/www/viora_documentos_privados \
+ && chown -R www-data:www-data /var/www/html/uploads /var/www/viora_documentos_privados
 EXPOSE 8080
-
-# Health check
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:8080/login/login.php || exit 1
-
-# Start Apache
+HEALTHCHECK --interval=30s --timeout=3s CMD curl -fsS http://localhost:8080/healthz.php || exit 1
 CMD ["apache2-foreground"]

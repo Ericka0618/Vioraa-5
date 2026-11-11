@@ -1,0 +1,230 @@
+{
+  "php": [
+    {
+      "file": "Viora/healthz.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/index.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/conf/conexion.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/conf/crear_plan_paypal.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/conf/ecf.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/conf/gemini.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/conf/paypal_config.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/conf/require_admin.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/configuracion/roles.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/configuracion/usuarios.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/guardar_registro.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/login.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/logout.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/principal.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/procesar_login.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/registro.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/suscripcion.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/login/verificar_suscripcion.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/administrar_propiedad.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/administrar_solicitudes.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/apartamento.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/buscar_clientes_factura.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/catalogo.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/chatbot_api.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/chatbot_herramientas.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/chatbot_widget.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/clientes.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/clientes_consulta.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/condominio.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/consulta_cobros.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/consulta_facturas.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/consulta_visitas.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/contratos.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/cxc_clientes.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/ecf_service.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/edificio.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/emitir_nota_credito.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/facturacion.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/facturacion_viora.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/factura_pdf.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/guardar_factura.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/mantenimiento.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/mantenimiento_mensual.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/menu_lateral.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/obtener_propiedades_cliente.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/pdf_simple.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/qr_simple.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/reenviar_ecf.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/registrar_pago.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/reparacion.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/reparaciones.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/reparaciones_servicio.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/solicitar_reparacion.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/solicitudes.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/vencimiento_contratos.php",
+      "passed": true
+    },
+    {
+      "file": "Viora/mantenimientos/ver_contrato.php",
+      "passed": true
+    }
+  ],
+  "container_build": "7c59407a-3ce9-4bd2-aa3d-2d1e6a683ffd",
+  "container_build_status": "SUCCESS"
+}

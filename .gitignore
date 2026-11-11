@@ -90,3 +90,6 @@ backups/
 Thumbs.db
 ehthumbs.db
 
+
+# Ephemeral GitHub OIDC credentials
+gha-creds-*.json
