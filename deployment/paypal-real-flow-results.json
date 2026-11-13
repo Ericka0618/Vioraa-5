@@ -1,0 +1,60 @@
+{
+  "environment": "sandbox",
+  "subscription_id": "I-ECPRJX8YDLSJ",
+  "checks": [
+    {
+      "test": "Real Sandbox buyer approval ACTIVE",
+      "passed": true
+    },
+    {
+      "test": "Real first payment USD10",
+      "passed": true
+    },
+    {
+      "test": "Real verified payment activates new QA account",
+      "passed": true
+    },
+    {
+      "test": "Payment persisted once in Cloud SQL",
+      "passed": true
+    },
+    {
+      "test": "Repeated real reconciliation creates no duplicate",
+      "passed": true
+    },
+    {
+      "test": "Confirmed QA subscriber accesses public catalog",
+      "passed": true
+    },
+    {
+      "test": "Real Sandbox refund accepted",
+      "passed": true
+    },
+    {
+      "test": "Refund completed at provider",
+      "passed": true
+    },
+    {
+      "test": "Refund reconciliation revokes subscription access",
+      "passed": true
+    },
+    {
+      "test": "Refund status persisted on original payment",
+      "passed": true
+    },
+    {
+      "test": "Real Sandbox cancellation accepted",
+      "passed": true
+    },
+    {
+      "test": "Cancellation persisted and access denied",
+      "passed": true
+    },
+    {
+      "test": "Cancelled subscriber cannot log into catalog",
+      "passed": true
+    }
+  ],
+  "renewal_real_tested": false,
+  "webhook_delivery_tested": true
+}

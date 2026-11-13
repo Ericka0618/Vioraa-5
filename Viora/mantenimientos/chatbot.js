@@ -14,7 +14,6 @@
   const botonCerrar = document.getElementById('cb-cerrar');
   const botonLimpiar = document.getElementById('cb-limpiar');
 
-  const CLAVE_HISTORIAL = 'viora_chat_historial';
   const CLAVE_ABIERTO = 'viora_chat_abierto';
   const saludoInicial = raiz.dataset.saludo || 'Hola, soy el asistente de VIORA. Puedo explicarle cómo usar el sistema, '
     + 'dónde encontrar cada módulo o resolver dudas sobre la página en que está. ¿En qué puedo ayudarle?';
@@ -37,7 +36,8 @@
   }
 
   function guardarHistorial() {
-    escribirAlmacen(CLAVE_HISTORIAL, JSON.stringify(historial));
+    // El historial pertenece al usuario en MySQL; no conservar copias compartidas en el navegador.
+    try { sessionStorage.removeItem('viora_chat_historial'); } catch (e) { /* sin almacenamiento */ }
   }
 
   function agregarMensaje(rol, texto) {
@@ -82,7 +82,6 @@
   }
 
   async function enviarMensaje(mensaje) {
-    const historialPrevio = historial.slice();
     agregarMensaje('user', mensaje);
     const burbujaRespuesta = agregarMensaje('assistant', 'Escribiendo…');
     burbujaRespuesta.classList.add('cb__mensaje--pendiente');
@@ -91,10 +90,9 @@
     try {
       const respuesta = await fetch(apiUrl, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': raiz.dataset.csrf },
         body: JSON.stringify({
           mensaje: mensaje,
-          historial: historialPrevio,
           pagina: { titulo: document.title, ruta: window.location.pathname }
         })
       });
@@ -142,25 +140,32 @@
 
   botonAbrir.addEventListener('click', abrir);
   botonCerrar.addEventListener('click', cerrar);
-  botonLimpiar.addEventListener('click', function () {
+  botonLimpiar.addEventListener('click', async function () {
     if (ocupado) {
       return;
     }
+    establecerCargando(true);
+    try {
+      const respuesta = await fetch(apiUrl, {method: 'POST', headers: {'Content-Type': 'application/json', 'X-CSRF-Token': raiz.dataset.csrf}, body: JSON.stringify({accion: 'nueva'})});
+      if (!respuesta.ok) throw new Error('No se pudo iniciar una conversación.');
+    } catch (e) { agregarMensaje('assistant', e.message); return; }
+    finally { establecerCargando(false); }
     historial = [];
     guardarHistorial();
     pintarHistorial();
   });
 
-  try {
-    const guardado = JSON.parse(leerAlmacen(CLAVE_HISTORIAL) || '[]');
-    if (Array.isArray(guardado)) {
-      historial = guardado.filter(function (i) {
-        return i && (i.rol === 'user' || i.rol === 'assistant') && typeof i.texto === 'string';
-      });
-    }
-  } catch (e) {
-    historial = [];
-  }
+  establecerCargando(true);
+  fetch(apiUrl, {method: 'POST', headers: {'Content-Type': 'application/json', 'X-CSRF-Token': raiz.dataset.csrf}, body: JSON.stringify({accion: 'historial'})})
+    .then(async function (r) {
+      const datos = await r.json().catch(function () { return {}; });
+      if (!r.ok) throw new Error(datos.error || 'No se pudo recuperar la conversación.');
+      return datos;
+    })
+    .then(function (datos) { historial = datos.historial || []; guardarHistorial(); pintarHistorial(); })
+    .catch(function (e) { historial = []; guardarHistorial(); pintarHistorial(); agregarMensaje('assistant', e.message); })
+    .finally(function () { establecerCargando(false); });
+
 
   pintarHistorial();
   if (leerAlmacen(CLAVE_ABIERTO) === '1') {

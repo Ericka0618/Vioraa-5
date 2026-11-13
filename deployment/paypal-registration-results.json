@@ -1,0 +1,26 @@
+[
+  {
+    "test": "Actual registration redirects without prior header output",
+    "passed": true
+  },
+  {
+    "test": "Subscription form keeps existing design and price",
+    "passed": true
+  },
+  {
+    "test": "Pending verification rejects absent CSRF",
+    "passed": true
+  },
+  {
+    "test": "Correct pending credentials resume subscription without a new account",
+    "passed": true
+  },
+  {
+    "test": "Pending account cannot access catalog",
+    "passed": true
+  },
+  {
+    "test": "PayPal page has no JavaScript syntax errors",
+    "passed": true
+  }
+]

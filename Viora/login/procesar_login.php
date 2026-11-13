@@ -65,6 +65,16 @@ if (!$claveValida) {
     exit;
 }
 
+// Reanudar exclusivamente un registro pendiente, después de verificar su contraseña.
+// No concede una sesión de acceso ni reactiva cuentas suspendidas.
+if (trim($row['rol']) === 'Cliente' && $row['estado_cuenta'] === 'Pendiente de pago') {
+    session_regenerate_id(true);
+    unset($_SESSION['logged_in']);
+    $_SESSION['registro_pendiente_usuario'] = (int)$row['id_usuarios'];
+    header('Location: suscripcion.php');
+    exit;
+}
+
 // Verificar cuenta activa
 if ((int)$row['activo'] !== 1) {
     header('Location: login.php?error=inactive');
@@ -102,7 +112,10 @@ if ($rol === 'Cliente') {
     $consulta->close();
 
     if (!$suscripcion) {
-        header('Location: login.php?error=subscription_required');
+        session_regenerate_id(true);
+        unset($_SESSION['logged_in'], $_SESSION['paypal_subscription_id']);
+        $_SESSION['registro_pendiente_usuario'] = (int)$row['id_usuarios'];
+        header('Location: suscripcion.php');
         exit;
     }
 }

@@ -1,0 +1,66 @@
+[
+    {
+        "test": "Empty Sandbox transaction list recovered only through verified sale",
+        "passed": true
+    },
+    {
+        "test": "Authenticated recovery records real sale identifier",
+        "passed": true
+    },
+    {
+        "test": "Completion event processed",
+        "passed": true
+    },
+    {
+        "test": "Repeated event recognized without another financial write",
+        "passed": true
+    },
+    {
+        "test": "Refund without subscription ID resolves original sale",
+        "passed": true
+    },
+    {
+        "test": "Refund preserved even if sale API snapshot is stale",
+        "passed": true
+    },
+    {
+        "test": "Refund denies catalog",
+        "passed": true
+    },
+    {
+        "test": "Late COMPLETED event cannot undo refund",
+        "passed": true
+    },
+    {
+        "test": "Cancellation applied from current provider state",
+        "passed": true
+    },
+    {
+        "test": "Late ACTIVATED event cannot undo cancellation",
+        "passed": true
+    },
+    {
+        "test": "Historical gap split into safe 31 day windows",
+        "passed": true
+    },
+    {
+        "test": "Provider next page is consumed",
+        "passed": true
+    },
+    {
+        "test": "Foreign paging URL cannot receive bearer token",
+        "passed": true
+    },
+    {
+        "test": "Preexisting legacy ownership reconciles safely",
+        "passed": true
+    },
+    {
+        "test": "Legacy subscription cannot be adopted by another user",
+        "passed": true
+    },
+    {
+        "test": "Only one financial row after repeated out of order events",
+        "passed": true
+    }
+]

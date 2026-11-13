@@ -10,6 +10,7 @@ if (empty($_SESSION['registro_pendiente_usuario'])) {
 $paypalClientId = getenv('PAYPAL_CLIENT_ID') ?: '';
 
 $paypalPlanId = getenv('PAYPAL_PLAN_ID') ?: '';
+if (empty($_SESSION['paypal_csrf'])) $_SESSION['paypal_csrf'] = bin2hex(random_bytes(32));
 
 // Comprobar que los identificadores estén configurados
 $configurado =
@@ -222,39 +223,30 @@ $configurado =
 <script>
 const mensaje = document.getElementById('payment-message');
 
-paypal.Buttons({
-
-    style: {
-        shape: 'rect',
-        color: 'gold',
-        layout: 'vertical',
-        label: 'subscribe'
-    },
-
-    createSubscription: function(data, actions) {
-        return actions.subscription.create({
-            plan_id: <?= json_encode($paypalPlanId) ?>,
-            custom_id: <?= json_encode('viora-user-' . (int)$_SESSION['registro_pendiente_usuario']) ?>
-        });
-    },
-
-    onApprove: async function(data) {
+async function verificarAprobacion(data) {
         mensaje.textContent =
             'Verificando tu suscripción con PayPal...';
 
         try {
-            const respuesta = await fetch(
+            const verificar = () => fetch(
                 'verificar_suscripcion.php',
                 {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': <?= json_encode($_SESSION['paypal_csrf']) ?>
                     },
                     body: JSON.stringify({
                         subscriptionID: data.subscriptionID
                     })
                 }
             );
+
+            let respuesta = await verificar();
+            for (let intento = 0; intento < 3 && [409, 503].includes(respuesta.status); intento++) {
+                await new Promise(resolve => setTimeout(resolve, 3000));
+                respuesta = await verificar();
+            }
 
             const resultado = await respuesta.json();
 
@@ -281,7 +273,25 @@ paypal.Buttons({
 
             mensaje.textContent = error.message;
         }
+}
+
+paypal.Buttons({
+
+    style: {
+        shape: 'rect',
+        color: 'gold',
+        layout: 'vertical',
+        label: 'subscribe'
     },
+
+    createSubscription: function(data, actions) {
+        return actions.subscription.create({
+            plan_id: <?= json_encode($paypalPlanId) ?>,
+            custom_id: <?= json_encode('viora-user-' . (int)$_SESSION['registro_pendiente_usuario']) ?>
+        });
+    },
+
+    onApprove: verificarAprobacion,
 
     onCancel: function() {
         mensaje.textContent =
@@ -299,6 +309,8 @@ paypal.Buttons({
     }
 
 }).render('#paypal-button-container');
+const pendiente = <?= json_encode($_SESSION['paypal_subscription_id'] ?? null) ?>;
+if (pendiente) verificarAprobacion({subscriptionID: pendiente});
 </script>
 
 <?php else: ?>

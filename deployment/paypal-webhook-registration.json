@@ -1,0 +1,16 @@
+{
+  "id": "4VC090373X444784F",
+  "url": "https://viora-6ikx2ezlba-uc.a.run.app/login/paypal_webhook.php",
+  "events": [
+    "BILLING.SUBSCRIPTION.ACTIVATED",
+    "BILLING.SUBSCRIPTION.CANCELLED",
+    "BILLING.SUBSCRIPTION.SUSPENDED",
+    "BILLING.SUBSCRIPTION.EXPIRED",
+    "BILLING.SUBSCRIPTION.PAYMENT.FAILED",
+    "PAYMENT.SALE.COMPLETED",
+    "PAYMENT.SALE.REFUNDED",
+    "PAYMENT.SALE.REVERSED"
+  ],
+  "environment": "sandbox",
+  "receiver_deployment_pending": false
+}

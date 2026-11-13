@@ -1,0 +1,14 @@
+{
+  "job": "viora-paypal-reconcile",
+  "scheduler": "viora-paypal-reconcile-hourly",
+  "schedule": "0 * * * *",
+  "timezone": "America/Santo_Domingo",
+  "private": true,
+  "http_endpoint_public": false,
+  "user_cost_authorized": true,
+  "configured": true,
+  "first_execution_verified": true,
+  "execution": "viora-paypal-reconcile-5shfh",
+  "execution_succeeded": true,
+  "scheduler_authenticated_invocation_verified": true
+}

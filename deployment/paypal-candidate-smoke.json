@@ -1,0 +1,54 @@
+{
+  "url": "https://paypal-review---viora-6ikx2ezlba-uc.a.run.app",
+  "revision": "viora-00006-gis",
+  "checks": [
+    {
+      "test": "Public HTTPS login healthy",
+      "passed": true
+    },
+    {
+      "test": "Unsigned webhook rejected",
+      "passed": true
+    },
+    {
+      "test": "Deployed Gemini JavaScript unchanged",
+      "passed": true
+    },
+    {
+      "test": "Browser registration redirects to subscription",
+      "passed": true
+    },
+    {
+      "test": "Existing US10 subscription design retained",
+      "passed": true
+    },
+    {
+      "test": "Real Sandbox SDK buttons render",
+      "passed": true
+    },
+    {
+      "test": "Missing payment CSRF rejected",
+      "passed": true
+    },
+    {
+      "test": "Pending registration resumes after password verification",
+      "passed": true
+    },
+    {
+      "test": "Unpaid account cannot access catalog",
+      "passed": true
+    },
+    {
+      "test": "Existing Administrator login unaffected",
+      "passed": true
+    },
+    {
+      "test": "Existing Gemini widget remains present",
+      "passed": true
+    },
+    {
+      "test": "No PayPal application JavaScript exceptions",
+      "passed": true
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "service": "viora",
+  "region": "us-central1",
+  "project": "viora-514300",
+  "base_image": "us-central1-docker.pkg.dev/viora-514300/viora/web@sha256:49c8c7449b809687de9d3cb557f92e7ad0a05f62163ae9557310da2086a79a20",
+  "rollback_revision": "viora-00002-pbz",
+  "prepared_latest_ready_revision": "viora-00003-xej",
+  "protected_config_sha256": "b1df14e3df8e256aadb5c5bf3f84e5af1fcdfb26b97a88e8177111cccc310567",
+  "image": "us-central1-docker.pkg.dev/viora-514300/viora/web:chatbot-20261113001434",
+  "files": [
+    {
+      "path": "mantenimientos/chatbot_api.php",
+      "sha256": "3891b0f3d732a53fb441593f5fb5b0454518ffbef2f941a681194f195b746a47"
+    },
+    {
+      "path": "mantenimientos/chatbot_historial.php",
+      "sha256": "35100c302ad02fa1384857577382b4291640c98374910abb177bf2fb46f822bc"
+    },
+    {
+      "path": "mantenimientos/chatbot_herramientas.php",
+      "sha256": "5708a993a1b441d91d419e32872d29ca41810c80fc91c1eab04be8f083785714"
+    },
+    {
+      "path": "mantenimientos/chatbot.js",
+      "sha256": "dd8262b395ac5433fa115a65083eb39d414d3fb818ec909f49150287f21fb22b"
+    },
+    {
+      "path": "mantenimientos/chatbot_widget.php",
+      "sha256": "5b1de58bc7ffbddf99fb44eab0abfe941928249bb9839c1c75ad2566c68c8e39"
+    },
+    {
+      "path": "conf/gemini.php",
+      "sha256": "4db5f4469b148b23feaa376689852cf8c24109f774c9a76df5f8634c2ed163c2"
+    },
+    {
+      "path": "conf/subscription_access.php",
+      "sha256": "0b9a40d3537da77e5d2d6c2a3a2d12cbb90444fbd96f4c432713759ab671d402"
+    }
+  ],
+  "built": true,
+  "deployed": true,
+  "context": ".cache\\chatbot-20261113001434",
+  "build_id": "67276cb7-462c-4a74-aa91-9cd5870b8fc3",
+  "build_status": "SUCCESS",
+  "staged": true,
+  "candidate_revision": "viora-00004-moh",
+  "candidate_url": "https://chatbot-review---viora-6ikx2ezlba-uc.a.run.app",
+  "gemini_model": "gemini-flash-lite-latest",
+  "gemini_secret_version": "2",
+  "image_digest": "sha256:490b86d67592e8794aac98f4803a1aebb7704f3d4614c8793a964301f96e07ae",
+  "public_verified": true,
+  "rolled_back": false
+}

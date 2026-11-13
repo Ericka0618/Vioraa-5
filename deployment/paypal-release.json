@@ -1,0 +1,66 @@
+{
+  "project": "viora-514300",
+  "service": "viora",
+  "region": "us-central1",
+  "base_image": "us-central1-docker.pkg.dev/viora-514300/viora/web@sha256:490b86d67592e8794aac98f4803a1aebb7704f3d4614c8793a964301f96e07ae",
+  "rollback_revision": "viora-00004-moh",
+  "prepared_latest_ready_revision": "viora-00004-moh",
+  "image": "us-central1-docker.pkg.dev/viora-514300/viora/web:paypal-20261113010056",
+  "context": ".cache\\paypal-20261113010056",
+  "files": [
+    {
+      "path": "login/paypal_service.php",
+      "sha256": "13439ed16ac3942f2465fa6c924e53ebcc8eb91dc6c36326b2a980f0730e7f11"
+    },
+    {
+      "path": "login/paypal_reconciliation.php",
+      "sha256": "f40ef2480ea20e09c53da4882713e86240616f18ab47baa0ab0515cb867f4ea0"
+    },
+    {
+      "path": "login/paypal_events.php",
+      "sha256": "011f3f3fb0cf734a169c22efa5e55916c460c9573b797447db732addb144fdad"
+    },
+    {
+      "path": "login/paypal_webhook.php",
+      "sha256": "b2b2ffa33eb3ee670d54a112411f07ea979a5d38365064ad799099011dc2c6f4"
+    },
+    {
+      "path": "login/verificar_suscripcion.php",
+      "sha256": "77560b7f137926d477afb8a573cb27e6a810f1b412bd3ba62785128aeee27cda"
+    },
+    {
+      "path": "login/suscripcion.php",
+      "sha256": "bbe1e99fa9e4ec4e0686d85c9823002cd5ac5e1bfcac5ba487b68cc45ba48e88"
+    },
+    {
+      "path": "login/guardar_registro.php",
+      "sha256": "044e1d65da0eb194a72e1362c6148447adb6eb732359350d8643118c38504ae8"
+    },
+    {
+      "path": "login/procesar_login.php",
+      "sha256": "eb027d1d1d560ce934c232b3a6a6ef0f81840af0d900f272d509960e8b230104"
+    },
+    {
+      "path": "mantenimientos/catalogo.php",
+      "sha256": "0dfc8c399d1a5ceae8574c29dfa3bbf3057d098216480985e608c480da2f8d59"
+    }
+  ],
+  "protected_config_sha256": "d231b70916c6387a8b5d07ea4b33371422d9e752737addfc453ab7657d13ee1a",
+  "webhook_id": "4VC090373X444784F",
+  "gemini_sources_unchanged": true,
+  "build_authorized": true,
+  "deployment_authorized": true,
+  "built": true,
+  "deployed": true,
+  "cli_sha256": "22690b81e21f05e6932c1db24a51b21a5697001883c504ae378188856155ad2e",
+  "scheduler_authorized": true,
+  "build_id": "776c2cba-6099-4a55-8d2c-b36832c335e7",
+  "build_status": "SUCCESS",
+  "image_digest": "sha256:0bf79979bdeaab1d830ed4187f05e441c22ce6ed3804cfcca7b019e90651bb88",
+  "staged": true,
+  "candidate_revision": "viora-00006-gis",
+  "candidate_url": "https://paypal-review---viora-6ikx2ezlba-uc.a.run.app",
+  "protected_configuration_preserved": true,
+  "unsigned_webhook_rejected": true,
+  "public_smoke_passed": true
+}

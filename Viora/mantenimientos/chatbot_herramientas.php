@@ -247,7 +247,7 @@ function chatbot_ejecutar_herramienta(mysqli $db, string $nombre, array $args): 
             if (($t = chatbot_texto($args, 'texto')) !== '') {
                 chatbot_filtro($where, $tipos, $params, "CONCAT_WS(' ', a.numero, e.nombre, co.nombre) LIKE ?", 's', chatbot_like($t));
             }
-            $sql = "SELECT co.nombre condominio, e.nombre edificio, a.numero, a.piso, a.habitaciones, a.banos, a.metros_cuadrados,
+            $sql = "SELECT a.id_apartamentos id, CONCAT('APT-', LPAD(a.id_apartamentos, 3, '0')) codigo, co.nombre condominio, e.nombre edificio, a.numero, a.piso, a.habitaciones, a.banos, a.metros_cuadrados,
                            a.tipo_operacion, a.precio_alquiler, a.precio_venta, a.estado
                     FROM apartamento a
                     LEFT JOIN edificio e ON e.id_edificios = a.edificio_id
@@ -359,23 +359,23 @@ function chatbot_declaraciones_cliente(): array
             ],
             [
                 'name' => 'agendar_visita',
-                'description' => 'Registra una visita del cliente a una propiedad disponible. Solo llámala después de que el cliente confirme explícitamente los datos resumidos.',
+                'description' => 'Prepara una visita a una propiedad disponible cuando tengas fecha y hora. El servidor mostrará el resumen y pedirá confirmación al cliente antes de registrarla.',
                 'parameters' => ['type' => 'object', 'properties' => [
                     'apartamento_id' => $entero('ID de la propiedad, tomado de buscar_propiedades.'),
                     'fecha' => $texto('Fecha de la visita en formato YYYY-MM-DD.'),
                     'hora' => $texto('Hora de la visita en formato HH:MM (24 horas).'),
                     'observaciones' => $texto('Notas opcionales del cliente.'),
-                    'confirmado' => ['type' => 'boolean', 'description' => 'Debe ser true solo si el cliente confirmó los datos con un sí.'],
+                    'confirmado' => ['type' => 'boolean', 'description' => 'Envía false: el servidor obtiene la confirmación en un turno posterior.'],
                 ], 'required' => ['apartamento_id', 'fecha', 'hora', 'confirmado']],
             ],
             [
                 'name' => 'solicitar_operacion',
-                'description' => 'Registra la solicitud del cliente para alquilar o comprar una propiedad disponible. Solo llámala después de que el cliente confirme explícitamente los datos resumidos.',
+                'description' => 'Prepara una solicitud de alquiler o compra. El servidor mostrará el resumen y pedirá confirmación al cliente antes de registrarla.',
                 'parameters' => ['type' => 'object', 'properties' => [
                     'apartamento_id' => $entero('ID de la propiedad, tomado de buscar_propiedades.'),
                     'operacion' => ['type' => 'string', 'enum' => ['Alquiler', 'Venta'], 'description' => 'Alquiler para rentar o Venta para comprar.'],
                     'observaciones' => $texto('Notas opcionales del cliente.'),
-                    'confirmado' => ['type' => 'boolean', 'description' => 'Debe ser true solo si el cliente confirmó los datos con un sí.'],
+                    'confirmado' => ['type' => 'boolean', 'description' => 'Envía false: el servidor obtiene la confirmación en un turno posterior.'],
                 ], 'required' => ['apartamento_id', 'operacion', 'confirmado']],
             ],
         ],

@@ -13,6 +13,12 @@ if (empty($_SESSION['logged_in']) || $_SESSION['logged_in'] !== true) {
 }
 
 $nombre = $_SESSION['nombre_usuario'] ?? 'Usuario';
+require_once __DIR__ . '/../conf/subscription_access.php';
+if (!viora_subscription_access($conexion, (int)($_SESSION['id_usuario'] ?? $_SESSION['id_usuarios'] ?? 0))) {
+    unset($_SESSION['logged_in']);
+    header('Location: ../login/login.php?error=subscription_required');
+    exit;
+}
 
 $usuario = $_SESSION['usuario'] ?? '';
 

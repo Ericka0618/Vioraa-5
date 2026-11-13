@@ -1,0 +1,62 @@
+{
+  "environment": "sandbox",
+  "provider_generated_events": true,
+  "checks": [
+    {
+      "test": "Real provider emitted activation payment refund and cancellation events",
+      "passed": true
+    },
+    {
+      "test": "Provider resend accepted BILLING.SUBSCRIPTION.CANCELLED",
+      "passed": true
+    },
+    {
+      "test": "Signed callback verified and committed BILLING.SUBSCRIPTION.CANCELLED",
+      "passed": true
+    },
+    {
+      "test": "Provider resend accepted PAYMENT.SALE.REFUNDED",
+      "passed": true
+    },
+    {
+      "test": "Signed callback verified and committed PAYMENT.SALE.REFUNDED",
+      "passed": true
+    },
+    {
+      "test": "Provider resend accepted BILLING.SUBSCRIPTION.ACTIVATED",
+      "passed": true
+    },
+    {
+      "test": "Signed callback verified and committed BILLING.SUBSCRIPTION.ACTIVATED",
+      "passed": true
+    },
+    {
+      "test": "Provider resend accepted PAYMENT.SALE.COMPLETED",
+      "passed": true
+    },
+    {
+      "test": "Signed callback verified and committed PAYMENT.SALE.COMPLETED",
+      "passed": true
+    },
+    {
+      "test": "Real duplicate delivery requested",
+      "passed": true
+    },
+    {
+      "test": "Duplicate webhook leaves exactly one payment",
+      "passed": true
+    },
+    {
+      "test": "Out of order completed event cannot reactivate cancellation",
+      "passed": true
+    },
+    {
+      "test": "Out of order event cannot undo refund",
+      "passed": true
+    },
+    {
+      "test": "Copied real event without signed headers is rejected",
+      "passed": true
+    }
+  ]
+}

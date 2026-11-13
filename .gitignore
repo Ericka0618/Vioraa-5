@@ -58,6 +58,7 @@ application_default_credentials.json
 
 # Database
 *.sql
+!Viora/conf/integraciones.sql
 !bd/viora.sql
 
 # Node/npm (if any)

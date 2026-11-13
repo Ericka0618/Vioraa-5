@@ -39,8 +39,8 @@ steps:
   - --concurrency=20
   - --timeout=300
   - --add-cloudsql-instances=$PROJECT_ID:${_REGION}:viora-staging-db
-  - --set-env-vars=APP_ENV=production,DB_HOST=localhost,DB_SOCKET=/cloudsql/$PROJECT_ID:${_REGION}:viora-staging-db,DB_USER=viora_prod,DB_NAME=viora_production,DB_SESSION_ENABLED=true,ECF_ENABLED=false,PAYPAL_MODE=sandbox
-  - --set-secrets=DB_PASSWORD=viora-production-db-password:latest,PAYPAL_CLIENT_ID=viora-production-paypal-client-id:latest,PAYPAL_CLIENT_SECRET=viora-production-paypal-client-secret:latest,PAYPAL_PLAN_ID=viora-production-paypal-plan-id:latest,GEMINI_API_KEY=viora-production-gemini-api-key:latest
+  - --update-env-vars=APP_ENV=production,DB_HOST=localhost,DB_SOCKET=/cloudsql/$PROJECT_ID:${_REGION}:viora-staging-db,DB_USER=viora_prod,DB_NAME=viora_production,DB_SESSION_ENABLED=true,ECF_ENABLED=false,PAYPAL_MODE=sandbox
+  - --update-secrets=DB_PASSWORD=viora-production-db-password:latest,PAYPAL_CLIENT_ID=viora-production-paypal-client-id:latest,PAYPAL_CLIENT_SECRET=viora-production-paypal-client-secret:latest,PAYPAL_PLAN_ID=viora-production-paypal-plan-id:latest,GEMINI_API_KEY=viora-production-gemini-api-key:latest
   - --add-volume=name=uploads,type=cloud-storage,bucket=$PROJECT_ID-production-uploads,mount-options=uid=33;gid=33;file-mode=664;dir-mode=775
   - --add-volume-mount=volume=uploads,mount-path=/var/www/html/uploads
   - --add-volume=name=documents,type=cloud-storage,bucket=$PROJECT_ID-production-documents,mount-options=uid=33;gid=33;file-mode=660;dir-mode=770

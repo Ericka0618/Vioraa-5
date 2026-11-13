@@ -2,10 +2,12 @@
 // mantenimientos/chatbot_widget.php
 // Burbuja flotante del asistente IA. Se incluye desde menu_lateral.php,
 // por lo que aparece en todas las páginas con sesión iniciada.
+if (empty($_SESSION['chatbot_csrf'])) $_SESSION['chatbot_csrf'] = bin2hex(random_bytes(32));
 ?>
 <link rel="stylesheet" href="../estilos/chatbot.css?v=2">
 
 <div class="cb" id="cb-widget" data-api="../mantenimientos/chatbot_api.php"
+     data-csrf="<?= htmlspecialchars($_SESSION['chatbot_csrf'], ENT_QUOTES, 'UTF-8') ?>"
      <?php if (!empty($esCliente)): ?>data-saludo="¡Hola! Soy el asistente de VIORA y puedo ayudarle a encontrar su propiedad ideal. Cuénteme qué busca (por ejemplo: «2 habitaciones», «más de 1 baño» o «alquiler hasta RD$ 20,000») o escriba «recomiéndame una propiedad» y le hago unas preguntas. También puedo agendarle una visita o registrar su solicitud para rentar o comprar."<?php endif; ?>>
   <section class="cb__ventana" id="cb-ventana" aria-label="Asistente IA de VIORA" hidden>
     <header class="cb__cabecera">
@@ -35,4 +37,4 @@
   </button>
 </div>
 
-<script src="../mantenimientos/chatbot.js?v=3" defer></script>
+<script src="../mantenimientos/chatbot.js?v=5" defer></script>
