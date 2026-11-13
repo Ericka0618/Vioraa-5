@@ -1,0 +1,212 @@
+{
+  "prepared_on_revision": "viora-00009-vav",
+  "files": [
+    {
+      "path": "mantenimientos/buscar_clientes_factura.php",
+      "sha256": "13eba6d74b1d394137e729f9504af6662edb663fc0117caaa3936572b44b4fdb"
+    },
+    {
+      "path": "mantenimientos/obtener_propiedades_cliente.php",
+      "sha256": "121f2f7dd87e94e046703d7535d374faac8e8008207345c07b6a7837e90834f1"
+    },
+    {
+      "path": "mantenimientos/facturacion_json.php",
+      "sha256": "0cf52738bd3358b29bd5db4e3d4a3aeb8d4aec90dfdc8df3cc0bd6e78bde909d"
+    },
+    {
+      "path": "mantenimientos/facturacion.js",
+      "sha256": "12c6a58992954be6ce30683acea5884f37893dc8499194af256987deea1b07f2"
+    }
+  ],
+  "no_migration": true,
+  "deployed": true,
+  "deployment_authorized": true,
+  "requires_final_cloud_run_browser_verification": true,
+  "build_authorized": true,
+  "base_image": "us-central1-docker.pkg.dev/viora-514300/viora/web@sha256:aaad2ea333682423cf575e3b6db05145dc340048ca8dd66c3f95a917b129d615",
+  "image": "us-central1-docker.pkg.dev/viora-514300/viora/web:billing-clients-20261113020221",
+  "config": {
+    "spec": {
+      "containerConcurrency": 20,
+      "containers": [
+        {
+          "env": [
+            {
+              "name": "APP_ENV",
+              "value": "production"
+            },
+            {
+              "name": "DB_HOST",
+              "value": "localhost"
+            },
+            {
+              "name": "DB_SOCKET",
+              "value": "/cloudsql/viora-514300:us-central1:viora-staging-db"
+            },
+            {
+              "name": "DB_USER",
+              "value": "viora_prod"
+            },
+            {
+              "name": "DB_NAME",
+              "value": "viora_production"
+            },
+            {
+              "name": "DB_SESSION_ENABLED",
+              "value": "true"
+            },
+            {
+              "name": "ECF_ENABLED",
+              "value": "false"
+            },
+            {
+              "name": "PAYPAL_MODE",
+              "value": "sandbox"
+            },
+            {
+              "name": "DB_PASSWORD",
+              "valueFrom": {
+                "secretKeyRef": {
+                  "key": "latest",
+                  "name": "viora-production-db-password"
+                }
+              }
+            },
+            {
+              "name": "PAYPAL_CLIENT_ID",
+              "valueFrom": {
+                "secretKeyRef": {
+                  "key": "latest",
+                  "name": "viora-production-paypal-client-id"
+                }
+              }
+            },
+            {
+              "name": "PAYPAL_CLIENT_SECRET",
+              "valueFrom": {
+                "secretKeyRef": {
+                  "key": "latest",
+                  "name": "viora-production-paypal-client-secret"
+                }
+              }
+            },
+            {
+              "name": "PAYPAL_PLAN_ID",
+              "valueFrom": {
+                "secretKeyRef": {
+                  "key": "latest",
+                  "name": "viora-production-paypal-plan-id"
+                }
+              }
+            },
+            {
+              "name": "GEMINI_API_KEY",
+              "valueFrom": {
+                "secretKeyRef": {
+                  "key": "latest",
+                  "name": "viora-production-gemini-api-key"
+                }
+              }
+            },
+            {
+              "name": "GEMINI_MODEL",
+              "value": "gemini-flash-lite-latest"
+            },
+            {
+              "name": "PAYPAL_WEBHOOK_ID",
+              "value": "4VC090373X444784F"
+            }
+          ],
+          "ports": [
+            {
+              "containerPort": 8080,
+              "name": "http1"
+            }
+          ],
+          "resources": {
+            "limits": {
+              "cpu": "1",
+              "memory": "512Mi"
+            }
+          },
+          "startupProbe": {
+            "failureThreshold": 1,
+            "periodSeconds": 240,
+            "tcpSocket": {
+              "port": 8080
+            },
+            "timeoutSeconds": 240
+          },
+          "volumeMounts": [
+            {
+              "mountPath": "/var/www/html/uploads",
+              "name": "uploads"
+            },
+            {
+              "mountPath": "/var/www/viora_documentos_privados",
+              "name": "documents"
+            }
+          ]
+        }
+      ],
+      "sandboxes": {},
+      "serviceAccountName": "viora-production@viora-514300.iam.gserviceaccount.com",
+      "timeoutSeconds": 300,
+      "volumes": [
+        {
+          "csi": {
+            "driver": "gcsfuse.run.googleapis.com",
+            "volumeAttributes": {
+              "bucketName": "viora-514300-production-uploads",
+              "mountOptions": "uid=33,gid=33,file-mode=664,dir-mode=775"
+            }
+          },
+          "name": "uploads"
+        },
+        {
+          "csi": {
+            "driver": "gcsfuse.run.googleapis.com",
+            "volumeAttributes": {
+              "bucketName": "viora-514300-production-documents",
+              "mountOptions": "uid=33,gid=33,file-mode=660,dir-mode=770"
+            }
+          },
+          "name": "documents"
+        }
+      ]
+    },
+    "cloud_sql": "viora-514300:us-central1:viora-staging-db"
+  },
+  "context": "C:\\xampp\\htdocs\\Vioraa_5\\.cache\\billing-clients-20261113020221",
+  "protected_files": [
+    "mantenimientos/chatbot_api.php",
+    "mantenimientos/chatbot_historial.php",
+    "mantenimientos/chatbot_herramientas.php",
+    "mantenimientos/chatbot.js",
+    "mantenimientos/chatbot_widget.php",
+    "conf/gemini.php",
+    "conf/subscription_access.php",
+    "login/paypal_service.php",
+    "login/paypal_events.php",
+    "login/paypal_reconciliation.php",
+    "login/paypal_webhook.php",
+    "login/suscripcion.php",
+    "login/verificar_suscripcion.php",
+    "conf/ecf.php",
+    "mantenimientos/ecf_service.php",
+    "mantenimientos/guardar_factura.php",
+    "mantenimientos/emitir_nota_credito.php",
+    "mantenimientos/reenviar_ecf.php",
+    "mantenimientos/facturacion.php",
+    "mantenimientos/factura_pdf.php"
+  ],
+  "build_id": "08757bb9-7433-443f-839f-520fa449089c",
+  "candidate_revision": "viora-00011-yeg",
+  "candidate_url": "https://billing-clients-review---viora-6ikx2ezlba-uc.a.run.app",
+  "image_digest": "sha256:43553aba30a68a6fb7452f688b65a99708ce9845e46f8d1e4b3c013f6ad06365",
+  "build_status": "SUCCESS",
+  "candidate_checks_passed": 19,
+  "public_checks_passed": 19,
+  "financial_counts_unchanged": true,
+  "protected_configuration_preserved": true
+}

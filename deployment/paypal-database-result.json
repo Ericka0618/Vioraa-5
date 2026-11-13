@@ -1,0 +1,13 @@
+{
+  "backup_private": true,
+  "backup_sha256": "4725b0e5ca951c34c2eca87c95934f08780bf4f6e12867062bc09d64856ce3b9",
+  "backup_bytes": 100780,
+  "original_tables": 36,
+  "original_row_counts_unchanged": true,
+  "migration_applied": true,
+  "tables_added": [
+    "suscripcion_pago",
+    "paypal_evento"
+  ],
+  "subscription_payment_primary_key": true
+}

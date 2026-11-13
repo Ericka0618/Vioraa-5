@@ -1,0 +1,10 @@
+{
+  "project": "viora-514300",
+  "secret": "viora-production-gemini-api-key",
+  "version": "2",
+  "model": "gemini-flash-lite-latest",
+  "validated_at": "2026-11-13T00:10:56.410559+00:00",
+  "real_text_response": true,
+  "real_viora_function_call": true,
+  "deployed": false
+}

@@ -1,0 +1,38 @@
+[
+  {
+    "test": "Client browser loads existing own history",
+    "passed": true
+  },
+  {
+    "test": "Other client marker absent",
+    "passed": true
+  },
+  {
+    "test": "Missing key produces visible error in actual widget",
+    "passed": true
+  },
+  {
+    "test": "Error does not expose a key or stack trace",
+    "passed": true
+  },
+  {
+    "test": "History restored after real browser reload",
+    "passed": true
+  },
+  {
+    "test": "Account switch in same browser isolates history",
+    "passed": true
+  },
+  {
+    "test": "New conversation clears current widget",
+    "passed": true
+  },
+  {
+    "test": "History no longer stored in shared sessionStorage",
+    "passed": true
+  },
+  {
+    "test": "Widget has no JavaScript exceptions",
+    "passed": true
+  }
+]

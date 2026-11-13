@@ -1,0 +1,43 @@
+{
+  "revision": "viora-00004-moh",
+  "url": "https://viora-6ikx2ezlba-uc.a.run.app",
+  "webhook_configured": false,
+  "credentials_present": true,
+  "oauth_http": 200,
+  "plan_http": 200,
+  "plan": {
+    "status": "ACTIVE",
+    "billing_cycles": [
+      {
+        "pricing_scheme": {
+          "version": 1,
+          "fixed_price": {
+            "currency_code": "USD",
+            "value": "10.0"
+          },
+          "create_time": "2026-10-15T02:24:40Z",
+          "update_time": "2026-10-15T02:24:40Z"
+        },
+        "frequency": {
+          "interval_unit": "MONTH",
+          "interval_count": 1
+        },
+        "tenure_type": "REGULAR",
+        "sequence": 1,
+        "total_cycles": 0
+      }
+    ],
+    "payment_preferences": {
+      "service_type": "PREPAID",
+      "auto_bill_outstanding": true,
+      "setup_fee": {
+        "currency_code": "USD",
+        "value": "0.0"
+      },
+      "setup_fee_failure_action": "CONTINUE",
+      "payment_failure_threshold": 3
+    }
+  },
+  "webhooks_http": 200,
+  "webhooks": []
+}

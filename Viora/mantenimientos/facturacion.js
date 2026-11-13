@@ -70,10 +70,11 @@ async function obtenerJSON(url, opciones = {}) {
     try {
         datos = JSON.parse(texto);
     } catch (error) {
-        throw new Error(
-            'El servidor no devolvió JSON válido. ' +
-            'Comprueba la ruta del archivo PHP.'
-        );
+        throw new Error('No se pudo leer la respuesta del servidor. Recargue la página e intente nuevamente.');
+    }
+
+    if (!datos || typeof datos !== 'object' || Array.isArray(datos)) {
+        throw new Error('El servidor devolvió una respuesta inesperada. Intente nuevamente.');
     }
 
     if (!respuesta.ok || !datos.success) {
@@ -583,7 +584,8 @@ async function guardarFactura() {
             {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/json'
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': document.querySelector('meta[name="ecf-csrf"]')?.content || ''
                 },
                 body: JSON.stringify(datosFactura)
             }

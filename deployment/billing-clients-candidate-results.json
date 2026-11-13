@@ -1,0 +1,83 @@
+{
+  "url": "https://billing-clients-review---viora-6ikx2ezlba-uc.a.run.app",
+  "real_browser_and_cloud_sql": true,
+  "financial_posts_blocked": true,
+  "checks": [
+    {
+      "test": "Administrador real login succeeds",
+      "passed": true
+    },
+    {
+      "test": "Monthly page renders",
+      "passed": true
+    },
+    {
+      "test": "Client list is valid JSON",
+      "passed": true
+    },
+    {
+      "test": "Browser dropdown matches SQL endpoint",
+      "passed": true
+    },
+    {
+      "test": "All client properties return JSON",
+      "passed": true
+    },
+    {
+      "test": "Single and multiple property cases available",
+      "passed": true
+    },
+    {
+      "test": "Single property loaded automatically",
+      "passed": true
+    },
+    {
+      "test": "Multiple properties selectable",
+      "passed": true
+    },
+    {
+      "test": "Invoice prepared without submission",
+      "passed": true
+    },
+    {
+      "test": "No JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "test": "No financial POST attempted",
+      "passed": true
+    },
+    {
+      "test": "Existing Gemini widget visible",
+      "passed": true
+    },
+    {
+      "test": "Gemini JavaScript unchanged",
+      "passed": true
+    },
+    {
+      "test": "Invalid client JSON 400",
+      "passed": true
+    },
+    {
+      "test": "Cliente real login succeeds",
+      "passed": true
+    },
+    {
+      "test": "Client denied JSON buscar_clientes_factura.php",
+      "passed": true
+    },
+    {
+      "test": "Client denied JSON obtener_propiedades_cliente.php?persona_id=1",
+      "passed": true
+    },
+    {
+      "test": "Anonymous JSON 401 buscar_clientes_factura.php",
+      "passed": true
+    },
+    {
+      "test": "Anonymous JSON 401 obtener_propiedades_cliente.php?persona_id=1",
+      "passed": true
+    }
+  ]
+}

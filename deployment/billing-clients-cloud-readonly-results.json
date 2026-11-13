@@ -1,0 +1,96 @@
+{
+  "app": "local corrected PHP and Chrome",
+  "database": "Cloud SQL read-only queries",
+  "cloud_run_updated": false,
+  "financial_posts_blocked": true,
+  "checks": [
+    {
+      "test": "Anonymous JSON 401 buscar_clientes_factura.php",
+      "passed": true
+    },
+    {
+      "test": "Client role JSON 403 buscar_clientes_factura.php",
+      "passed": true
+    },
+    {
+      "test": "Method JSON 405 buscar_clientes_factura.php",
+      "passed": true
+    },
+    {
+      "test": "Anonymous JSON 401 obtener_propiedades_cliente.php?persona_id=1",
+      "passed": true
+    },
+    {
+      "test": "Client role JSON 403 obtener_propiedades_cliente.php?persona_id=1",
+      "passed": true
+    },
+    {
+      "test": "Method JSON 405 obtener_propiedades_cliente.php?persona_id=1",
+      "passed": true
+    },
+    {
+      "test": "Administrator gets JSON client array",
+      "passed": true
+    },
+    {
+      "test": "Available clients found",
+      "passed": true
+    },
+    {
+      "test": "Invalid client JSON 400",
+      "passed": true
+    },
+    {
+      "test": "Absent client returns empty property array",
+      "passed": true
+    },
+    {
+      "test": "All client property responses are JSON",
+      "passed": true
+    },
+    {
+      "test": "Browser dropdown contains database clients",
+      "passed": true
+    },
+    {
+      "test": "Single property fills automatically",
+      "passed": true
+    },
+    {
+      "test": "Multiple properties keep contract selector",
+      "passed": true
+    },
+    {
+      "test": "At least one property selectable",
+      "passed": true
+    },
+    {
+      "test": "Invoice can be prepared without submission",
+      "passed": true
+    },
+    {
+      "test": "Existing fiscal CSRF token retained",
+      "passed": true
+    },
+    {
+      "test": "No JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "test": "No financial write request",
+      "passed": true
+    },
+    {
+      "test": "Connection failure still returns JSON 503",
+      "passed": true
+    },
+    {
+      "test": "Connection details not exposed",
+      "passed": true
+    },
+    {
+      "test": "Financial table counts unchanged",
+      "passed": true
+    }
+  ]
+}

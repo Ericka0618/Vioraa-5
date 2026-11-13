@@ -1,0 +1,50 @@
+[
+    {
+        "test": "Owner retrieves both persisted messages",
+        "passed": true
+    },
+    {
+        "test": "Different user cannot read a known conversation ID",
+        "passed": true
+    },
+    {
+        "test": "Different user cannot append to known conversation",
+        "passed": true
+    },
+    {
+        "test": "Denied append leaves record count unchanged",
+        "passed": true
+    },
+    {
+        "test": "Session with another owner ID cannot reuse it",
+        "passed": true
+    },
+    {
+        "test": "Owner recovers conversation after session reset",
+        "passed": true
+    },
+    {
+        "test": "Closed conversation cannot receive new turns",
+        "passed": true
+    },
+    {
+        "test": "Closing a conversation preserves its messages",
+        "passed": true
+    },
+    {
+        "test": "New conversation has an independent empty history",
+        "passed": true
+    },
+    {
+        "test": "Client cannot execute administrative tool",
+        "passed": true
+    },
+    {
+        "test": "Client action requires server confirmation",
+        "passed": true
+    },
+    {
+        "test": "Client with no authorized person cannot write",
+        "passed": true
+    }
+]

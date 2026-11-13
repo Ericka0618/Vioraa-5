@@ -1,0 +1,20 @@
+[
+  {
+    "subscription_id": "I-A969B8VY0T4K",
+    "http": 200,
+    "status": "ACTIVE",
+    "has_verified_ledger": false
+  },
+  {
+    "subscription_id": "I-ECPRJX8YDLSJ",
+    "http": 200,
+    "status": "CANCELLED",
+    "has_verified_ledger": true
+  },
+  {
+    "subscription_id": "I-HNVYF3E1LPM1",
+    "http": 200,
+    "status": "ACTIVE",
+    "has_verified_ledger": false
+  }
+]

@@ -1,0 +1,42 @@
+[
+  {
+    "path": "Viora/conf/ecf.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/ecf_service.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/ecf_validacion.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/consultar_ecf.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/guardar_factura.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/reenviar_ecf.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/emitir_nota_credito.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/facturacion.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/facturacion_viora.php",
+    "passed": true
+  },
+  {
+    "path": "Viora/mantenimientos/consulta_facturas.php",
+    "passed": true
+  }
+]

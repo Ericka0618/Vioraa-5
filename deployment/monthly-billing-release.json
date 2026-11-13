@@ -1,0 +1,178 @@
+{
+  "base_revision": "viora-00006-gis",
+  "base_image": "us-central1-docker.pkg.dev/viora-514300/viora/web@sha256:0bf79979bdeaab1d830ed4187f05e441c22ce6ed3804cfcca7b019e90651bb88",
+  "image": "us-central1-docker.pkg.dev/viora-514300/viora/web:monthly-20261113014731",
+  "config": {
+    "containerConcurrency": 20,
+    "containers": [
+      {
+        "env": [
+          {
+            "name": "APP_ENV",
+            "value": "production"
+          },
+          {
+            "name": "DB_HOST",
+            "value": "localhost"
+          },
+          {
+            "name": "DB_SOCKET",
+            "value": "/cloudsql/viora-514300:us-central1:viora-staging-db"
+          },
+          {
+            "name": "DB_USER",
+            "value": "viora_prod"
+          },
+          {
+            "name": "DB_NAME",
+            "value": "viora_production"
+          },
+          {
+            "name": "DB_SESSION_ENABLED",
+            "value": "true"
+          },
+          {
+            "name": "ECF_ENABLED",
+            "value": "false"
+          },
+          {
+            "name": "PAYPAL_MODE",
+            "value": "sandbox"
+          },
+          {
+            "name": "DB_PASSWORD",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-db-password"
+              }
+            }
+          },
+          {
+            "name": "PAYPAL_CLIENT_ID",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-paypal-client-id"
+              }
+            }
+          },
+          {
+            "name": "PAYPAL_CLIENT_SECRET",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-paypal-client-secret"
+              }
+            }
+          },
+          {
+            "name": "PAYPAL_PLAN_ID",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-paypal-plan-id"
+              }
+            }
+          },
+          {
+            "name": "GEMINI_API_KEY",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-gemini-api-key"
+              }
+            }
+          },
+          {
+            "name": "GEMINI_MODEL",
+            "value": "gemini-flash-lite-latest"
+          },
+          {
+            "name": "PAYPAL_WEBHOOK_ID",
+            "value": "4VC090373X444784F"
+          }
+        ],
+        "ports": [
+          {
+            "containerPort": 8080,
+            "name": "http1"
+          }
+        ],
+        "resources": {
+          "limits": {
+            "cpu": "1",
+            "memory": "512Mi"
+          }
+        },
+        "startupProbe": {
+          "failureThreshold": 1,
+          "periodSeconds": 240,
+          "tcpSocket": {
+            "port": 8080
+          },
+          "timeoutSeconds": 240
+        },
+        "volumeMounts": [
+          {
+            "mountPath": "/var/www/html/uploads",
+            "name": "uploads"
+          },
+          {
+            "mountPath": "/var/www/viora_documentos_privados",
+            "name": "documents"
+          }
+        ]
+      }
+    ],
+    "sandboxes": {},
+    "serviceAccountName": "viora-production@viora-514300.iam.gserviceaccount.com",
+    "timeoutSeconds": 300,
+    "volumes": [
+      {
+        "csi": {
+          "driver": "gcsfuse.run.googleapis.com",
+          "volumeAttributes": {
+            "bucketName": "viora-514300-production-uploads",
+            "mountOptions": "uid=33,gid=33,file-mode=664,dir-mode=775"
+          }
+        },
+        "name": "uploads"
+      },
+      {
+        "csi": {
+          "driver": "gcsfuse.run.googleapis.com",
+          "volumeAttributes": {
+            "bucketName": "viora-514300-production-documents",
+            "mountOptions": "uid=33,gid=33,file-mode=660,dir-mode=770"
+          }
+        },
+        "name": "documents"
+      }
+    ]
+  },
+  "context": "C:\\xampp\\htdocs\\Vioraa_5\\.cache\\monthly-20261113014731",
+  "sha256": "2b3b5f88a5b23cb49528a644964656f1d183566dc4a8e338032633e0222142fe",
+  "only_file": "mantenimientos/facturacion.php",
+  "authorized_by_user": true,
+  "build_id": "ba11ea2a-2b10-43f0-950e-7cd4d8d2a3b9",
+  "candidate_revision": "viora-00009-vav",
+  "image_digest": "sha256:aaad2ea333682423cf575e3b6db05145dc340048ca8dd66c3f95a917b129d615",
+  "candidate_checks": [
+    "Admin login",
+    "Monthly billing form renders",
+    "Page and existing Gemini widget present",
+    "No JavaScript exceptions",
+    "Unsigned PayPal event rejected",
+    "Anonymous session redirected"
+  ],
+  "public_checks": [
+    "Admin login",
+    "Monthly billing form renders",
+    "Page and existing Gemini widget present",
+    "No JavaScript exceptions",
+    "Unsigned PayPal event rejected",
+    "Anonymous session redirected"
+  ],
+  "deployed": true
+}

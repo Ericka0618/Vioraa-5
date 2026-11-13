@@ -1,6 +1,7 @@
 <?php
 // Facturas del contrato y registro de pagos.
 if (session_status() === PHP_SESSION_NONE) session_start();
+$_SESSION['ecf_csrf'] ??= bin2hex(random_bytes(32));
 require_once __DIR__ . '/../conf/conexion.php';
 require_once __DIR__ . '/../conf/require_admin.php';
 
@@ -195,7 +196,7 @@ try {
       try {
         const respuesta = await fetch('registrar_pago.php', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': <?= json_encode($_SESSION['ecf_csrf']) ?> },
           body: JSON.stringify(datos)
         });
         const resultado = await respuesta.json();
@@ -214,12 +215,12 @@ try {
       try {
         const respuesta = await fetch('reenviar_ecf.php', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': <?= json_encode($_SESSION['ecf_csrf']) ?> },
           body: JSON.stringify({ factura_id: Number(boton.dataset.factura) })
         });
         const resultado = await respuesta.json();
         if (!resultado.success) throw new Error(resultado.message || 'No se pudo enviar el e-CF.');
-        mostrar('e-CF enviado. Estado: ' + resultado.ecf.estado + '.', 'exito');
+        mostrar('Estado fiscal: ' + resultado.ecf.estado + '.', 'exito');
         setTimeout(() => location.reload(), 800);
       } catch (error) {
         mostrar(error.message, 'error');

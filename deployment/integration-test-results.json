@@ -1,0 +1,118 @@
+[
+    {
+        "test": "Webhook verification accepts provider SUCCESS",
+        "passed": true
+    },
+    {
+        "test": "Webhook verification rejects missing signature headers",
+        "passed": true
+    },
+    {
+        "test": "Forged webhook is rejected",
+        "passed": true
+    },
+    {
+        "test": "Pending approval cannot activate",
+        "passed": true
+    },
+    {
+        "test": "Pending user stays disabled",
+        "passed": true
+    },
+    {
+        "test": "ACTIVE without transaction cannot activate",
+        "passed": true
+    },
+    {
+        "test": "Confirmed monthly USD10 activates",
+        "passed": true
+    },
+    {
+        "test": "Account enabled and catalog allowed",
+        "passed": true
+    },
+    {
+        "test": "Duplicate confirmation records one payment",
+        "passed": true
+    },
+    {
+        "test": "Cancellation revokes access in existing session",
+        "passed": true
+    },
+    {
+        "test": "Past due subscription blocked",
+        "passed": true
+    },
+    {
+        "test": "Renewal restores access",
+        "passed": true
+    },
+    {
+        "test": "Wrong currency rejected",
+        "passed": true
+    },
+    {
+        "test": "Wrong amount rejected",
+        "passed": true
+    },
+    {
+        "test": "Foreign subscription rejected",
+        "passed": true
+    },
+    {
+        "test": "Non monthly plan rejected",
+        "passed": true
+    },
+    {
+        "test": "Refund does not authorize access",
+        "passed": true
+    },
+    {
+        "test": "Refund updates ledger state",
+        "passed": true
+    },
+    {
+        "test": "Conversation and both messages persist",
+        "passed": true
+    },
+    {
+        "test": "Conversation restored after login",
+        "passed": true
+    },
+    {
+        "test": "Another user cannot reuse conversation",
+        "passed": true
+    },
+    {
+        "test": "ITBIS by line in integer cents",
+        "passed": true
+    },
+    {
+        "test": "RNC normalization",
+        "passed": true
+    },
+    {
+        "test": "Invalid fiscal identifier rejected",
+        "passed": true
+    },
+    {
+        "test": "Disabled emission never contacts provider",
+        "passed": true
+    },
+    {
+        "test": "Accepted fiscal document preserved on resend",
+        "passed": true
+    },
+    {
+        "test": "Uncertain send cannot be repeated",
+        "passed": true
+    },
+    {
+        "test": "Legacy invoice with mismatched ITBIS blocked",
+        "passed": true
+    },
+    {
+        "test": "Valid invoice prepares with existing E32 format",
+        "passed": true
+    }
+]

@@ -1,0 +1,554 @@
+{
+  "database": "viora_production",
+  "mysql_version": "8.0.46-google",
+  "read_only": true,
+  "tables": {
+    "conversacion_ia": [
+      {
+        "column": "id_conversaciones",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "usuario_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "fecha_inicio",
+        "type": "timestamp",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "varchar(30)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "activo",
+        "type": "tinyint(1)",
+        "null": "YES",
+        "key": ""
+      }
+    ],
+    "mensaje_ia": [
+      {
+        "column": "id_mensajes",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "conversacion_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "tipo_emisor",
+        "type": "enum('USUARIO','ASISTENTE')",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "contenido",
+        "type": "text",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "fecha_envio",
+        "type": "timestamp",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "activo",
+        "type": "tinyint(1)",
+        "null": "YES",
+        "key": ""
+      }
+    ],
+    "factura": [
+      {
+        "column": "id_facturas",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "numero_documento",
+        "type": "varchar(50)",
+        "null": "NO",
+        "key": "UNI"
+      },
+      {
+        "column": "contrato_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "persona_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "periodo",
+        "type": "char(7)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "fecha",
+        "type": "date",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "fecha_vencimiento",
+        "type": "date",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "subtotal",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "total",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "monto_pagado",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "saldo_pendiente",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "enum('Borrador','Pendiente','Parcial','Pagada','Anulada')",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "observaciones",
+        "type": "text",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "rnc_comprador",
+        "type": "varchar(11)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "razon_social_comprador",
+        "type": "varchar(150)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "usuario_id",
+        "type": "bigint",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "fecha_registro",
+        "type": "timestamp",
+        "null": "NO",
+        "key": ""
+      }
+    ],
+    "factura_detalle": [
+      {
+        "column": "id_detalles",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "factura_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "concepto",
+        "type": "enum('Alquiler','Mantenimiento')",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "descripcion",
+        "type": "varchar(255)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "periodo",
+        "type": "char(7)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "monto",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "activo",
+        "type": "tinyint(1)",
+        "null": "YES",
+        "key": ""
+      }
+    ],
+    "factura_ecf": [
+      {
+        "column": "id_factura_ecf",
+        "type": "int",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "factura_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "UNI"
+      },
+      {
+        "column": "ecf_api_id",
+        "type": "varchar(64)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "encf",
+        "type": "varchar(20)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "fecha_emision_ecf",
+        "type": "date",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "tipo_ecf",
+        "type": "varchar(5)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "varchar(60)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "codigo_seguridad",
+        "type": "varchar(20)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "dgii_url",
+        "type": "text",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "error_mensaje",
+        "type": "text",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "intentos",
+        "type": "int",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "fecha_envio",
+        "type": "datetime",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "fecha_registro",
+        "type": "timestamp",
+        "null": "YES",
+        "key": ""
+      }
+    ],
+    "factura_pago": [
+      {
+        "column": "id_pagos",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "factura_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "fecha_pago",
+        "type": "datetime",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "monto",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "metodo_pago",
+        "type": "varchar(50)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "referencia",
+        "type": "varchar(100)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "observaciones",
+        "type": "text",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "usuario_id",
+        "type": "bigint",
+        "null": "YES",
+        "key": ""
+      }
+    ],
+    "comprobante_fiscal": [
+      {
+        "column": "id_comprobantes",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "pago_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "numero_comprobante",
+        "type": "varchar(50)",
+        "null": "NO",
+        "key": "UNI"
+      },
+      {
+        "column": "tipo_comprobante",
+        "type": "varchar(30)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "rnc_emisor",
+        "type": "varchar(30)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "rnc_receptor",
+        "type": "varchar(30)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "subtotal",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "impuesto",
+        "type": "decimal(18,2)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "total",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "fecha_emision",
+        "type": "timestamp",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "ruta_archivo",
+        "type": "varchar(255)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "varchar(30)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "activo",
+        "type": "tinyint(1)",
+        "null": "YES",
+        "key": ""
+      }
+    ],
+    "suscripcion": [
+      {
+        "column": "id_suscripcion",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "usuario_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "paypal_subscription_id",
+        "type": "varchar(100)",
+        "null": "YES",
+        "key": "UNI"
+      },
+      {
+        "column": "paypal_plan_id",
+        "type": "varchar(100)",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "monto",
+        "type": "decimal(10,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "moneda",
+        "type": "varchar(3)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "varchar(30)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "fecha_inicio",
+        "type": "datetime",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "fecha_proximo_pago",
+        "type": "datetime",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "fecha_actualizacion",
+        "type": "timestamp",
+        "null": "NO",
+        "key": ""
+      }
+    ],
+    "transaccion_paypal": [
+      {
+        "column": "id_transacciones",
+        "type": "bigint",
+        "null": "NO",
+        "key": "PRI"
+      },
+      {
+        "column": "pago_id",
+        "type": "bigint",
+        "null": "NO",
+        "key": "MUL"
+      },
+      {
+        "column": "codigo_transaccion",
+        "type": "varchar(100)",
+        "null": "NO",
+        "key": "UNI"
+      },
+      {
+        "column": "estado",
+        "type": "varchar(30)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "monto",
+        "type": "decimal(18,2)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "moneda",
+        "type": "varchar(3)",
+        "null": "NO",
+        "key": ""
+      },
+      {
+        "column": "fecha_transaccion",
+        "type": "timestamp",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "respuesta_paypal",
+        "type": "text",
+        "null": "YES",
+        "key": ""
+      },
+      {
+        "column": "activo",
+        "type": "tinyint(1)",
+        "null": "YES",
+        "key": ""
+      }
+    ],
+    "suscripcion_pago": null
+  }
+}

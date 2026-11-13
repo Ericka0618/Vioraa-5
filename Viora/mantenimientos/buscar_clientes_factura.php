@@ -1,17 +1,8 @@
-
 <?php
-session_start();
-header('Content-Type: application/json; charset=utf-8');
-
-require_once '../conf/conexion.php';
-require_once __DIR__ . '/../conf/require_admin.php';
-
+require_once __DIR__ . '/facturacion_json.php';
+facturacion_json_iniciar();
 try {
-    if (empty($_SESSION['logged_in'])) {
-        http_response_code(401);
-        throw new Exception('Sesión no iniciada');
-    }
-
+    $conexion = facturacion_json_conexion();
     $sql = "
         SELECT DISTINCT
             p.id_personas,
@@ -41,16 +32,8 @@ try {
         $clientes[] = $fila;
     }
 
-    echo json_encode([
-        'success' => true,
-        'clientes' => $clientes
-    ]);
-
+    facturacion_json_responder(200, ['success' => true, 'clientes' => $clientes]);
 } catch (Throwable $e) {
-    error_log('Error buscando clientes: ' . $e->getMessage());
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'No se pudieron cargar los clientes'
-    ]);
+    error_log('[VIORA facturacion clientes] Consulta fallida: ' . $e->getCode());
+    facturacion_json_responder(503, ['success' => false, 'message' => 'Consulta temporalmente no disponible. Intente mas tarde.']);
 }

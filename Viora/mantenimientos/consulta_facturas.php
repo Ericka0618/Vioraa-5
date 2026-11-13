@@ -1,6 +1,7 @@
 <?php
 // Consulta de facturas guardadas: listado con filtros y detalle por factura.
 if (session_status() === PHP_SESSION_NONE) session_start();
+$_SESSION['ecf_csrf'] ??= bin2hex(random_bytes(32));
 require_once __DIR__ . '/../conf/conexion.php';
 
 if (empty($_SESSION['logged_in'])) { header('Location: ../login/login.php'); exit; }
@@ -347,6 +348,7 @@ foreach ($facturas as $f) {
             const agregar = document.getElementById('nota-agregar');
             const enviar = document.getElementById('nota-enviar');
             const mensaje = document.getElementById('nota-mensaje');
+            const operacionFiscal = <?= json_encode(bin2hex(random_bytes(32))) ?>;
             const facturaId = <?= (int)$detalle['id_facturas'] ?>;
 
             function mostrarError(texto) {
@@ -407,9 +409,10 @@ foreach ($facturas as $f) {
                 try {
                     const respuesta = await fetch('emitir_nota_credito.php', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
+                        headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': <?= json_encode($_SESSION['ecf_csrf']) ?> },
                         body: JSON.stringify({
                             factura_id: facturaId,
+                            operacion: operacionFiscal,
                             codigo_modificacion: Number(codigo.value),
                             lineas: lineas
                         })
@@ -418,6 +421,7 @@ foreach ($facturas as $f) {
                     if (!datos.success) {
                         throw new Error(datos.message || 'No se pudo emitir la nota de crédito');
                     }
+                    if (!datos.nota.id) { cancelarVentana(); mostrarError(datos.nota.error || 'Emisi?n fiscal deshabilitada.'); return; }
                     if (ventanaPdf) {
                         ventanaPdf.location.href = 'factura_pdf.php?nota=' + encodeURIComponent(datos.nota.id);
                     }

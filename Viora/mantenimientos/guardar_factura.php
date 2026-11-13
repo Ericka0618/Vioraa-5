@@ -53,6 +53,7 @@ try {
         throw new Exception('Acceso exclusivo para administradores');
     }
 
+    ecf_validar_peticion();
     $input = json_decode(
         file_get_contents('php://input'),
         true
@@ -313,7 +314,7 @@ try {
         $ecf = ecf_enviar_factura($conexion, $facturaId);
     } catch (Throwable $e) {
         error_log('Error e-CF factura ' . $facturaId . ': ' . $e->getMessage());
-        $ecf = ['estado' => 'ERROR_INTERNO', 'error' => $e->getMessage()];
+        $ecf = ['estado' => 'ERROR_INTERNO', 'error' => 'No se pudo completar el registro fiscal. Consulte antes de reintentar.'];
     }
 
     echo json_encode([
@@ -345,6 +346,6 @@ try {
 
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => $e instanceof mysqli_sql_exception ? 'Operacion fiscal temporalmente no disponible.' : $e->getMessage()
     ]);
 }

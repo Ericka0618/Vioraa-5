@@ -1,0 +1,22 @@
+{
+  "base_url": "https://ecf-platform-backend-50801509587.us-central1.run.app",
+  "read_only_probes": [
+    {
+      "path": "/",
+      "status": 200
+    },
+    {
+      "path": "/openapi.json",
+      "status": 404
+    },
+    {
+      "path": "/api-docs",
+      "status": 404
+    },
+    {
+      "path": "/swagger.json",
+      "status": 404
+    }
+  ],
+  "authenticated": false
+}

@@ -38,6 +38,7 @@ try {
         throw new Exception('Acceso exclusivo para administradores');
     }
 
+    ecf_validar_peticion();
     $input = json_decode(file_get_contents('php://input'), true);
 
     if (!is_array($input)) {
@@ -63,7 +64,8 @@ try {
         $facturaId,
         $codigoModificacion,
         $lineas,
-        $usuarioId
+        $usuarioId,
+        is_string($input['operacion'] ?? null) ? $input['operacion'] : null
     );
 
     echo json_encode([
@@ -82,6 +84,6 @@ try {
 
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => $e instanceof mysqli_sql_exception ? 'Operacion fiscal temporalmente no disponible.' : $e->getMessage()
     ]);
 }

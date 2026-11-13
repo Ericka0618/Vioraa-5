@@ -1,0 +1,12 @@
+{
+  "subscription_id": "I-ECPRJX8YDLSJ",
+  "status": "ACTIVE",
+  "last_payment": {
+    "amount": {
+      "currency_code": "USD",
+      "value": "10.0"
+    },
+    "time": "2026-11-13T00:40:19Z"
+  },
+  "next_billing_time": "2026-12-12T10:00:00Z"
+}

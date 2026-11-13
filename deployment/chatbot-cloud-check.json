@@ -1,0 +1,89 @@
+{
+  "url": "https://viora-6ikx2ezlba-uc.a.run.app",
+  "revision": "viora-00004-moh",
+  "gemini_key_configured": true,
+  "secret_accessor_granted": true,
+  "database": "viora_production",
+  "cloud_sql_read_only": true,
+  "public_login_http": 200,
+  "mysql_version": "8.0.46-google",
+  "tables": {
+    "conversacion_ia": {
+      "columns": [
+        {
+          "name": "id_conversaciones",
+          "type": "bigint",
+          "null": "NO",
+          "key": "PRI"
+        },
+        {
+          "name": "usuario_id",
+          "type": "bigint",
+          "null": "NO",
+          "key": "MUL"
+        },
+        {
+          "name": "fecha_inicio",
+          "type": "timestamp",
+          "null": "NO",
+          "key": ""
+        },
+        {
+          "name": "estado",
+          "type": "varchar(30)",
+          "null": "YES",
+          "key": ""
+        },
+        {
+          "name": "activo",
+          "type": "tinyint(1)",
+          "null": "YES",
+          "key": ""
+        }
+      ],
+      "row_count": 10
+    },
+    "mensaje_ia": {
+      "columns": [
+        {
+          "name": "id_mensajes",
+          "type": "bigint",
+          "null": "NO",
+          "key": "PRI"
+        },
+        {
+          "name": "conversacion_id",
+          "type": "bigint",
+          "null": "NO",
+          "key": "MUL"
+        },
+        {
+          "name": "tipo_emisor",
+          "type": "enum('USUARIO','ASISTENTE')",
+          "null": "NO",
+          "key": ""
+        },
+        {
+          "name": "contenido",
+          "type": "text",
+          "null": "NO",
+          "key": ""
+        },
+        {
+          "name": "fecha_envio",
+          "type": "timestamp",
+          "null": "NO",
+          "key": ""
+        },
+        {
+          "name": "activo",
+          "type": "tinyint(1)",
+          "null": "YES",
+          "key": ""
+        }
+      ],
+      "row_count": 38
+    }
+  },
+  "orphan_messages": 0
+}

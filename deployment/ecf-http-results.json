@@ -1,0 +1,58 @@
+{
+  "destination": "127.0.0.1:13308/viora_ecf_qa",
+  "real_provider_called": false,
+  "checks": [
+    {
+      "test": "Anonymous local fiscal query denied",
+      "passed": true
+    },
+    {
+      "test": "QA administrator login succeeds",
+      "passed": true
+    },
+    {
+      "test": "Invoice without CSRF denied",
+      "passed": true
+    },
+    {
+      "test": "Invoice GET denied",
+      "passed": true
+    },
+    {
+      "test": "Actual invoice generation commits in isolated QA",
+      "passed": true
+    },
+    {
+      "test": "Disabled fiscal state after invoice generation",
+      "passed": true
+    },
+    {
+      "test": "Invoice detail and total match existing ITBIS rule",
+      "passed": true
+    },
+    {
+      "test": "Duplicate invoice concepts denied",
+      "passed": true
+    },
+    {
+      "test": "Existing PDF still renders",
+      "passed": true
+    },
+    {
+      "test": "Query identifies local source and no remote claim",
+      "passed": true
+    },
+    {
+      "test": "Disabled E34 returns no issued note",
+      "passed": true
+    },
+    {
+      "test": "Credit note without CSRF denied",
+      "passed": true
+    },
+    {
+      "test": "Fiscal retry without CSRF denied",
+      "passed": true
+    }
+  ]
+}

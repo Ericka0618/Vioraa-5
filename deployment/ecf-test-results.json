@@ -1,0 +1,166 @@
+{
+    "provider_simulated": true,
+    "database": "local fiscal QA",
+    "checks": [
+        {
+            "test": "Exact cents without binary rounding",
+            "passed": true
+        },
+        {
+            "test": "Invalid amount 0",
+            "passed": true
+        },
+        {
+            "test": "Invalid amount -1",
+            "passed": true
+        },
+        {
+            "test": "Invalid amount 1.001",
+            "passed": true
+        },
+        {
+            "test": "Invalid amount 1e3",
+            "passed": true
+        },
+        {
+            "test": "Invalid amount INF",
+            "passed": true
+        },
+        {
+            "test": "Existing per-line ITBIS calculation",
+            "passed": true
+        },
+        {
+            "test": "RNC format normalized",
+            "passed": true
+        },
+        {
+            "test": "URLs with embedded credentials rejected",
+            "passed": true
+        },
+        {
+            "test": "HTTP provider rejected",
+            "passed": true
+        },
+        {
+            "test": "Unconfirmed issuer cannot send",
+            "passed": true
+        },
+        {
+            "test": "Explicit test configuration validates",
+            "passed": true
+        },
+        {
+            "test": "Unsupported type rejected",
+            "passed": true
+        },
+        {
+            "test": "E34 payload keeps original reference",
+            "passed": true
+        },
+        {
+            "test": "Invalid original date rejected",
+            "passed": true
+        },
+        {
+            "test": "Fake reference format rejected",
+            "passed": true
+        },
+        {
+            "test": "Negative credit line rejected",
+            "passed": true
+        },
+        {
+            "test": "Unconfirmed HTTP 200 blocks resend",
+            "passed": true
+        },
+        {
+            "test": "Unconfirmed HTTP 400 blocks resend",
+            "passed": true
+        },
+        {
+            "test": "Unconfirmed HTTP 429 blocks resend",
+            "passed": true
+        },
+        {
+            "test": "Unconfirmed HTTP 500 blocks resend",
+            "passed": true
+        },
+        {
+            "test": "Provider secrets not returned to browser",
+            "passed": true
+        },
+        {
+            "test": "Accepted without eNCF requires reconciliation",
+            "passed": true
+        },
+        {
+            "test": "Legacy API errors reserve credit balance",
+            "passed": true
+        },
+        {
+            "test": "Disabled E34 creates no credit note",
+            "passed": true
+        },
+        {
+            "test": "Disabled send never needs transport",
+            "passed": true
+        },
+        {
+            "test": "Accepted document unchanged on resend",
+            "passed": true
+        },
+        {
+            "test": "Provider response and status persisted with invoice",
+            "passed": true
+        },
+        {
+            "test": "Audit strips private credentials",
+            "passed": true
+        },
+        {
+            "test": "Payload fingerprint persisted",
+            "passed": true
+        },
+        {
+            "test": "Invoice identifiers survive absent fields",
+            "passed": true
+        },
+        {
+            "test": "E32 preparation with consistent invoice",
+            "passed": true
+        },
+        {
+            "test": "E31 preparation with buyer",
+            "passed": true
+        },
+        {
+            "test": "Unsupported invoice type rejected",
+            "passed": true
+        },
+        {
+            "test": "Repeated E34 operation returns same note without transport",
+            "passed": true
+        },
+        {
+            "test": "Repeated E34 operation creates no duplicate",
+            "passed": true
+        },
+        {
+            "test": "Changed proposal cannot reuse operation",
+            "passed": true
+        },
+        {
+            "test": "E34 identifiers preserved after incomplete update",
+            "passed": true
+        },
+        {
+            "test": "Invalid fiscal CSRF denied",
+            "passed": true
+        },
+        {
+            "test": "Valid fiscal CSRF accepted",
+            "passed": true
+        }
+    ]
+}

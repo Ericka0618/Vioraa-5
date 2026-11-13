@@ -1,0 +1,12 @@
+{
+  "public_url": "https://viora-6ikx2ezlba-uc.a.run.app",
+  "checks": [
+    {
+      "test": "Existing pending account resumes actual public subscription",
+      "passed": true
+    }
+  ],
+  "completed": false,
+  "interruption": "Browser target closed before payment verification",
+  "new_payment_verified": false
+}

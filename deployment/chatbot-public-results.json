@@ -1,0 +1,88 @@
+{
+  "url": "https://viora-6ikx2ezlba-uc.a.run.app",
+  "revision": "viora-00004-moh",
+  "real_gemini": true,
+  "checks": [
+    {
+      "test": "Administrador actual browser login",
+      "passed": true
+    },
+    {
+      "test": "Administrador opens separate QA conversation",
+      "passed": true
+    },
+    {
+      "test": "Administrador authenticated request without CSRF rejected",
+      "passed": true
+    },
+    {
+      "test": "Administrador Gemini real reply over HTTPS",
+      "passed": true
+    },
+    {
+      "test": "Administrador both Gemini messages persisted in Cloud SQL",
+      "passed": true
+    },
+    {
+      "test": "Administrador remote history survives reload",
+      "passed": true
+    },
+    {
+      "test": "Administrador real property reply contains valid catalog codes",
+      "passed": true
+    },
+    {
+      "test": "Cliente actual browser login",
+      "passed": true
+    },
+    {
+      "test": "Cliente opens separate QA conversation",
+      "passed": true
+    },
+    {
+      "test": "Cliente authenticated request without CSRF rejected",
+      "passed": true
+    },
+    {
+      "test": "Cliente cannot request other user conversation by ID",
+      "passed": true
+    },
+    {
+      "test": "Cliente does not see other account history",
+      "passed": true
+    },
+    {
+      "test": "Cliente Gemini real reply over HTTPS",
+      "passed": true
+    },
+    {
+      "test": "Cliente both Gemini messages persisted in Cloud SQL",
+      "passed": true
+    },
+    {
+      "test": "Cliente remote history survives reload",
+      "passed": true
+    },
+    {
+      "test": "Cliente real property reply contains valid catalog codes",
+      "passed": true
+    },
+    {
+      "test": "Client receives explicit server confirmation before action",
+      "passed": true
+    },
+    {
+      "test": "Unconfirmed visit creates no business record",
+      "passed": true
+    },
+    {
+      "test": "Declined proposal creates no business record",
+      "passed": true
+    },
+    {
+      "test": "Browser has no JavaScript exceptions",
+      "passed": true
+    }
+  ],
+  "new_qa_conversations_closed": 2
+}

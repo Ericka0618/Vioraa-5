@@ -1,0 +1,454 @@
+{
+  "ecf_environment": [
+    {
+      "name": "ECF_ENABLED",
+      "value": "false"
+    }
+  ],
+  "api_key_reference_present": false,
+  "secret_names": [],
+  "tables": {
+    "factura": [
+      {
+        "column": "id_facturas",
+        "type": "bigint",
+        "key": "PRI"
+      },
+      {
+        "column": "numero_documento",
+        "type": "varchar(50)",
+        "key": "UNI"
+      },
+      {
+        "column": "contrato_id",
+        "type": "bigint",
+        "key": "MUL"
+      },
+      {
+        "column": "persona_id",
+        "type": "bigint",
+        "key": "MUL"
+      },
+      {
+        "column": "periodo",
+        "type": "char(7)",
+        "key": ""
+      },
+      {
+        "column": "fecha",
+        "type": "date",
+        "key": ""
+      },
+      {
+        "column": "fecha_vencimiento",
+        "type": "date",
+        "key": ""
+      },
+      {
+        "column": "subtotal",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "total",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "monto_pagado",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "saldo_pendiente",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "enum('Borrador','Pendiente','Parcial','Pagada','Anulada')",
+        "key": ""
+      },
+      {
+        "column": "observaciones",
+        "type": "text",
+        "key": ""
+      },
+      {
+        "column": "rnc_comprador",
+        "type": "varchar(11)",
+        "key": ""
+      },
+      {
+        "column": "razon_social_comprador",
+        "type": "varchar(150)",
+        "key": ""
+      },
+      {
+        "column": "usuario_id",
+        "type": "bigint",
+        "key": ""
+      },
+      {
+        "column": "fecha_registro",
+        "type": "timestamp",
+        "key": ""
+      }
+    ],
+    "factura_detalle": [
+      {
+        "column": "id_detalles",
+        "type": "bigint",
+        "key": "PRI"
+      },
+      {
+        "column": "factura_id",
+        "type": "bigint",
+        "key": "MUL"
+      },
+      {
+        "column": "concepto",
+        "type": "enum('Alquiler','Mantenimiento')",
+        "key": ""
+      },
+      {
+        "column": "descripcion",
+        "type": "varchar(255)",
+        "key": ""
+      },
+      {
+        "column": "periodo",
+        "type": "char(7)",
+        "key": ""
+      },
+      {
+        "column": "monto",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "activo",
+        "type": "tinyint(1)",
+        "key": ""
+      }
+    ],
+    "factura_ecf": [
+      {
+        "column": "id_factura_ecf",
+        "type": "int",
+        "key": "PRI"
+      },
+      {
+        "column": "factura_id",
+        "type": "bigint",
+        "key": "UNI"
+      },
+      {
+        "column": "ecf_api_id",
+        "type": "varchar(64)",
+        "key": ""
+      },
+      {
+        "column": "encf",
+        "type": "varchar(20)",
+        "key": ""
+      },
+      {
+        "column": "fecha_emision_ecf",
+        "type": "date",
+        "key": ""
+      },
+      {
+        "column": "tipo_ecf",
+        "type": "varchar(5)",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "varchar(60)",
+        "key": ""
+      },
+      {
+        "column": "codigo_seguridad",
+        "type": "varchar(20)",
+        "key": ""
+      },
+      {
+        "column": "dgii_url",
+        "type": "text",
+        "key": ""
+      },
+      {
+        "column": "error_mensaje",
+        "type": "text",
+        "key": ""
+      },
+      {
+        "column": "intentos",
+        "type": "int",
+        "key": ""
+      },
+      {
+        "column": "fecha_envio",
+        "type": "datetime",
+        "key": ""
+      },
+      {
+        "column": "fecha_registro",
+        "type": "timestamp",
+        "key": ""
+      }
+    ],
+    "factura_ecf_nota": [
+      {
+        "column": "id_factura_ecf_nota",
+        "type": "int",
+        "key": "PRI"
+      },
+      {
+        "column": "factura_id",
+        "type": "bigint",
+        "key": "MUL"
+      },
+      {
+        "column": "codigo_modificacion",
+        "type": "tinyint",
+        "key": ""
+      },
+      {
+        "column": "encf_modificado",
+        "type": "varchar(20)",
+        "key": ""
+      },
+      {
+        "column": "fecha_encf_modificado",
+        "type": "date",
+        "key": ""
+      },
+      {
+        "column": "monto_centavos",
+        "type": "bigint",
+        "key": ""
+      },
+      {
+        "column": "lineas_json",
+        "type": "text",
+        "key": ""
+      },
+      {
+        "column": "usuario_id",
+        "type": "int",
+        "key": ""
+      },
+      {
+        "column": "ecf_api_id",
+        "type": "varchar(64)",
+        "key": ""
+      },
+      {
+        "column": "encf",
+        "type": "varchar(20)",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "varchar(60)",
+        "key": ""
+      },
+      {
+        "column": "codigo_seguridad",
+        "type": "varchar(20)",
+        "key": ""
+      },
+      {
+        "column": "dgii_url",
+        "type": "text",
+        "key": ""
+      },
+      {
+        "column": "error_mensaje",
+        "type": "text",
+        "key": ""
+      },
+      {
+        "column": "intentos",
+        "type": "int",
+        "key": ""
+      },
+      {
+        "column": "fecha_envio",
+        "type": "datetime",
+        "key": ""
+      },
+      {
+        "column": "fecha_registro",
+        "type": "timestamp",
+        "key": ""
+      }
+    ],
+    "factura_pago": [
+      {
+        "column": "id_pagos",
+        "type": "bigint",
+        "key": "PRI"
+      },
+      {
+        "column": "factura_id",
+        "type": "bigint",
+        "key": "MUL"
+      },
+      {
+        "column": "fecha_pago",
+        "type": "datetime",
+        "key": ""
+      },
+      {
+        "column": "monto",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "metodo_pago",
+        "type": "varchar(50)",
+        "key": ""
+      },
+      {
+        "column": "referencia",
+        "type": "varchar(100)",
+        "key": ""
+      },
+      {
+        "column": "observaciones",
+        "type": "text",
+        "key": ""
+      },
+      {
+        "column": "usuario_id",
+        "type": "bigint",
+        "key": ""
+      }
+    ],
+    "comprobante_fiscal": [
+      {
+        "column": "id_comprobantes",
+        "type": "bigint",
+        "key": "PRI"
+      },
+      {
+        "column": "pago_id",
+        "type": "bigint",
+        "key": "MUL"
+      },
+      {
+        "column": "numero_comprobante",
+        "type": "varchar(50)",
+        "key": "UNI"
+      },
+      {
+        "column": "tipo_comprobante",
+        "type": "varchar(30)",
+        "key": ""
+      },
+      {
+        "column": "rnc_emisor",
+        "type": "varchar(30)",
+        "key": ""
+      },
+      {
+        "column": "rnc_receptor",
+        "type": "varchar(30)",
+        "key": ""
+      },
+      {
+        "column": "subtotal",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "impuesto",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "total",
+        "type": "decimal(18,2)",
+        "key": ""
+      },
+      {
+        "column": "fecha_emision",
+        "type": "timestamp",
+        "key": ""
+      },
+      {
+        "column": "ruta_archivo",
+        "type": "varchar(255)",
+        "key": ""
+      },
+      {
+        "column": "estado",
+        "type": "varchar(30)",
+        "key": ""
+      },
+      {
+        "column": "activo",
+        "type": "tinyint(1)",
+        "key": ""
+      }
+    ]
+  },
+  "factura_detalle_orphans": 0,
+  "factura_ecf_orphans": 0,
+  "factura_pago_orphans": 0,
+  "foreign_keys": [
+    {
+      "table": "comprobante_fiscal",
+      "column": "pago_id",
+      "references_table": "pago",
+      "references_column": "id_pagos",
+      "orphans": 0
+    },
+    {
+      "table": "factura",
+      "column": "contrato_id",
+      "references_table": "contrato",
+      "references_column": "id_contratos",
+      "orphans": 0
+    },
+    {
+      "table": "factura",
+      "column": "persona_id",
+      "references_table": "persona",
+      "references_column": "id_personas",
+      "orphans": 0
+    },
+    {
+      "table": "factura_detalle",
+      "column": "factura_id",
+      "references_table": "factura",
+      "references_column": "id_facturas",
+      "orphans": 0
+    },
+    {
+      "table": "factura_ecf",
+      "column": "factura_id",
+      "references_table": "factura",
+      "references_column": "id_facturas",
+      "orphans": 0
+    },
+    {
+      "table": "factura_ecf_nota",
+      "column": "factura_id",
+      "references_table": "factura",
+      "references_column": "id_facturas",
+      "orphans": 0
+    },
+    {
+      "table": "factura_pago",
+      "column": "factura_id",
+      "references_table": "factura",
+      "references_column": "id_facturas",
+      "orphans": 0
+    }
+  ],
+  "invoices_inconsistent_with_existing_18_percent_rule": 6
+}

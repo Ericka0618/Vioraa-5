@@ -1,17 +1,8 @@
-
 <?php
-session_start();
-header('Content-Type: application/json; charset=utf-8');
-
-require_once '../conf/conexion.php';
-require_once __DIR__ . '/../conf/require_admin.php';
-
+require_once __DIR__ . '/facturacion_json.php';
+facturacion_json_iniciar();
 try {
-    if (empty($_SESSION['logged_in'])) {
-        http_response_code(401);
-        throw new Exception('Sesión no iniciada');
-    }
-
+    $conexion = facturacion_json_conexion();
     $persona_id = filter_input(
         INPUT_GET,
         'persona_id',
@@ -19,7 +10,7 @@ try {
     );
 
     if (!$persona_id || $persona_id <= 0) {
-        throw new Exception('Cliente no válido');
+        facturacion_json_responder(400, ['success' => false, 'message' => 'Cliente no valido.']);
     }
 
     $sql = "
@@ -39,6 +30,8 @@ try {
             co.nombre AS condominio
 
         FROM contrato c
+
+        INNER JOIN persona p ON p.id_personas=c.persona_id AND p.activo=1
 
         INNER JOIN apartamento a
             ON a.id_apartamentos = c.apartamento_id
@@ -75,16 +68,8 @@ try {
 
     $stmt->close();
 
-    echo json_encode([
-        'success' => true,
-        'propiedades' => $propiedades
-    ]);
-
+    facturacion_json_responder(200, ['success' => true, 'propiedades' => $propiedades]);
 } catch (Throwable $e) {
-    error_log('Error obteniendo propiedades: ' . $e->getMessage());
-
-    echo json_encode([
-        'success' => false,
-        'message' => 'No se pudieron cargar las propiedades'
-    ]);
+    error_log('[VIORA facturacion propiedades] Consulta fallida: ' . $e->getCode());
+    facturacion_json_responder(503, ['success' => false, 'message' => 'Consulta temporalmente no disponible. Intente mas tarde.']);
 }

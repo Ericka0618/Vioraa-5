@@ -1,0 +1,46 @@
+[
+  {
+    "test": "Anonymous chatbot denied",
+    "passed": true
+  },
+  {
+    "test": "Anonymous fiscal query denied",
+    "passed": true
+  },
+  {
+    "test": "Webhook GET denied",
+    "passed": true
+  },
+  {
+    "test": "Unconfigured webhook fails closed",
+    "passed": true
+  },
+  {
+    "test": "Admin login with hashed fixture password",
+    "passed": true
+  },
+  {
+    "test": "Chat rejects missing CSRF",
+    "passed": true
+  },
+  {
+    "test": "Chat history available without Gemini key",
+    "passed": true
+  },
+  {
+    "test": "New conversation preserves records and clears current history",
+    "passed": true
+  },
+  {
+    "test": "Missing Gemini key returns safe JSON 503",
+    "passed": true
+  },
+  {
+    "test": "Fiscal status query explicitly identifies local source",
+    "passed": true
+  },
+  {
+    "test": "No pending registration cannot activate subscription",
+    "passed": true
+  }
+]
