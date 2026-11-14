@@ -1,0 +1,400 @@
+{
+  "previous_revision": "viora-00018-tuy",
+  "base_image": "us-central1-docker.pkg.dev/viora-514300/viora/web@sha256:0cc14124adfc9d926c0cd1cb8c5251fb0833791482f92f3175b96cb72c67e4ad",
+  "config": {
+    "containerConcurrency": 20,
+    "containers": [
+      {
+        "env": [
+          {
+            "name": "APP_ENV",
+            "value": "production"
+          },
+          {
+            "name": "DB_HOST",
+            "value": "localhost"
+          },
+          {
+            "name": "DB_SOCKET",
+            "value": "/cloudsql/viora-514300:us-central1:viora-staging-db"
+          },
+          {
+            "name": "DB_USER",
+            "value": "viora_prod"
+          },
+          {
+            "name": "DB_NAME",
+            "value": "viora_production"
+          },
+          {
+            "name": "DB_SESSION_ENABLED",
+            "value": "true"
+          },
+          {
+            "name": "ECF_ENABLED",
+            "value": "false"
+          },
+          {
+            "name": "PAYPAL_MODE",
+            "value": "sandbox"
+          },
+          {
+            "name": "DB_PASSWORD",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-db-password"
+              }
+            }
+          },
+          {
+            "name": "PAYPAL_CLIENT_ID",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-paypal-client-id"
+              }
+            }
+          },
+          {
+            "name": "PAYPAL_CLIENT_SECRET",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-paypal-client-secret"
+              }
+            }
+          },
+          {
+            "name": "PAYPAL_PLAN_ID",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-paypal-plan-id"
+              }
+            }
+          },
+          {
+            "name": "GEMINI_API_KEY",
+            "valueFrom": {
+              "secretKeyRef": {
+                "key": "latest",
+                "name": "viora-production-gemini-api-key"
+              }
+            }
+          },
+          {
+            "name": "GEMINI_MODEL",
+            "value": "gemini-flash-lite-latest"
+          },
+          {
+            "name": "PAYPAL_WEBHOOK_ID",
+            "value": "4VC090373X444784F"
+          },
+          {
+            "name": "INVOICE_PDF_BUCKET",
+            "value": "viora-514300-production-documents"
+          }
+        ],
+        "ports": [
+          {
+            "containerPort": 8080,
+            "name": "http1"
+          }
+        ],
+        "resources": {
+          "limits": {
+            "cpu": "1",
+            "memory": "512Mi"
+          }
+        },
+        "startupProbe": {
+          "failureThreshold": 1,
+          "periodSeconds": 240,
+          "tcpSocket": {
+            "port": 8080
+          },
+          "timeoutSeconds": 240
+        },
+        "volumeMounts": [
+          {
+            "mountPath": "/var/www/html/uploads",
+            "name": "uploads"
+          },
+          {
+            "mountPath": "/var/www/viora_documentos_privados",
+            "name": "documents"
+          }
+        ]
+      }
+    ],
+    "sandboxes": {},
+    "serviceAccountName": "viora-production@viora-514300.iam.gserviceaccount.com",
+    "timeoutSeconds": 300,
+    "volumes": [
+      {
+        "csi": {
+          "driver": "gcsfuse.run.googleapis.com",
+          "volumeAttributes": {
+            "bucketName": "viora-514300-production-uploads",
+            "mountOptions": "uid=33,gid=33,file-mode=664,dir-mode=775"
+          }
+        },
+        "name": "uploads"
+      },
+      {
+        "csi": {
+          "driver": "gcsfuse.run.googleapis.com",
+          "volumeAttributes": {
+            "bucketName": "viora-514300-production-documents",
+            "mountOptions": "uid=33,gid=33,file-mode=660,dir-mode=770"
+          }
+        },
+        "name": "documents"
+      }
+    ]
+  },
+  "image": "us-central1-docker.pkg.dev/viora-514300/viora/web:csrf-billing-20261114142338",
+  "files": [
+    {
+      "path": "mantenimientos/facturacion.php",
+      "sha256": "6171cdb491917322e7b69e2fd517ca5ff9852247c85cae34e79896906748f10c"
+    },
+    {
+      "path": "mantenimientos/facturacion_viora.php",
+      "sha256": "036147faa937425906901eabbc554e175939a740a965d93fd7c79215ad4f45ea"
+    },
+    {
+      "path": "conf/ecf.php",
+      "sha256": "62eaf74660a9c49bc27667475611d8eaa9f33ccc0e08d540a8c422d0bac337fe"
+    },
+    {
+      "path": "mantenimientos/ecf_validacion.php",
+      "sha256": "1e7d20f5c11dabdc087d46be2deb8833a5d60520d2e2019f130973c146f03e82"
+    },
+    {
+      "path": "mantenimientos/ecf_service.php",
+      "sha256": "a264c927f143186645d32be3e72e4ff52d35f3564d840acbd942d9cadb781c2d"
+    },
+    {
+      "path": "mantenimientos/reenviar_ecf.php",
+      "sha256": "c6f6448257e4a04ae2f190f9afd49356683c95ac78b14f9628d40a2cf04e1f42"
+    },
+    {
+      "path": "mantenimientos/emitir_nota_credito.php",
+      "sha256": "384fc769bd200bd5d12719a4d37a9784b1921d9396eecc8957cb7f323685cf82"
+    },
+    {
+      "path": "mantenimientos/consulta_facturas.php",
+      "sha256": "3382ef813126ebe7d03b14392f90b904fe568ad59317a64db8a29c96fbfdff2e"
+    },
+    {
+      "path": "mantenimientos/mis_facturas.php",
+      "sha256": "80960c835f76839da49bdd525102bdb46d98b35208b15cb1bad3d4bb3ae1e36d"
+    },
+    {
+      "path": "mantenimientos/factura_acceso.php",
+      "sha256": "4cdf21753ec9eb2489819a834a2fa00553aff4db993839915ecca2ae45fe8ee8"
+    },
+    {
+      "path": "mantenimientos/factura_pdf.php",
+      "sha256": "cbe5cf3f41e56e67ac3f05e9487d834b13d1d95f6a3031b2bd1e37fa79a019e7"
+    },
+    {
+      "path": "mantenimientos/factura_render.php",
+      "sha256": "c5fc46ec9affab98adb919e09d4432fab723e0a3b25a8e7d7fb55ff8ffad8404"
+    },
+    {
+      "path": "mantenimientos/factura_documento.php",
+      "sha256": "e1ecf95493d417e95caef5293d69d43cb32165bfd15fc6c1963dc0bc437b5ed6"
+    },
+    {
+      "path": "mantenimientos/guardar_factura.php",
+      "sha256": "3a914c57dd82368d452db1132547fec4769e49efba4f09f8e3ad0735f143603f"
+    },
+    {
+      "path": "mantenimientos/menu_lateral.php",
+      "sha256": "f12e093b488c83bb4f0174896111c4e9a359482835500e827419f8ad06d759f6"
+    },
+    {
+      "path": "mantenimientos/pdf_simple.php",
+      "sha256": "bcb7de429177205add10ee1b3390aa19177b51ca7baacd7f0a4c514e9558656f"
+    },
+    {
+      "path": "mantenimientos/registrar_pago.php",
+      "sha256": "cf455bb80f376a7e2ad89659081ccbebca007cc7df5b37935fe7107a97b2a201"
+    },
+    {
+      "path": "mantenimientos/facturacion.js",
+      "sha256": "a9bee1b750ff8d2a03290cb0755e929f99d55059ca1132d6119e2254d1a2de34"
+    },
+    {
+      "path": "mantenimientos/facturacion_json.php",
+      "sha256": "0cf52738bd3358b29bd5db4e3d4a3aeb8d4aec90dfdc8df3cc0bd6e78bde909d"
+    },
+    {
+      "path": "mantenimientos/buscar_clientes_factura.php",
+      "sha256": "13eba6d74b1d394137e729f9504af6662edb663fc0117caaa3936572b44b4fdb"
+    },
+    {
+      "path": "mantenimientos/obtener_propiedades_cliente.php",
+      "sha256": "121f2f7dd87e94e046703d7535d374faac8e8008207345c07b6a7837e90834f1"
+    }
+  ],
+  "build_id": "8703eb65-35a6-4c5f-93f8-587189c3326c",
+  "financial_counts_before": {
+    "factura": 13,
+    "factura_detalle": 26,
+    "factura_pago": 6,
+    "factura_ecf": 12,
+    "factura_ecf_nota": 6,
+    "comprobante_fiscal": 5
+  },
+  "last_invoice_before": "2026-10-20 02:35:08",
+  "preexisting_duplicate_groups": 2,
+  "public_url": "https://viora-1055595302579.us-central1.run.app",
+  "production_before": {
+    "http_status": 200,
+    "csrf_meta_present": false,
+    "session_token_present": false,
+    "tokens_match": false,
+    "payment_page_csrf_header_present": false
+  },
+  "candidate_revision": "viora-00021-rok",
+  "candidate_url": "https://csrf-billing-review---viora-6ikx2ezlba-uc.a.run.app",
+  "image_digest": "sha256:bdfc2f492cba5a8579ef5b8b0c9a86a2ed67bbe3a9c34c1ae8f79df7fc14fe9d",
+  "build_status": "SUCCESS",
+  "image_browser_checks": 37,
+  "candidate_csrf": {
+    "rendered_token_matches_sql": true,
+    "payment_form_token_matches": true,
+    "valid_csrf_reaches_domain_validation": true,
+    "form_cache_disabled": true
+  },
+  "candidate_checks": [
+    {
+      "test": "Administrador invoice portal renders",
+      "passed": true
+    },
+    {
+      "test": "Administrador no JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "test": "Admin date filters",
+      "passed": true
+    },
+    {
+      "test": "Admin PDF 1",
+      "passed": true
+    },
+    {
+      "test": "PDF download disposition",
+      "passed": true
+    },
+    {
+      "test": "Administrador no financial POST",
+      "passed": true
+    },
+    {
+      "test": "Cliente invoice portal renders",
+      "passed": true
+    },
+    {
+      "test": "Cliente no JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "test": "Client sidebar has Mis Facturas",
+      "passed": true
+    },
+    {
+      "test": "Client cannot access admin invoices",
+      "passed": true
+    },
+    {
+      "test": "Client cannot access missing PDF",
+      "passed": true
+    },
+    {
+      "test": "Cliente no financial POST",
+      "passed": true
+    },
+    {
+      "test": "Anonymous PDF redirects to login",
+      "passed": true
+    },
+    {
+      "test": "Unsigned PayPal event still rejected",
+      "passed": true
+    }
+  ],
+  "public_csrf": {
+    "rendered_token_matches_sql": true,
+    "payment_form_token_matches": true,
+    "valid_csrf_reaches_domain_validation": true,
+    "form_cache_disabled": true
+  },
+  "public_checks": [
+    {
+      "test": "Administrador invoice portal renders",
+      "passed": true
+    },
+    {
+      "test": "Administrador no JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "test": "Admin date filters",
+      "passed": true
+    },
+    {
+      "test": "Admin PDF 1",
+      "passed": true
+    },
+    {
+      "test": "PDF download disposition",
+      "passed": true
+    },
+    {
+      "test": "Administrador no financial POST",
+      "passed": true
+    },
+    {
+      "test": "Cliente invoice portal renders",
+      "passed": true
+    },
+    {
+      "test": "Cliente no JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "test": "Client sidebar has Mis Facturas",
+      "passed": true
+    },
+    {
+      "test": "Client cannot access admin invoices",
+      "passed": true
+    },
+    {
+      "test": "Client cannot access missing PDF",
+      "passed": true
+    },
+    {
+      "test": "Cliente no financial POST",
+      "passed": true
+    },
+    {
+      "test": "Anonymous PDF redirects to login",
+      "passed": true
+    },
+    {
+      "test": "Unsigned PayPal event still rejected",
+      "passed": true
+    }
+  ],
+  "deployed": true,
+  "fiscal_enabled": false,
+  "financial_counts_unchanged": true,
+  "session_runtime_unchanged": true
+}

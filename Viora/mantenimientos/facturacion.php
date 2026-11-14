@@ -1,14 +1,18 @@
 <?php
 session_start();
 
-$_SESSION['ecf_csrf'] ??= bin2hex(random_bytes(32));
-require_once '../conf/conexion.php';
+require_once __DIR__ . '/../conf/conexion.php';
 require_once __DIR__ . '/../conf/require_admin.php';
 
 if (empty($_SESSION['logged_in'])) {
     header('Location: ../login/login.php');
     exit;
 }
+
+// El formulario y el POST comparten el mismo token de la sesión autenticada.
+$_SESSION['ecf_csrf'] ??= bin2hex(random_bytes(32));
+header('Cache-Control: no-store, private');
+header('Pragma: no-cache');
 
 $nombre = $_SESSION['nombre_usuario'] ?? 'Administrador';
 $menuActivo = 'facturacion';

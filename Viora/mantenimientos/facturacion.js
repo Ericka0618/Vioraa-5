@@ -561,6 +561,12 @@ async function guardarFactura() {
         razon_social_comprador: $('razon_social_comprador').value.trim()
     };
 
+    const csrfToken = document.querySelector('meta[name="ecf-csrf"]')?.content?.trim() || '';
+    if (!/^[a-f0-9]{64}$/.test(csrfToken)) {
+        mensaje('No se pudo cargar la seguridad del formulario. Recargue la página antes de generar la factura.');
+        return;
+    }
+
     const confirmar = confirm(
         '¿Desea generar la factura del período ' +
         periodo +
@@ -585,7 +591,7 @@ async function guardarFactura() {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-Token': document.querySelector('meta[name="ecf-csrf"]')?.content || ''
+                    'X-CSRF-Token': csrfToken
                 },
                 body: JSON.stringify(datosFactura)
             }

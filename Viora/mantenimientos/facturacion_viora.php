@@ -4,6 +4,8 @@ if (session_status() === PHP_SESSION_NONE) session_start();
 $_SESSION['ecf_csrf'] ??= bin2hex(random_bytes(32));
 require_once __DIR__ . '/../conf/conexion.php';
 require_once __DIR__ . '/../conf/require_admin.php';
+header('Cache-Control: no-store, private');
+header('Pragma: no-cache');
 
 if (empty($_SESSION['logged_in'])) { header('Location: ../login/login.php'); exit; }
 

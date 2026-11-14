@@ -5,7 +5,7 @@ from playwright.sync_api import sync_playwright
 
 RECEIPT = ROOT/'deployment/invoices-release.json'
 BUCKET = 'viora-514300-production-documents'
-FILES = ['conf/ecf.php', 'mantenimientos/ecf_validacion.php', 'mantenimientos/ecf_service.php',
+FILES = ['mantenimientos/facturacion.php', 'mantenimientos/facturacion_viora.php', 'conf/ecf.php', 'mantenimientos/ecf_validacion.php', 'mantenimientos/ecf_service.php',
     'mantenimientos/reenviar_ecf.php', 'mantenimientos/emitir_nota_credito.php',
     'mantenimientos/consulta_facturas.php', 'mantenimientos/mis_facturas.php',
     'mantenimientos/factura_acceso.php', 'mantenimientos/factura_pdf.php',

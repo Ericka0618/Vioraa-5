@@ -1,0 +1,157 @@
+{
+  "checks": [
+    {
+      "test": "Real browser login 1",
+      "passed": true
+    },
+    {
+      "test": "HTTPS secure HttpOnly SameSite cookie 1",
+      "passed": true
+    },
+    {
+      "test": "Login rotates session ID 1",
+      "passed": true
+    },
+    {
+      "test": "Form publishes a strong CSRF token",
+      "passed": true
+    },
+    {
+      "test": "Form cannot be cached",
+      "passed": true
+    },
+    {
+      "test": "Rendered token equals shared SQL session",
+      "passed": true
+    },
+    {
+      "test": "Client property and concept changes preserve token",
+      "passed": true
+    },
+    {
+      "test": "Concurrent AJAX preserves shared session",
+      "passed": true
+    },
+    {
+      "test": "Second replica and tab preserve same token",
+      "passed": true
+    },
+    {
+      "test": "Actual AJAX sends the rendered token",
+      "passed": true
+    },
+    {
+      "test": "Other replica accepts legitimate browser submission",
+      "passed": true
+    },
+    {
+      "test": "Ordinary invoice and automatic PDF succeed",
+      "passed": true
+    },
+    {
+      "test": "Real browser opened a working invoice PDF",
+      "passed": true
+    },
+    {
+      "test": "SQL totals and PDF persistence are correct",
+      "passed": true
+    },
+    {
+      "test": "CSRF missing remains rejected",
+      "passed": true
+    },
+    {
+      "test": "CSRF wrong remains rejected",
+      "passed": true
+    },
+    {
+      "test": "Valid token retry rejects duplicate charge",
+      "passed": true
+    },
+    {
+      "test": "Failed attempts leave exactly one invoice",
+      "passed": true
+    },
+    {
+      "test": "Generated invoice appears in admin history",
+      "passed": true
+    },
+    {
+      "test": "No billing JavaScript exceptions",
+      "passed": true
+    },
+    {
+      "test": "Real browser login 2",
+      "passed": true
+    },
+    {
+      "test": "HTTPS secure HttpOnly SameSite cookie 2",
+      "passed": true
+    },
+    {
+      "test": "Login rotates session ID 2",
+      "passed": true
+    },
+    {
+      "test": "Generated invoice automatically appears in client history",
+      "passed": true
+    },
+    {
+      "test": "Client downloads a real PDF through browser",
+      "passed": true
+    },
+    {
+      "test": "Client can view its PDF",
+      "passed": true
+    },
+    {
+      "test": "Browser payment accepted with valid CSRF Parcial",
+      "passed": true
+    },
+    {
+      "test": "Browser payment accepted with valid CSRF Pagada",
+      "passed": true
+    },
+    {
+      "test": "Two real browser payments update SQL balance",
+      "passed": true
+    },
+    {
+      "test": "Fully paid invoice remains in client history",
+      "passed": true
+    },
+    {
+      "test": "Paid invoice PDF remains accessible",
+      "passed": true
+    },
+    {
+      "test": "Real browser login 3",
+      "passed": true
+    },
+    {
+      "test": "HTTPS secure HttpOnly SameSite cookie 3",
+      "passed": true
+    },
+    {
+      "test": "Login rotates session ID 3",
+      "passed": true
+    },
+    {
+      "test": "Another client cannot access PDF",
+      "passed": true
+    },
+    {
+      "test": "Another client cannot access invoice detail",
+      "passed": true
+    },
+    {
+      "test": "Login selection and submission crossed PHP replicas",
+      "passed": true
+    }
+  ],
+  "real_browser_login_and_submit": true,
+  "two_php_replicas": true,
+  "shared_mysql_sessions": true,
+  "isolated_database": "viora_csrf_qa",
+  "production_writes": false
+}

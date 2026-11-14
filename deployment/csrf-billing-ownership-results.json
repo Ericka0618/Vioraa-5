@@ -1,0 +1,43 @@
+{
+  "url": "https://viora-1055595302579.us-central1.run.app",
+  "checks": [
+    {
+      "test": "Public client can view its existing PDF",
+      "passed": true
+    },
+    {
+      "test": "Public client can download its existing PDF",
+      "passed": true
+    },
+    {
+      "test": "Eligible client with historical invoice tested",
+      "passed": true
+    },
+    {
+      "test": "Foreign invoice fixture available",
+      "passed": true
+    },
+    {
+      "test": "Public foreign invoice PDF denied",
+      "passed": true
+    },
+    {
+      "test": "Public foreign invoice detail denied",
+      "passed": true
+    },
+    {
+      "test": "Stored PDF has valid xref and invoice totals",
+      "passed": true
+    },
+    {
+      "test": "Stored PDF embeds existing VIORA logo",
+      "passed": true
+    },
+    {
+      "test": "Fiscal issuance remains disabled",
+      "passed": true
+    }
+  ],
+  "sessions_removed": true,
+  "financial_posts": false
+}
