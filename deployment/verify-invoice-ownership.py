@@ -1,5 +1,5 @@
 """Read-only portal requests; temporary sessions are removed on exit."""
-import importlib.util, json, re
+import importlib.util, json, re, os
 import requests
 from paypal_cloud import ROOT, database, service
 
@@ -18,7 +18,7 @@ with database() as (db,_,__), release.runtime_accounts(db) as accounts:
         c.execute('SELECT persona_id FROM usuario WHERE id_usuarios=%s',(uid,));person=c.fetchone()[0]
         c.execute('SELECT id_facturas FROM factura WHERE persona_id=%s LIMIT 1',(person,));own=c.fetchone()
         c.execute('SELECT id_facturas FROM factura WHERE persona_id<>%s LIMIT 1',(person,));other=c.fetchone()
-    base=service()['status']['url'];session=requests.Session();session.trust_env=False
+    base=os.environ.get('INVOICE_VERIFY_URL') or service()['status']['url'];session=requests.Session();session.trust_env=False
     session.cookies.set('VIORASID',accounts['Cliente'],domain=base.split('//')[1],path='/')
     if own:
         r=session.get(base+'/mantenimientos/factura_pdf.php',params={'id':own[0]},timeout=45)
@@ -44,4 +44,4 @@ with database() as (db,_,__), release.runtime_accounts(db) as accounts:
     check('Stored PDF embeds existing VIORA logo',b'/Subtype /Image' in doc and (ROOT/'Viora/imagenes/viora.jpg').read_bytes() in doc)
     r=service();check('Fiscal issuance remains disabled',next(e for e in r['spec']['template']['spec']['containers'][0]['env'] if e['name']=='ECF_ENABLED')['value']=='false')
 
-(ROOT/'deployment/invoice-ownership-public-results.json').write_text(json.dumps({'checks':checks,'sessions_removed':True,'financial_posts':False},indent=2))
+(ROOT/'deployment'/os.environ.get('INVOICE_VERIFY_RESULT', 'invoice-ownership-public-results.json')).write_text(json.dumps({'url':base,'checks':checks,'sessions_removed':True,'financial_posts':False},indent=2))

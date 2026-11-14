@@ -6,8 +6,9 @@ header('Content-Type: application/json; charset=utf-8');
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 
-require_once '../conf/conexion.php';
-require_once 'ecf_service.php';
+require_once __DIR__ . '/../conf/conexion.php';
+require_once __DIR__ . '/ecf_validacion.php';
+require_once __DIR__ . '/ecf_service.php';
 
 try {
     if (empty($_SESSION['logged_in'])) {

@@ -5,7 +5,8 @@ from playwright.sync_api import sync_playwright
 
 RECEIPT = ROOT/'deployment/invoices-release.json'
 BUCKET = 'viora-514300-production-documents'
-FILES = ['conf/ecf.php', 'mantenimientos/ecf_validacion.php',
+FILES = ['conf/ecf.php', 'mantenimientos/ecf_validacion.php', 'mantenimientos/ecf_service.php',
+    'mantenimientos/reenviar_ecf.php', 'mantenimientos/emitir_nota_credito.php',
     'mantenimientos/consulta_facturas.php', 'mantenimientos/mis_facturas.php',
     'mantenimientos/factura_acceso.php', 'mantenimientos/factura_pdf.php',
     'mantenimientos/factura_render.php', 'mantenimientos/factura_documento.php',
@@ -63,7 +64,8 @@ def prepare():
         src=ROOT/'Viora'/f;dst=folder/'overlay'/f;dst.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,dst)
         manifest.append({'path':f,'sha256':hashlib.sha256(src.read_bytes()).hexdigest()})
     lint=' && '.join('php -l /var/www/html/'+f for f in FILES if f.endswith('.php'))
-    (folder/'Dockerfile').write_text('FROM '+base+'\nCOPY overlay/ /var/www/html/\nRUN '+lint+' && apache2ctl -t\n')
+    runtime_check = "php -r 'require \"/var/www/html/mantenimientos/ecf_service.php\"; if (!function_exists(\"ecf_validar_peticion\")) exit(1);'"
+    (folder/'Dockerfile').write_text('FROM '+base+'\nCOPY overlay/ /var/www/html/\nRUN '+lint+' && '+runtime_check+' && apache2ctl -t\n')
     image='us-central1-docker.pkg.dev/viora-514300/viora/web:'+stamp
     paths=' '.join('/var/www/html/'+p for p in PROTECTED)
     compare='set -eu\ndocker run --rm --entrypoint sha256sum "$$BASE" '+paths+' > /tmp/old.sha\ndocker run --rm --entrypoint sha256sum "$$IMAGE" '+paths+' > /tmp/new.sha\ndiff /tmp/old.sha /tmp/new.sha\n'
