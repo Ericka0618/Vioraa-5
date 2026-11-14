@@ -1,5 +1,3 @@
-
-
 <?php
 // mantenimientos/menu_lateral.php
 
@@ -292,6 +290,8 @@ $paginasConfiguracion = [
             <span class="menu__icono">⌂</span>
             <span>Administrar mi propiedad</span>
         </a>
+
+        <a href="../mantenimientos/mis_facturas.php" class="menu__enlace <?= $paginaActual === 'mis_facturas.php' ? 'activo' : '' ?>"><span class="menu__icono">▤</span><span>Mis Facturas</span></a>
 
         <!-- SOLICITAR UNA REPARACIÓN -->
         <a href="../mantenimientos/solicitar_reparacion.php"

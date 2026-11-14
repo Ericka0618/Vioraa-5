@@ -6,6 +6,16 @@ class PdfSimple
     const ALTO = 841.89;
 
     private array $paginas = [''];
+    private array $imagenes = [];
+
+    public function imagenJpeg(string $ruta, float $x, float $y, float $ancho, float $alto): void
+    {
+        $info = getimagesize($ruta);
+        if (!$info || $info[2] !== IMAGETYPE_JPEG) return;
+        $nombre = 'Im' . (count($this->imagenes) + 1);
+        $this->imagenes[$nombre] = ['bytes' => file_get_contents($ruta), 'w' => $info[0], 'h' => $info[1], 'color' => ($info['channels'] ?? 3) === 1 ? '/DeviceGray' : '/DeviceRGB'];
+        $this->agregar(sprintf('q %s 0 0 %s %s %s cm /%s Do Q', $this->n($ancho), $this->n($alto), $this->n($x), $this->n(self::ALTO - $y - $alto), $nombre));
+    }
 
     public function nuevaPagina(): void
     {
@@ -131,6 +141,12 @@ class PdfSimple
         ];
 
         $hijas = [];
+        $recursosImagen = '';
+        foreach ($this->imagenes as $nombre => $imagen) {
+            $numero = 5 + 2 * $cantidad + count(explode(' 0 R', $recursosImagen)) - 1;
+            $recursosImagen .= '/' . $nombre . ' ' . $numero . ' 0 R ';
+            $objetos[$numero] = '<< /Type /XObject /Subtype /Image /Width ' . $imagen['w'] . ' /Height ' . $imagen['h'] . ' /ColorSpace ' . $imagen['color'] . ' /BitsPerComponent 8 /Filter /DCTDecode /Length ' . strlen($imagen['bytes']) . " >>\nstream\n" . $imagen['bytes'] . "\nendstream";
+        }
         for ($i = 0; $i < $cantidad; $i++) {
             $hijas[] = (5 + 2 * $i) . ' 0 R';
         }
@@ -138,7 +154,7 @@ class PdfSimple
 
         foreach ($this->paginas as $i => $contenido) {
             $objetos[5 + 2 * $i] = sprintf(
-                '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 %s %s] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents %d 0 R >>',
+                '<< /Type /Page /Parent 2 0 R /MediaBox [0 0 %s %s] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> /XObject << ' . $recursosImagen . ' >> >> /Contents %d 0 R >>',
                 $this->n(self::ANCHO),
                 $this->n(self::ALTO),
                 6 + 2 * $i

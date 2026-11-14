@@ -95,3 +95,5 @@ ehthumbs.db
 # Ephemeral GitHub OIDC credentials
 gha-creds-*.json
 !Viora/conf/ecf_auditoria.sql
+
+!Viora/conf/factura_documento.sql

@@ -39,6 +39,9 @@ try {
         throw new Exception('Acceso exclusivo para administradores');
     }
 
+    require_once __DIR__ . '/ecf_service.php';
+    ecf_validar_peticion();
+
     $input = json_decode(file_get_contents('php://input'), true);
 
     if (!is_array($input)) {

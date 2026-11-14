@@ -22,9 +22,17 @@ $menuActivo = 'facturacion';
 $q = trim((string)($_GET['q'] ?? ''));
 $periodo = trim((string)($_GET['periodo'] ?? ''));
 $estado = trim((string)($_GET['estado'] ?? ''));
+$desde = trim((string)($_GET['desde'] ?? ''));
+$hasta = trim((string)($_GET['hasta'] ?? ''));
+$pagina = max(1, (int)($_GET['pagina'] ?? 1));
+$offset = ($pagina - 1) * 100;
+foreach (['desde', 'hasta'] as $campo) {
+    $d = DateTimeImmutable::createFromFormat('!Y-m-d', $$campo);
+    if (!$d || $d->format('Y-m-d') !== $$campo) $$campo = '';
+}
 $idFactura = (int)($_GET['id'] ?? 0);
 
-if (!in_array($estado, ['Pendiente', 'Parcial', 'Pagada', 'Anulada'], true)) $estado = '';
+if (!in_array($estado, ['Pendiente', 'Parcial', 'Pagada', 'Vencida', 'Anulada'], true)) $estado = '';
 if (!preg_match('/^\d{4}-(0[1-9]|1[0-2])$/', $periodo)) $periodo = '';
 
 $joins = "FROM factura f
@@ -35,16 +43,11 @@ $joins = "FROM factura f
           LEFT JOIN factura_ecf fe ON fe.factura_id = f.id_facturas";
 
 try {
-    $sqlRol = 'SELECT r.nombre FROM usuario u INNER JOIN role r ON r.id_roles=u.id_rol WHERE u.activo=1 AND ' . ($idUsuario ? 'u.id_usuarios=?' : 'u.usuario=?') . ' LIMIT 1';
-    $st = $conexion->prepare($sqlRol);
-    if ($idUsuario) $st->bind_param('i', $idUsuario); else $st->bind_param('s', $usuario);
-    $st->execute();
-    $filaRol = $st->get_result()->fetch_assoc();
-    $st->close();
-    if (!$filaRol || !in_array(mb_strtolower(trim($filaRol['nombre'])), ['administrador', 'admin'], true)) {
-        http_response_code(403); exit('Acceso exclusivo del administrador.');
-    }
-
+    require_once __DIR__ . '/factura_acceso.php';
+    $identidad = factura_identidad($conexion);
+    $esMisFacturas = defined('VIORA_MIS_FACTURAS');
+    if (!$esMisFacturas && !$identidad['admin']) { http_response_code(403); exit('Acceso exclusivo del administrador.'); }
+    $propietarioSql = $identidad['admin'] ? '' : ' AND f.persona_id=' . (int)$identidad['persona_id'];
     $detalle = null;
     $conceptos = [];
     $pagos = [];
@@ -57,12 +60,13 @@ try {
                                          fe.encf, fe.estado AS ecf_estado, fe.codigo_seguridad, fe.dgii_url,
                                          fe.error_mensaje, fe.fecha_envio, fe.ecf_api_id, fe.tipo_ecf
                                   $joins
-                                  WHERE f.id_facturas = ? LIMIT 1");
+                                  WHERE f.id_facturas = ? $propietarioSql LIMIT 1");
         $st->bind_param('i', $idFactura);
         $st->execute();
         $detalle = $st->get_result()->fetch_assoc();
         $st->close();
 
+        if (!$detalle) { http_response_code(404); }
         if ($detalle) {
             $st = $conexion->prepare("SELECT concepto, descripcion, periodo, monto FROM factura_detalle
                                       WHERE factura_id = ? AND activo = 1 ORDER BY id_detalles");
@@ -87,7 +91,7 @@ try {
             $st->close();
         }
     } else {
-        $where = [];
+        $where = ['1=1' . $propietarioSql];
         $params = [];
         $types = '';
 
@@ -103,17 +107,20 @@ try {
             $types .= 's';
         }
         if ($estado !== '') {
-            $where[] = 'f.estado = ?';
+            $where[] = "(CASE WHEN f.estado <> 'Anulada' AND f.saldo_pendiente > 0 AND f.fecha_vencimiento < CURRENT_DATE THEN 'Vencida' ELSE f.estado END) = ?";
             $params[] = $estado;
             $types .= 's';
         }
 
+        foreach (['desde' => '>=', 'hasta' => '<='] as $campo => $op) {
+            if ($$campo !== '') { $where[] = 'f.fecha ' . $op . ' ?'; $params[] = $$campo; $types .= 's'; }
+        }
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
         $sql = "SELECT f.id_facturas, f.numero_documento, f.periodo, f.fecha, f.total, f.monto_pagado,
-                       f.saldo_pendiente, f.estado, p.nombres, p.apellidos, p.cedula, a.numero AS apto,
+                       f.saldo_pendiente, f.estado, f.fecha_vencimiento, (SELECT GROUP_CONCAT(DISTINCT fd.concepto ORDER BY fd.concepto SEPARATOR ', ') FROM factura_detalle fd WHERE fd.factura_id=f.id_facturas AND fd.activo=1) AS conceptos, p.nombres, p.apellidos, p.cedula, a.numero AS apto,
                        e.nombre AS edificio, fe.estado AS ecf_estado, fe.encf
                 $joins $whereSql
-                ORDER BY f.fecha_registro DESC, f.id_facturas DESC LIMIT 300";
+                ORDER BY f.fecha_registro DESC, f.id_facturas DESC LIMIT 101 OFFSET $offset";
 
         $st = $conexion->prepare($sql);
         if ($params) $st->bind_param($types, ...$params);
@@ -127,6 +134,12 @@ try {
     exit('No se pudieron consultar las facturas.');
 }
 
+$hayMas = count($facturas) > 100;
+if ($hayMas) array_pop($facturas);
+foreach ($facturas as &$f) {
+    if ($f['estado'] !== 'Anulada' && (float)$f['saldo_pendiente'] > 0 && !empty($f['fecha_vencimiento']) && $f['fecha_vencimiento'] < date('Y-m-d')) $f['estado'] = 'Vencida';
+}
+unset($f);
 $totalFiltrado = 0; $pagadoFiltrado = 0; $saldoFiltrado = 0;
 foreach ($facturas as $f) {
     if ($f['estado'] === 'Anulada') continue;
@@ -179,6 +192,7 @@ foreach ($facturas as $f) {
 .cf-fila-linea{display:flex;gap:8px;align-items:center;margin-bottom:8px}
 .cf-fila-linea .nota-desc{flex:1}
 .cf-subtitulo{font-size:15px;margin:18px 0 8px;color:#0f382b}
+@media(max-width:640px){.cf-contenido{padding:14px}.cf-totales{width:100%}.cf-filtros label,.cf-filtros input,.cf-filtros select{width:100%}.cf-tabla-contenedor{overflow-x:auto}}
 </style>
 </head>
 <body>
@@ -194,8 +208,8 @@ foreach ($facturas as $f) {
             <p>Período <?= esc($detalle['periodo'] ?? '') ?> · Emitida el <?= esc($detalle['fecha'] ?? '') ?></p>
         </div>
         <div>
-            <a class="cf-enlace" href="consulta_facturas.php">← Volver al listado</a>
-            <?php if ($detalle && $detalle['id_contratos'] && $detalle['estado'] !== 'Anulada'): ?>
+            <a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>">← Volver al listado</a>
+            <?php if ($identidad['admin'] && $detalle && $detalle['id_contratos'] && $detalle['estado'] !== 'Anulada'): ?>
                 <a class="cf-boton" href="facturacion_viora.php?contrato=<?= (int)$detalle['id_contratos'] ?>">Registrar pago</a>
             <?php endif; ?>
         </div>
@@ -206,7 +220,7 @@ foreach ($facturas as $f) {
     <?php else: ?>
 
     <section class="cf-panel">
-        <h2>Datos generales</h2>
+        <h2>Datos generales</h2><p><a class="cf-boton" target="_blank" rel="noopener" href="factura_pdf.php?id=<?= (int)$idFactura ?>">Ver / imprimir PDF</a> <a class="cf-enlace" href="factura_pdf.php?id=<?= (int)$idFactura ?>&amp;descargar=1">Descargar PDF</a></p>
         <div class="cf-datos">
             <div><span>Cliente</span><?= esc(trim(($detalle['nombres'] ?? '') . ' ' . ($detalle['apellidos'] ?? ''))) ?: '—' ?></div>
             <div><span>Cédula</span><?= esc($detalle['cedula'] ?? '') ?: '—' ?></div>
@@ -244,7 +258,7 @@ foreach ($facturas as $f) {
         <?php $itbis = (float)$detalle['total'] - (float)$detalle['subtotal']; ?>
         <div class="cf-totales">
             <div><span>Subtotal</span><span><?= pesos($detalle['subtotal']) ?></span></div>
-            <div><span>ITBIS 18%</span><span><?= pesos($itbis) ?></span></div>
+            <div><span>ITBIS</span><span><?= pesos($itbis) ?></span></div>
             <div class="final"><span>Total</span><span><?= pesos($detalle['total']) ?></span></div>
             <div><span>Pagado</span><span><?= pesos($detalle['monto_pagado']) ?></span></div>
             <div class="final"><span>Saldo pendiente</span><span><?= pesos($detalle['saldo_pendiente']) ?></span></div>
@@ -287,10 +301,10 @@ foreach ($facturas as $f) {
             <div><span>Fecha de envío</span><?= esc($detalle['fecha_envio']) ?: '—' ?></div>
         </div>
         <?php if (!empty($detalle['error_mensaje'])): ?>
-            <div class="cf-error">Error: <?= esc($detalle['error_mensaje']) ?></div>
+            <div class="cf-error"><?= $identidad['admin'] ? 'Consulte la auditoría fiscal para revisar el envío.' : 'Comprobante pendiente de revisión.' ?></div>
         <?php endif; ?>
         <?php if (!empty($detalle['dgii_url'])): ?>
-            <p><a class="cf-enlace" href="<?= esc($detalle['dgii_url']) ?>" target="_blank" rel="noopener">Ver en DGII</a></p>
+            <p><a class="cf-enlace" href="<?= esc(preg_match('~^https://~i', (string)$detalle['dgii_url']) ? $detalle['dgii_url'] : '#') ?>" target="_blank" rel="noopener">Ver en DGII</a></p>
         <?php endif; ?>
         <?php endif; ?>
     </section>
@@ -312,7 +326,7 @@ foreach ($facturas as $f) {
                     <td><span class="cf-estado <?= esc(strtolower(str_replace(' ', '', $n['estado']))) ?>"><?= esc($n['estado']) ?></span></td>
                     <td class="num"><?= pesos($n['monto_centavos'] / 100) ?></td>
                     <td><?= esc($n['fecha_registro']) ?></td>
-                    <td><?= esc($n['error_mensaje']) ?: '—' ?></td>
+                    <td><?= empty($n['error_mensaje']) ? '—' : 'Pendiente de revisión' ?></td>
                     <td><?= $n['encf'] ? icono_ojo('factura_pdf.php?nota=' . (int)$n['id_factura_ecf_nota'], 'Ver PDF de la nota de crédito') : '—' ?></td>
                 </tr>
             <?php endforeach; ?>
@@ -321,7 +335,7 @@ foreach ($facturas as $f) {
         </div>
         <?php endif; ?>
 
-        <?php if (in_array($detalle['ecf_estado'] ?? '', ['Aceptado', 'Aceptado Condicional'], true)): ?>
+        <?php if ($identidad['admin'] && in_array($detalle['ecf_estado'] ?? '', ['Aceptado', 'Aceptado Condicional'], true)): ?>
         <h3 class="cf-subtitulo">Emitir nota de crédito</h3>
         <form id="form-nota-credito" class="cf-form-nota">
             <label>Tipo de nota
@@ -445,39 +459,40 @@ foreach ($facturas as $f) {
 
     <header class="cf-encabezado">
         <div>
-            <h1>Consulta de facturas</h1>
-            <p>Facturas guardadas por cliente. Se muestran hasta 300 resultados.</p>
+            <h1><?= $esMisFacturas ? 'Mis Facturas' : 'Consulta de facturas' ?></h1>
+            <p>Historial de facturación · 100 resultados por página.</p>
         </div>
         <div>
-            <a class="cf-enlace" href="facturacion.php">+ Generar factura</a>
+            <?php if ($identidad['admin']): ?><a class="cf-enlace" href="facturacion.php">+ Generar factura</a><?php endif; ?>
         </div>
     </header>
 
     <section class="cf-panel">
         <h2>Filtros</h2>
-        <form method="get" action="consulta_facturas.php" class="cf-filtros">
+        <form method="get" action="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>" class="cf-filtros">
             <label>Cliente, cédula o factura
                 <input type="text" name="q" value="<?= esc($q) ?>" placeholder="Ej. Juan, 001-..., FAC-...">
             </label>
+            <label>Desde<input type="date" name="desde" value="<?= esc($desde) ?>"></label><label>Hasta<input type="date" name="hasta" value="<?= esc($hasta) ?>"></label>
             <label>Período
                 <input type="month" name="periodo" value="<?= esc($periodo) ?>">
             </label>
             <label>Estado
                 <select name="estado">
                     <option value="">Todos</option>
-                    <?php foreach (['Pendiente', 'Parcial', 'Pagada', 'Anulada'] as $op): ?>
+                    <?php foreach (['Pendiente', 'Parcial', 'Pagada', 'Vencida', 'Anulada'] as $op): ?>
                         <option value="<?= $op ?>" <?= $estado === $op ? 'selected' : '' ?>><?= $op ?></option>
                     <?php endforeach; ?>
                 </select>
             </label>
             <button type="submit" class="cf-boton">Buscar</button>
-            <a class="cf-enlace" href="consulta_facturas.php">Limpiar</a>
+            <a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>">Limpiar</a>
         </form>
     </section>
 
     <div class="cf-resumen">
         <div class="cf-tarjeta"><span>Facturas</span><strong><?= count($facturas) ?></strong></div>
-        <div class="cf-tarjeta"><span>Total facturado (sin anuladas)</span><strong><?= pesos($totalFiltrado) ?></strong></div>
+        <div class="cf-tarjeta"><span>Total de esta página (sin anuladas)</span><strong><?= pesos($totalFiltrado) ?></strong></div>
         <div class="cf-tarjeta"><span>Pagado</span><strong><?= pesos($pagadoFiltrado) ?></strong></div>
         <div class="cf-tarjeta"><span>Saldo pendiente</span><strong><?= pesos($saldoFiltrado) ?></strong></div>
     </div>
@@ -487,26 +502,26 @@ foreach ($facturas as $f) {
         <table class="cf-tabla">
             <thead>
                 <tr>
-                    <th>Factura</th><th>Cliente</th><th>Propiedad</th><th>Período</th><th>Fecha</th>
-                    <th class="num">Total</th><th class="num">Saldo</th><th>Estado</th><th>e-CF</th><th></th>
+                    <th>Factura</th><th>Cliente</th><th>Propiedad</th><th>Período / concepto</th><th>Fecha</th>
+                    <th class="num">Total</th><th class="num">Pagado</th><th class="num">Saldo</th><th>Estado</th><th>e-CF</th><th></th>
                 </tr>
             </thead>
             <tbody>
             <?php if (!$facturas): ?>
-                <tr><td colspan="10" class="cf-vacio">No hay facturas que coincidan con los filtros.</td></tr>
+                <tr><td colspan="11" class="cf-vacio">No hay facturas que coincidan con los filtros.</td></tr>
             <?php endif; ?>
             <?php foreach ($facturas as $f): ?>
                 <tr>
                     <td><strong><?= esc($f['numero_documento']) ?></strong></td>
                     <td><?= esc(trim($f['nombres'] . ' ' . $f['apellidos'])) ?: '—' ?><br><small><?= esc($f['cedula']) ?></small></td>
                     <td><?= esc($f['edificio'] . ($f['apto'] ? ' · Apto. ' . $f['apto'] : '')) ?: '—' ?></td>
-                    <td><?= esc($f['periodo']) ?></td>
+                    <td><?= esc($f['periodo']) ?><br><small><?= esc($f['conceptos']) ?></small></td>
                     <td><?= esc($f['fecha']) ?></td>
                     <td class="num"><?= pesos($f['total']) ?></td>
-                    <td class="num"><?= pesos($f['saldo_pendiente']) ?></td>
+                    <td class="num"><?= pesos($f['monto_pagado']) ?></td><td class="num"><?= pesos($f['saldo_pendiente']) ?></td>
                     <td><span class="cf-estado <?= esc(strtolower(str_replace(' ', '', $f['estado']))) ?>"><?= esc($f['estado']) ?></span></td>
-                    <td><?= $f['ecf_estado'] ? '<span class="cf-estado ' . esc(strtolower(str_replace(' ', '', $f['ecf_estado']))) . '">' . esc($f['ecf_estado']) . '</span>' : '<small>Sin enviar</small>' ?></td>
-                    <td><a class="cf-enlace" href="consulta_facturas.php?id=<?= (int)$f['id_facturas'] ?>">Ver</a><?= icono_ojo('factura_pdf.php?id=' . (int)$f['id_facturas'], 'Ver PDF de la factura') ?></td>
+                    <td><?= esc($f['encf']) ?><br><?= $f['ecf_estado'] ? '<span class="cf-estado ' . esc(strtolower(str_replace(' ', '', $f['ecf_estado']))) . '">' . esc($f['ecf_estado']) . '</span>' : '<small>Sin enviar</small>' ?></td>
+                    <td><a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>?id=<?= (int)$f['id_facturas'] ?>">Ver</a><?= icono_ojo('factura_pdf.php?id=' . (int)$f['id_facturas'], 'Ver e imprimir PDF') ?><a class="cf-enlace" href="factura_pdf.php?id=<?= (int)$f['id_facturas'] ?>&amp;descargar=1">Descargar</a></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -516,6 +531,11 @@ foreach ($facturas as $f) {
 
 <?php endif; ?>
 
+<?php if (!$idFactura): ?><nav aria-label="Páginas de facturas">
+<?php if ($pagina > 1): ?><a class="cf-boton" href="?<?= esc(http_build_query(array_merge($_GET, ['pagina'=>$pagina-1]))) ?>">Anterior</a><?php endif; ?>
+<span>Página <?= $pagina ?></span>
+<?php if ($hayMas): ?><a class="cf-boton" href="?<?= esc(http_build_query(array_merge($_GET, ['pagina'=>$pagina+1]))) ?>">Siguiente</a><?php endif; ?>
+</nav><?php endif; ?>
 </main>
 </div>
 </body>

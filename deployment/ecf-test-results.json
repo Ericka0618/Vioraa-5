@@ -155,6 +155,14 @@
             "passed": true
         },
         {
+            "test": "IMECF secret environment is read without transport",
+            "passed": true
+        },
+        {
+            "test": "Production-shaped key blocked in test configuration",
+            "passed": true
+        },
+        {
             "test": "Invalid fiscal CSRF denied",
             "passed": true
         },

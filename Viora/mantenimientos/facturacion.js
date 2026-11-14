@@ -599,7 +599,12 @@ async function guardarFactura() {
             'exito'
         );
 
-        abrirPdfFactura(resultado.id_facturas, ventanaPdf);
+        if (resultado.pdf_generado === false) {
+            mensaje('Factura guardada. El PDF está pendiente; ábralo desde Consulta de facturas para reintentar.');
+            if (ventanaPdf) ventanaPdf.close();
+        } else {
+            abrirPdfFactura(resultado.id_facturas, ventanaPdf);
+        }
 
         console.log(
             'Factura generada:',

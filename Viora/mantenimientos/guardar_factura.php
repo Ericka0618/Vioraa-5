@@ -1,4 +1,3 @@
-
 <?php
 session_start();
 
@@ -239,6 +238,7 @@ try {
             persona_id,
             periodo,
             fecha,
+            fecha_vencimiento,
             subtotal,
             total,
             monto_pagado,
@@ -250,18 +250,19 @@ try {
             usuario_id
         )
         VALUES (
-            ?, ?, ?, ?, ?, ?,
+            ?, ?, ?, ?, ?, ?, ?,
             ?, 0, ?, 'Pendiente', ?, ?, ?, ?
         )
     ");
 
     $stmtFactura->bind_param(
-        'siissdddsssi',
+        'siisssdddsssi',
         $numero,
         $contratoId,
         $personaId,
         $periodo,
         $fecha,
+        $finPeriodo,
         $subtotal,
         $total,
         $total,
@@ -317,7 +318,16 @@ try {
         $ecf = ['estado' => 'ERROR_INTERNO', 'error' => 'No se pudo completar el registro fiscal. Consulte antes de reintentar.'];
     }
 
+    $pdfGenerado = false;
+    try {
+        require_once __DIR__ . '/factura_documento.php';
+        factura_documento_generar($conexion, (int)$facturaId);
+        $pdfGenerado = true;
+    } catch (Throwable $e) { error_log('PDF factura ' . $facturaId . ': ' . $e->getMessage()); }
+
     echo json_encode([
+        'pdf_generado' => $pdfGenerado,
+        'pdf_url' => 'factura_pdf.php?id=' . $facturaId,
         'success' => true,
         'message' => 'Factura guardada correctamente',
         'id_facturas' => $facturaId,

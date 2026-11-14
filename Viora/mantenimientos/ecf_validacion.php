@@ -38,6 +38,9 @@ function ecf_url_segura(string $url): bool
 
 function ecf_validar_configuracion(array $cfg, string $tipo): void
 {
+    if (str_starts_with((string)($cfg['api_key'] ?? ''), 'ecf_live_')) {
+        throw new InvalidArgumentException('Una clave de producción no puede utilizarse en las pruebas fiscales.');
+    }
     if (($cfg['ambiente'] ?? '') !== 'pruebas' || empty($cfg['contrato_validado']) || empty($cfg['emisor_confirmado'])) {
         throw new InvalidArgumentException('Confirme el contrato, el ambiente de pruebas y los datos del emisor antes de enviar.');
     }

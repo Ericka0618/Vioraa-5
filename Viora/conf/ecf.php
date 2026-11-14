@@ -1,10 +1,10 @@
 <?php
 
-// La API Key se lee de la variable de entorno ECF_API_KEY.
+// Cloud Run inyecta IMECF_API_KEY desde Secret Manager; alias legado compatible.
 // No la guarde en este archivo.
 return [
     'base_url' => getenv('ECF_BASE_URL') ?: 'https://ecf-platform-backend-50801509587.us-central1.run.app',
-    'api_key' => getenv('ECF_API_KEY') ?: '',
+    'api_key' => trim(getenv('IMECF_API_KEY') ?: (getenv('ECF_API_KEY') ?: '')),
     'itbis_porcentaje' => 18,
     'ambiente' => getenv('ECF_AMBIENTE') ?: '',
     'contrato_validado' => getenv('ECF_CONTRATO_VALIDADO') === 'true',

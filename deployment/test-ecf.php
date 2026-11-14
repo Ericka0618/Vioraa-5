@@ -72,6 +72,11 @@ try {
         $q=$db->prepare('DELETE FROM ecf_nota_operacion WHERE operacion=?');$q->bind_param('s',$operation);$q->execute();
         $db->query('DELETE FROM factura_ecf_nota WHERE id_factura_ecf_nota='.$nid);putenv('ECF_ENABLED=false');
     }
+    putenv('IMECF_API_KEY=qa-imecf-fixture');
+    check('IMECF secret environment is read without transport',ecf_configuracion()['api_key']==='qa-imecf-fixture');
+    putenv('IMECF_API_KEY');
+    $live=$cfg;$live['api_key']='ecf_live_qa_fixture_not_a_credential';
+    rejects('Production-shaped key blocked in test configuration',fn()=>ecf_validar_configuracion($live,'E31'));
     $_SESSION=['ecf_csrf'=>'qa-token'];$_SERVER['REQUEST_METHOD']='POST';$_SERVER['HTTP_X_CSRF_TOKEN']='bad';
     rejects('Invalid fiscal CSRF denied',fn()=>ecf_validar_peticion());
     $_SERVER['HTTP_X_CSRF_TOKEN']='qa-token';ecf_validar_peticion();check('Valid fiscal CSRF accepted',true);

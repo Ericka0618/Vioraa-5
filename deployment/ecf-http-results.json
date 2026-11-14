@@ -53,6 +53,94 @@
     {
       "test": "Fiscal retry without CSRF denied",
       "passed": true
+    },
+    {
+      "test": "PDF created and persisted automatically",
+      "passed": true
+    },
+    {
+      "test": "Owner automatically sees invoice and sidebar",
+      "passed": true
+    },
+    {
+      "test": "Client cannot access admin consultation",
+      "passed": true
+    },
+    {
+      "test": "Other client cannot see invoice detail",
+      "passed": true
+    },
+    {
+      "test": "Client cannot override owner with query parameters",
+      "passed": true
+    },
+    {
+      "test": "Other client cannot fetch invoice PDF",
+      "passed": true
+    },
+    {
+      "test": "Anonymous cannot fetch invoice PDF",
+      "passed": true
+    },
+    {
+      "test": "Owner can view PDF",
+      "passed": true
+    },
+    {
+      "test": "Owner can download PDF",
+      "passed": true
+    },
+    {
+      "test": "Admin consultation contains invoice",
+      "passed": true
+    },
+    {
+      "test": "Overdue filter finds outstanding invoice",
+      "passed": true
+    },
+    {
+      "test": "Date filter excludes invoice outside range",
+      "passed": true
+    },
+    {
+      "test": "Payment without CSRF denied",
+      "passed": true
+    },
+    {
+      "test": "Client cannot mark invoice paid",
+      "passed": true
+    },
+    {
+      "test": "Partial payment updates balance",
+      "passed": true
+    },
+    {
+      "test": "Partial payment visible to client",
+      "passed": true
+    },
+    {
+      "test": "Overpayment rejected",
+      "passed": true
+    },
+    {
+      "test": "Full payment clears balance",
+      "passed": true
+    },
+    {
+      "test": "Paid invoice retained in client history",
+      "passed": true
+    },
+    {
+      "test": "Mobile portal renders paid invoice",
+      "passed": true
+    },
+    {
+      "test": "Client portal has no fiscal emission form",
+      "passed": true
+    },
+    {
+      "test": "Mobile portal has no JavaScript exceptions",
+      "passed": true
     }
   ]
 }
