@@ -44,7 +44,7 @@ function valor(mysqli $db, string $sql, string $tipos = '', array $params = []) 
 
 $nombre = $_SESSION['nombre_usuario'] ?? 'Usuario';
 $usuario = $_SESSION['usuario'] ?? 'Administrador';
-$idUsuario = (int)($_SESSION['id_usuario'] ?? 0);
+$idUsuario = (int)($_SESSION['id_usuarios'] ?? $_SESSION['id_usuario'] ?? 0);  // Aceptar ambas formas por compatibilidad
 
 $palabras = preg_split('/\s+/', trim($nombre));
 if (count($palabras) >= 2) {
