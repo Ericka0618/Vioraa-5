@@ -208,9 +208,26 @@ if ($tieneEcf) {
     $seccion('FECHAS');
     $campo($ecf['fechaEtiqueta'], fecha_corta($ecf['fecha']) ?: '—');
 
+    // Generar código QR con datos de la factura
+    $datosQr = '';
     if ($url !== '') {
+        // Si hay URL DGII validada, usar esa
+        $datosQr = $url;
+    } elseif ($tieneEcf && !empty($ecf['encf'])) {
+        // Si no hay URL pero hay ENCF, generar QR con datos de la factura
+        $datosQr = json_encode([
+            'encf' => $ecf['encf'],
+            'tipo' => $nota ? 'Nota de Crédito' : ($factura['tipo_ecf'] === 'E31' ? 'Factura de Crédito' : 'Factura de Consumo'),
+            'monto' => $nota ? $total : (float)$factura['total'],
+            'fecha' => $nota ? $nota['fecha_envio'] : $factura['fecha'],
+            'rnc_emisor' => $emisor['RNCEmisor'],
+            'ambiente' => $ambiente
+        ], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    }
+
+    if ($datosQr !== '') {
         try {
-            $matriz = QrSimple::matriz($url);
+            $matriz = QrSimple::matriz($datosQr);
             $n = count($matriz);
             $modulo = 2.1;
             $origenX = $derecha - ($n + 8) * $modulo;
@@ -230,7 +247,10 @@ if ($tieneEcf) {
                 }
             }
 
-            $y = max($y, $qrTop + ($n + 8) * $modulo) + 6;
+            // Agregar etiqueta del QR
+            $pdf->texto($origenX + ($n + 8) * $modulo / 2, $qrTop + ($n + 8) * $modulo + 3, 'Verifique este código QR', 7, false, 'C');
+
+            $y = max($y, $qrTop + ($n + 8) * $modulo + 12) + 6;
         } catch (Throwable $error) {
             error_log('factura_pdf QR: ' . $error->getMessage());
         }
