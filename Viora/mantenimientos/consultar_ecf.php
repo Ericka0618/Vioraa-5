@@ -11,9 +11,15 @@ $uid = (int)($_SESSION['id_usuario'] ?? $_SESSION['id_usuarios'] ?? 0);
 $q = $conexion->prepare('SELECT r.nombre FROM usuario u JOIN role r ON r.id_roles=u.id_rol WHERE u.id_usuarios=? AND u.activo=1');
 $q->bind_param('i', $uid); $q->execute();
 $role = $q->get_result()->fetch_assoc();
-if (!$role || !in_array(strtolower(trim($role['nombre'])), ['admin','administrador'], true)) { http_response_code(403); echo '{"error":"Acceso exclusivo para administradores"}'; exit; }
+$isAdmin = $role && in_array(strtolower(trim($role['nombre'])), ['admin','administrador'], true);
 $id = filter_var($_GET['factura_id'] ?? null, FILTER_VALIDATE_INT);
 if (!$id || $id < 1) { http_response_code(400); echo '{"error":"Factura inválida"}'; exit; }
+// Validar acceso: admin accede a todo, cliente solo a sus propias facturas
+if (!$isAdmin) {
+    $q = $conexion->prepare('SELECT f.factura_id FROM factura f WHERE f.factura_id=? AND f.persona_id=?');
+    $q->bind_param('ii', $id, $uid); $q->execute(); $accessCheck = $q->get_result()->fetch_assoc();
+    if (!$accessCheck) { http_response_code(403); echo '{"error":"Acceso denegado a esta factura"}'; exit; }
+}
     $q = $conexion->prepare('SELECT factura_id,tipo_ecf,estado,ecf_api_id,encf,fecha_emision_ecf,fecha_envio,intentos FROM factura_ecf WHERE factura_id=?');
     $q->bind_param('i', $id); $q->execute(); $row = $q->get_result()->fetch_assoc();
     if (!$row) { http_response_code(404); echo '{"error":"Sin registro fiscal"}'; exit; }

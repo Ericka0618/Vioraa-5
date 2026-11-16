@@ -238,7 +238,8 @@ $sql = "
 $result = $conexion->query($sql);
 
 if (!$result) {
-    die('Error en la consulta: ' . $conexion->error);
+    error_log('VIORA condominio error: ' . $conexion->error);
+    die('Error al consultar los datos. Intenta nuevamente más tarde.');
 }
 ?>
 <!DOCTYPE html>

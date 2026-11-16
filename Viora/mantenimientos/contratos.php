@@ -52,7 +52,7 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
 
     $propiedadId=null; // Se deja NULL porque no hay relación propiedad-apartamento definida.
     $q=$conexion->prepare("INSERT INTO contrato (apartamento_id,propiedad_id,numero_contrato,fecha_inicio,fecha_fin,monto_alquiler,deposito,condiciones,estado,activo,solicitud_id,persona_id,tipo_operacion,archivo_contrato,monto_mantenimiento) VALUES (?,?,?,?,?,?,?,?,'Activo',1,?,?,?,?,?)");
-    $q->bind_param('iisssddsiissd',$sol['apartamento_id'],$propiedadId,$numero,$inicio,$finSQL,$monto,$deposito,$condiciones,$id,$sol['persona_id'],$sol['tipo_operacion'],$archivo,$mantenimiento);
+    $q->bind_param('iiissddsiissd',$sol['apartamento_id'],$propiedadId,$numero,$inicio,$finSQL,$monto,$deposito,$condiciones,$id,$sol['persona_id'],$sol['tipo_operacion'],$archivo,$mantenimiento);
     $q->execute();
     $conexion->commit();$guardado=null;
     header('Location: contratos.php?creado=1');exit;

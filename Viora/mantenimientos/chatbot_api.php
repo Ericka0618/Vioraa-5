@@ -27,36 +27,8 @@ if (empty($_SESSION['chatbot_csrf']) || !hash_equals($_SESSION['chatbot_csrf'], 
     responder_json(403, ['error' => 'Solicitud no autorizada. Recarga la página.']);
 }
 
-$raw = file_get_contents('php://input', false, null, 0, 32769);
-if (strlen($raw) > 32768) responder_json(413, ['error' => 'La solicitud es demasiado grande.']);
-$entrada = json_decode($raw ?: '', true);
-if (!is_array($entrada)) {
-    responder_json(400, ['error' => 'Solicitud inválida.']);
-}
-
-require __DIR__ . '/../conf/conexion.php';
-require_once __DIR__ . '/chatbot_historial.php';
-$usuarioId = (int)($_SESSION['id_usuario'] ?? $_SESSION['id_usuarios'] ?? 0);
-$q = $conexion->prepare('SELECT r.nombre FROM usuario u JOIN role r ON r.id_roles=u.id_rol WHERE u.id_usuarios=? AND u.activo=1');
-$q->bind_param('i', $usuarioId); $q->execute();
-$usuarioReal = $q->get_result()->fetch_assoc();
-if (!$usuarioReal) responder_json(403, ['error' => 'Usuario no autorizado.']);
-require_once __DIR__ . '/../conf/subscription_access.php';
-if (!viora_subscription_access($conexion, $usuarioId)) responder_json(403, ['error' => 'Tu suscripción no está activa.']);
-$_SESSION['rol'] = $usuarioReal['nombre'];
-$conversacionId = chatbot_conversacion($conexion, $usuarioId);
-if (($entrada['accion'] ?? '') === 'nueva') {
-    $q = $conexion->prepare("UPDATE conversacion_ia SET estado='Cerrada' WHERE id_conversaciones=? AND usuario_id=?");
-    $q->bind_param('ii', $conversacionId, $usuarioId); $q->execute();
-    unset($_SESSION['chatbot_conversacion']);
-    unset($_SESSION['chatbot_accion_pendiente']);
-    responder_json(200, ['historial' => []]);
-}
-if (($entrada['accion'] ?? '') === 'historial') {
-    responder_json(200, ['historial' => chatbot_historial($conexion, $conversacionId, 100, $usuarioId)]);
-}
-if ($config['api_key'] === '' || $config['api_key'] === 'UNCONFIGURED') {
-    responder_json(503, ['error' => 'El asistente no está disponible temporalmente.']);
+if (empty($config['api_key']) || $config['api_key'] === 'UNCONFIGURED') {
+    responder_json(503, ['error' => 'El asistente no está disponible temporalmente (credenciales no configuradas).']);
 }
 
 $maxCaracteres = $config['max_caracteres_mensaje'];

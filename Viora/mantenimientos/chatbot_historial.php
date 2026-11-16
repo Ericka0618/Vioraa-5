@@ -21,8 +21,10 @@ function chatbot_conversacion(mysqli $db, int $uid): int
 }
 function chatbot_historial(mysqli $db, int $id, int $limit, int $uid): array
 {
+    // Validar y sanitizar el límite (MySQL no permite bind_param para LIMIT)
     $limit = max(1, min(100, $limit));
-    $q = $db->prepare("SELECT m.tipo_emisor,m.contenido FROM mensaje_ia m JOIN conversacion_ia c ON c.id_conversaciones=m.conversacion_id WHERE m.conversacion_id=? AND c.usuario_id=? AND c.activo=1 AND m.activo=1 ORDER BY m.id_mensajes DESC LIMIT $limit");
+    // Usar interpolación solo después de validación strict de rango numérico
+    $q = $db->prepare("SELECT m.tipo_emisor,m.contenido FROM mensaje_ia m JOIN conversacion_ia c ON c.id_conversaciones=m.conversacion_id WHERE m.conversacion_id=? AND c.usuario_id=? AND c.activo=1 AND m.activo=1 ORDER BY m.id_mensajes DESC LIMIT " . (int)$limit);
     $q->bind_param('ii', $id, $uid); $q->execute();
     return array_map(fn($r) => ['rol' => $r['tipo_emisor'] === 'USUARIO' ? 'user' : 'assistant', 'texto' => $r['contenido']], array_reverse($q->get_result()->fetch_all(MYSQLI_ASSOC)));
 }

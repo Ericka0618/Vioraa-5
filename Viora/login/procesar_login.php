@@ -9,11 +9,32 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+// Protección contra fuerza bruta: validar intentos fallidos
+$maxIntentos = 5;
+$tiempoBloqueo = 900; // 15 minutos en segundos
+$intentosFallidos = (int)($_SESSION['login_intentos_fallidos'] ?? 0);
+$ultimoIntento = (int)($_SESSION['login_ultimo_intento'] ?? 0);
+$ahora = time();
+
+// Si hay bloqueo activo, rechazar
+if ($intentosFallidos >= $maxIntentos && ($ahora - $ultimoIntento) < $tiempoBloqueo) {
+    header('Location: login.php?error=too_many_attempts');
+    exit;
+}
+
+// Limpiar intentos si pasó el tiempo de bloqueo
+if (($ahora - $ultimoIntento) >= $tiempoBloqueo) {
+    $_SESSION['login_intentos_fallidos'] = 0;
+    $intentosFallidos = 0;
+}
+
 // Recibir datos
 $user = trim($_POST['username'] ?? '');
 $pass = $_POST['password'] ?? '';
 
 if ($user === '' || $pass === '') {
+    $_SESSION['login_intentos_fallidos'] = $intentosFallidos + 1;
+    $_SESSION['login_ultimo_intento'] = $ahora;
     header('Location: login.php?error=empty_fields');
     exit;
 }
@@ -45,6 +66,8 @@ $stmt->close();
 
 // Verificar usuario
 if (!$row) {
+    $_SESSION['login_intentos_fallidos'] = $intentosFallidos + 1;
+    $_SESSION['login_ultimo_intento'] = $ahora;
     header('Location: login.php?error=invalid_credentials');
     exit;
 }
@@ -61,6 +84,8 @@ if (!$claveValida) {
 }
 
 if (!$claveValida) {
+    $_SESSION['login_intentos_fallidos'] = $intentosFallidos + 1;
+    $_SESSION['login_ultimo_intento'] = $ahora;
     header('Location: login.php?error=invalid_credentials');
     exit;
 }
@@ -123,9 +148,12 @@ if ($rol === 'Cliente') {
 // Regenerar sesión después de autenticar
 session_regenerate_id(true);
 
+// Limpiar contador de intentos fallidos
+unset($_SESSION['login_intentos_fallidos'], $_SESSION['login_ultimo_intento']);
+
 // Guardar datos en sesión
 $_SESSION['logged_in'] = true;
-$_SESSION['id_usuario'] = $row['id_usuarios'];
+$_SESSION['id_usuarios'] = $row['id_usuarios'];  // Estandarizar nombre de variable
 $_SESSION['nombre_usuario'] = $row['nombre'];
 $_SESSION['usuario'] = $row['usuario'];
 $_SESSION['rol'] = $rol;

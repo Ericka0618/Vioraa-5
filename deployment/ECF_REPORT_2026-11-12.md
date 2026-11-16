@@ -41,7 +41,7 @@ python deployment/test-ecf-http.py
 git diff --cached --check
 ```
 
-La instancia QA local del puerto 13308 y la base fuente `viora_integrations_qa` deben existir previamente. Evidencia: `ecf-test-results.json`, `ecf-http-results.json`, `ecf-lint-results.json`, `ecf-cloud-audit.json` y `ecf-provider-discovery.json`.
+La instancia QA local del puerto 13308 y la base fuente `viora_integrations_qa` deben existir previamente. Evidencia: `ecf-test-results.json`, `ecf-http-results.json`, `ecf-lint-results.json`, `ecf-cloud-audit.json` y `ecf-provider-discovery.json`.d
 
 ## Archivos preparados y activación pendiente
 

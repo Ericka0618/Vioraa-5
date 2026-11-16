@@ -16,6 +16,11 @@ function ecf_validar_peticion(): void
     }
 }
 
+function ecf_ahora(): DateTime
+{
+    return new DateTime('now', new DateTimeZone('America/Santo_Domingo'));
+}
+
 // Validaciones compartidas; no asigna secuencias fiscales.
 function ecf_centavos($valor): int
 {

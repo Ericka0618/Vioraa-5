@@ -26,10 +26,12 @@ $desde = trim((string)($_GET['desde'] ?? ''));
 $hasta = trim((string)($_GET['hasta'] ?? ''));
 $pagina = max(1, (int)($_GET['pagina'] ?? 1));
 $offset = ($pagina - 1) * 100;
-foreach (['desde', 'hasta'] as $campo) {
-    $d = DateTimeImmutable::createFromFormat('!Y-m-d', $$campo);
-    if (!$d || $d->format('Y-m-d') !== $$campo) $$campo = '';
+// Validar fechas sin usar variables variables
+foreach (['desde' => &$desde, 'hasta' => &$hasta] as $campo => $ref) {
+    $d = DateTimeImmutable::createFromFormat('!Y-m-d', $ref);
+    if (!$d || $d->format('Y-m-d') !== $ref) $ref = '';
 }
+unset($ref);
 $idFactura = (int)($_GET['id'] ?? 0);
 
 if (!in_array($estado, ['Pendiente', 'Parcial', 'Pagada', 'Vencida', 'Anulada'], true)) $estado = '';
@@ -116,11 +118,12 @@ try {
             if ($$campo !== '') { $where[] = 'f.fecha ' . $op . ' ?'; $params[] = $$campo; $types .= 's'; }
         }
         $whereSql = $where ? 'WHERE ' . implode(' AND ', $where) : '';
+        // MySQL no permite bind_param para LIMIT/OFFSET, validar offset después de cálculo int
         $sql = "SELECT f.id_facturas, f.numero_documento, f.periodo, f.fecha, f.total, f.monto_pagado,
                        f.saldo_pendiente, f.estado, f.fecha_vencimiento, (SELECT GROUP_CONCAT(DISTINCT fd.concepto ORDER BY fd.concepto SEPARATOR ', ') FROM factura_detalle fd WHERE fd.factura_id=f.id_facturas AND fd.activo=1) AS conceptos, p.nombres, p.apellidos, p.cedula, a.numero AS apto,
                        e.nombre AS edificio, fe.estado AS ecf_estado, fe.encf
                 $joins $whereSql
-                ORDER BY f.fecha_registro DESC, f.id_facturas DESC LIMIT 101 OFFSET $offset";
+                ORDER BY f.fecha_registro DESC, f.id_facturas DESC LIMIT 101 OFFSET " . (int)$offset;
 
         $st = $conexion->prepare($sql);
         if ($params) $st->bind_param($types, ...$params);
