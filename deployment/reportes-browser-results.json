@@ -1,0 +1,593 @@
+{
+  "url": "https://viora-6ikx2ezlba-uc.a.run.app",
+  "checks": [
+    {
+      "test": "existing admin login",
+      "passed": true
+    },
+    {
+      "test": "dashboard has 12 linked indicators",
+      "passed": true
+    },
+    {
+      "test": "admin navigation includes Reportes",
+      "passed": true
+    },
+    {
+      "test": "CSRF missing rejected",
+      "passed": true
+    },
+    {
+      "test": "generation disallows GET",
+      "passed": true
+    },
+    {
+      "test": "expense belongs to selected condominium",
+      "passed": true
+    },
+    {
+      "test": "expense rejects negative amounts",
+      "passed": true
+    },
+    {
+      "test": "demo expense can be registered",
+      "passed": true
+    },
+    {
+      "test": "duplicate expense reference is rejected",
+      "passed": true
+    },
+    {
+      "test": "five accordion reports per page",
+      "passed": true
+    },
+    {
+      "test": "accent-insensitive search",
+      "passed": true
+    },
+    {
+      "test": "category filter",
+      "passed": true
+    },
+    {
+      "test": "pagination changes report list",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 1",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 1",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 1",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 1",
+      "passed": true
+    },
+    {
+      "test": "PDF attachment header",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 2",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 2",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 2",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 2",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 3",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 3",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 3",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 3",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 4",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 4",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 4",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 4",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 5",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 5",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 5",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 5",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 6",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 6",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 6",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 6",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 7",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 7",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 7",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 7",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 8",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 8",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 8",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 8",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 9",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 9",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 9",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 9",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 10",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 10",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 10",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 10",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 11",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 11",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 11",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 11",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 12",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 12",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 12",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 12",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 13",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 13",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 13",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 13",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 14",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 14",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 14",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 14",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 15",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 15",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 15",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 15",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 16",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 16",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 16",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 16",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 17",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 17",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 17",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 17",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 18",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 18",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 18",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 18",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 19",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 19",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 19",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 19",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 20",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 20",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 20",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 20",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 21",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 21",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 21",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 21",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 22",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 22",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 22",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 22",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 23",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 23",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 23",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 23",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 24",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 24",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 24",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 24",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 25",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 25",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 25",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 25",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 26",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 26",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 26",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 26",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 27",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 27",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 27",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 27",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 28",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 28",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 28",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 28",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 29",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 29",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 29",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 29",
+      "passed": true
+    },
+    {
+      "test": "HTTP generation report 30",
+      "passed": true
+    },
+    {
+      "test": "PDF valid report 30",
+      "passed": true
+    },
+    {
+      "test": "PDF content and page numbering 30",
+      "passed": true
+    },
+    {
+      "test": "history restores original result 30",
+      "passed": true
+    },
+    {
+      "test": "UI renders report table",
+      "passed": true
+    },
+    {
+      "test": "mobile no horizontal overflow",
+      "passed": true
+    },
+    {
+      "test": "live Gemini Genera el reporte de zonas con mayo",
+      "passed": true
+    },
+    {
+      "test": "Gemini has textual answer",
+      "passed": true
+    },
+    {
+      "test": "Gemini returns authorized report and PDF",
+      "passed": true
+    },
+    {
+      "test": "live Gemini \u00bfPor qu\u00e9? Explica los datos de ese ",
+      "passed": true
+    },
+    {
+      "test": "Gemini has textual answer",
+      "passed": true
+    },
+    {
+      "test": "live Gemini Genera un PDF de ese resultado.",
+      "passed": true
+    },
+    {
+      "test": "Gemini has textual answer",
+      "passed": true
+    },
+    {
+      "test": "Gemini returns authorized report and PDF",
+      "passed": true
+    },
+    {
+      "test": "no browser JavaScript errors",
+      "passed": true
+    },
+    {
+      "test": "anonymous PDF is protected",
+      "passed": true
+    },
+    {
+      "test": "client cannot bypass authorization with forged session role",
+      "passed": true
+    }
+  ]
+}

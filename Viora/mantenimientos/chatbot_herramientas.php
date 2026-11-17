@@ -4,6 +4,7 @@
 // consulta aquí es fija y parametrizada.
 
 const CHATBOT_MAX_FILAS = 25;
+require_once __DIR__.'/reportes_ia.php';
 
 function chatbot_declaraciones_herramientas(): array
 {
@@ -12,6 +13,8 @@ function chatbot_declaraciones_herramientas(): array
 
     return [[
         'functionDeclarations' => [
+            bi_declaracion_catalogo(),
+            bi_declaracion_generar(),
             [
                 'name' => 'resumen_general',
                 'description' => 'Resumen global del sistema: totales de propiedades, contratos, clientes, facturas pendientes, saldo por cobrar, solicitudes y mantenimientos pendientes.',
@@ -142,6 +145,7 @@ function chatbot_filtro(array &$where, string &$tipos, array &$params, string $c
 
 function chatbot_ejecutar_herramienta(mysqli $db, string $nombre, array $args): array
 {
+    if(in_array($nombre,['catalogo_reportes','generar_reporte_bi'],true)) return bi_herramienta($db,$nombre,$args);
     $limite = chatbot_limite($args);
     $where = [];
     $tipos = '';

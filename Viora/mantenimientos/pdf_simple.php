@@ -7,12 +7,19 @@ class PdfSimple
 
     private array $paginas = [''];
     private array $imagenes = [];
+    private array $rutasImagenes = [];
 
     public function imagenJpeg(string $ruta, float $x, float $y, float $ancho, float $alto): void
     {
+        if (isset($this->rutasImagenes[$ruta])) {
+            $nombre = $this->rutasImagenes[$ruta];
+            $this->agregar(sprintf('q %s 0 0 %s %s %s cm /%s Do Q', $this->n($ancho), $this->n($alto), $this->n($x), $this->n(self::ALTO - $y - $alto), $nombre));
+            return;
+        }
         $info = getimagesize($ruta);
         if (!$info || $info[2] !== IMAGETYPE_JPEG) return;
         $nombre = 'Im' . (count($this->imagenes) + 1);
+        $this->rutasImagenes[$ruta] = $nombre;
         $this->imagenes[$nombre] = ['bytes' => file_get_contents($ruta), 'w' => $info[0], 'h' => $info[1], 'color' => ($info['channels'] ?? 3) === 1 ? '/DeviceGray' : '/DeviceRGB'];
         $this->agregar(sprintf('q %s 0 0 %s %s %s cm /%s Do Q', $this->n($ancho), $this->n($alto), $this->n($x), $this->n(self::ALTO - $y - $alto), $nombre));
     }

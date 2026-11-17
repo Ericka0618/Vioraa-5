@@ -76,6 +76,7 @@ $paginasConfiguracion = [
     </a>
 
     <?php if ($esAdministrador): ?>
+        <a href="../mantenimientos/reportes.php" class="menu__enlace <?= $paginaActual === 'reportes.php' ? 'activo' : '' ?>"><span class="menu__icono">▥</span><span>Reportes</span></a>
 
         <!-- INICIO -->
         <a href="../login/principal.php"

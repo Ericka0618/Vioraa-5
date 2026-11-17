@@ -190,12 +190,7 @@ function ecf_tipo_factura(mysqli $conexion, int $facturaId): string
     return !empty($factura['rnc_comprador']) ? 'E31' : 'E32';
 }
 
-// La fecha de emisión la toma IMECF en zona de República Dominicana.
-function ecf_ahora(): DateTime
-{
-    return new DateTime('now', new DateTimeZone('America/Santo_Domingo'));
-}
-
+// ecf_ahora() is shared by the fiscal validator loaded at the top of this file.
 function ecf_bloque_emisor(array $cfg, string $fechaEmision): array
 {
     $emisor = $cfg['emisor'];

@@ -101,6 +101,17 @@
         throw new Error(datos.error || 'No se pudo obtener respuesta del asistente.');
       }
       burbujaRespuesta.textContent = datos.respuesta;
+      if (datos.historial_id) {
+        const documentos = document.createElement('div');
+        ['Ver PDF', 'Descargar PDF', 'Abrir Reportes'].forEach(function (texto, indice) {
+          const enlace = document.createElement('a');
+          enlace.textContent = texto;
+          enlace.href = indice === 2 ? '../mantenimientos/reportes.php' : '../mantenimientos/reportes_api.php?accion=pdf&id=' + encodeURIComponent(datos.historial_id) + (indice === 1 ? '&descargar=1' : '');
+          enlace.target = '_blank'; enlace.rel = 'noopener'; enlace.style.marginRight = '12px';
+          documentos.appendChild(enlace);
+        });
+        burbujaRespuesta.appendChild(documentos);
+      }
       burbujaRespuesta.classList.remove('cb__mensaje--pendiente');
       historial.push({ rol: 'user', texto: mensaje });
       historial.push({ rol: 'assistant', texto: datos.respuesta });

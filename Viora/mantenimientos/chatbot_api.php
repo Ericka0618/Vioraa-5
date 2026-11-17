@@ -27,6 +27,28 @@ if (empty($_SESSION['chatbot_csrf']) || !hash_equals($_SESSION['chatbot_csrf'], 
     responder_json(403, ['error' => 'Solicitud no autorizada. Recarga la página.']);
 }
 
+require_once __DIR__.'/../conf/conexion.php';
+require_once __DIR__.'/chatbot_historial.php';
+$entrada=json_decode(file_get_contents('php://input'),true);
+if (!is_array($entrada)) responder_json(400,['error'=>'Solicitud JSON inválida.']);
+$usuarioId=(int)($_SESSION['id_usuario']??$_SESSION['id_usuarios']??0);
+$auth=$conexion->prepare('SELECT r.nombre FROM usuario u JOIN role r ON r.id_roles=u.id_rol WHERE u.id_usuarios=? AND u.activo=1');
+$auth->bind_param('i',$usuarioId);$auth->execute();$actual=$auth->get_result()->fetch_assoc();
+if(!$actual) responder_json(403,['error'=>'Usuario no autorizado.']);
+$_SESSION['rol']=$actual['nombre'];
+if(($entrada['accion']??'')==='nueva') {
+    $q=$conexion->prepare("UPDATE conversacion_ia SET estado='Cerrada' WHERE usuario_id=? AND estado='Activa'");$q->bind_param('i',$usuarioId);$q->execute();
+    unset($_SESSION['chatbot_conversacion'],$_SESSION['bi_contexto'],$_SESSION['chatbot_accion_pendiente']);
+}
+$conversacionId=chatbot_conversacion($conexion,$usuarioId);
+if(in_array($entrada['accion']??'',['historial','nueva'],true)) responder_json(200,['historial'=>chatbot_historial($conexion,$conversacionId,20,$usuarioId)]);
+$biToolResult=null;
+if(isset($entrada['reportes_filtros']) && in_array(strtolower($actual['nombre']),['admin','administrador'],true)) {
+    require_once __DIR__.'/reportes_servicio.php';
+    try { $_SESSION['bi_filtros_pagina']=bi_filtros($entrada['reportes_filtros']); }
+    catch(InvalidArgumentException $e){responder_json(422,['error'=>$e->getMessage()]);}
+} else unset($_SESSION['bi_filtros_pagina']);
+
 if (empty($config['api_key']) || $config['api_key'] === 'UNCONFIGURED') {
     responder_json(503, ['error' => 'El asistente no está disponible temporalmente (credenciales no configuradas).']);
 }
@@ -142,6 +164,12 @@ $instruccion = 'Eres el asistente virtual de VIORA, un sistema de administració
         ? "Página en que se encuentra: \"$tituloPagina\" ($rutaPagina). "
         : '')
     . "\n\n" . ($esAdministrador ? $modulosAdministrador : $modulosCliente);
+
+if($esAdministrador) {
+    $instruccion.="\nReportes e Inteligencia de Negocios: usa catalogo_reportes para descubrir los 30 reportes y sus filtros. Usa generar_reporte_bi para consultas financieras, comparaciones, demanda y proyecciones; genera automáticamente un resultado y un PDF privado con historial. Nunca escribas SQL. Si falta información, conserva N/D y explica qué falta. Respeta la fuente real/demo/todos: predeterminado real. No mezcles monedas ni confundas cobros con rentabilidad. Para seguimiento (por qué, PDF de ese resultado) conserva reporte y filtros anteriores; omite reporte_id para reutilizarlos. Las herramientas devuelven enlaces autorizados. Solo estos artefactos de reportes pueden generarse desde el asistente; no crees operaciones financieras. Para inversión compara rentabilidad, ocupación y demanda, sin prometer rendimiento.";
+    $instruccion.="\nContexto de reporte anterior: ".json_encode($_SESSION['bi_contexto']??null,JSON_UNESCAPED_UNICODE);
+    $instruccion.="\nFiltros visibles actuales: ".json_encode($_SESSION['bi_filtros_pagina']??null,JSON_UNESCAPED_UNICODE);
+}
 
 function llamar_gemini(array $config, array $payload): array
 {
@@ -293,4 +321,12 @@ if ($texto === '') {
 }
 
 chatbot_guardar_turno($conexion, $conversacionId, $mensaje, $texto, $usuarioId);
-responder_json(200, ['respuesta' => $texto]);
+// A follow-up may reuse the already generated PDF without another model tool call.
+// Return the server-owned artifact so both chat interfaces can display real links.
+if($esAdministrador && !$biToolResult && preg_match('/\bpdf\b/iu',$mensaje)
+    && preg_match('/(ese|este|el mismo)\s+(resultado|reporte)|anterior|último/iu',$mensaje)
+    && !empty($_SESSION['bi_contexto']['historial_id'])) {
+    $artifact=bi_query($conexion,'SELECT id,resultado FROM bi_reporte_historial WHERE id=? AND usuario_id=?',[(int)$_SESSION['bi_contexto']['historial_id'],$usuarioId]);
+    if($artifact)$biToolResult=['historial_id'=>(int)$artifact[0]['id'],'reporte'=>json_decode($artifact[0]['resultado'],true)];
+}
+responder_json(200, ['respuesta' => $texto]+($biToolResult?['reporte'=>$biToolResult['reporte'],'historial_id'=>$biToolResult['historial_id']]:[]));

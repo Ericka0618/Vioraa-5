@@ -1,0 +1,74 @@
+{
+  "build_id": "3ab22c54-e059-4a65-9c77-1ae164878c06",
+  "image": "us-central1-docker.pkg.dev/viora-514300/viora/web:bi-20261117013512",
+  "previous_revision": "viora-00021-rok",
+  "manifest": [
+    {
+      "path": "estilos/reportes.css",
+      "sha256": "7a21ca597ea2fb8b943dc2badd4091ec1fd7162f0515a17a04a39353069dc4e2"
+    },
+    {
+      "path": "mantenimientos/reportes.js",
+      "sha256": "76eb800fb378b469f466bfd51f2a050bcc1da46e99ff7a3a6c23da21168f302e"
+    },
+    {
+      "path": "mantenimientos/reportes.php",
+      "sha256": "a418de1ec463e0629a0a08ac5eb279e757a791979c5950fc664046a20a024826"
+    },
+    {
+      "path": "mantenimientos/reportes_api.php",
+      "sha256": "ca88deea2a60eb7f58fef1ba6420bca0fa6d65b703e0bc692291fb7cc2290a36"
+    },
+    {
+      "path": "mantenimientos/reportes_catalogo.php",
+      "sha256": "891d63daeb08da009796803655ea5c30b47ed9f34f584fb89786eeca05d05ff9"
+    },
+    {
+      "path": "mantenimientos/reportes_documento.php",
+      "sha256": "9c27fc1ed2af0fc7f2637807e5b29d65bc6c43c9d27c6a39478a23e6b1ae08a2"
+    },
+    {
+      "path": "mantenimientos/reportes_ia.php",
+      "sha256": "9a52509ea504ee8652d6c553d60232899901e32dd3bb32810f90e54b9959f1c9"
+    },
+    {
+      "path": "mantenimientos/reportes_servicio.php",
+      "sha256": "9c73721d6d47572520f4fa89aa3807e60fdcaf9f19e89146cc6373e2e441999d"
+    },
+    {
+      "path": "mantenimientos/chatbot.js",
+      "sha256": "58a3fc65e9e3fed5ba64a52cbc796449713188b6f86831ea64426db1e838fcf9"
+    },
+    {
+      "path": "mantenimientos/chatbot_api.php",
+      "sha256": "bbceeb0fe0e0494554dd1c3e6b725147925ce86adbdb6a6677504a1c7cf88d65"
+    },
+    {
+      "path": "mantenimientos/chatbot_herramientas.php",
+      "sha256": "5e36e57d0e9690cc00101ad8ae324f431940706517935133b9a1ec2249ee4793"
+    },
+    {
+      "path": "mantenimientos/chatbot_widget.php",
+      "sha256": "4f116a79807a3f7bda12404a3b7f6dc8ff22c48ee9b9e16355469ab1b94697fa"
+    },
+    {
+      "path": "mantenimientos/menu_lateral.php",
+      "sha256": "a469f6d5026d0b4091ea9c2e97e63cc523fb5d409400a3f202468b7c1bc674c2"
+    },
+    {
+      "path": "mantenimientos/pdf_simple.php",
+      "sha256": "8671903a3c03bf2c70dbb0ad5b66684a39df909d96b9d4b19d8713154d469426"
+    }
+  ],
+  "base_image": "us-central1-docker.pkg.dev/viora-514300/viora/web@sha256:bdfc2f492cba5a8579ef5b8b0c9a86a2ed67bbe3a9c34c1ae8f79df7fc14fe9d",
+  "candidate_revision": "viora-00027-viz",
+  "candidate_url": "https://bi-review---viora-6ikx2ezlba-uc.a.run.app",
+  "backup_id": "1794878242419",
+  "migration_verified": true,
+  "runtime_configuration_preserved": true,
+  "private_storage_verified": true,
+  "candidate_verified": true,
+  "public_url": "https://viora-6ikx2ezlba-uc.a.run.app",
+  "promoted": true,
+  "public_verified": true
+}
