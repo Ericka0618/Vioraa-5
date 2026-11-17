@@ -129,3 +129,11 @@ La publicación consiste en promover únicamente la revisión candidata validada
 Resultado final: revisión **viora-00027-viz**, publicada con **100% del tráfico**. URL: **https://viora-6ikx2ezlba-uc.a.run.app/mantenimientos/reportes.php**. Se aprobaron **147 comprobaciones de navegador** en la revisión candidata y otras **147 en producción**, con llamadas reales a Gemini, los 30 PDF y controles de acceso. Se verificaron las réplicas de Google Cloud Storage y que el documento no puede descargarse de ese almacenamiento de forma anónima.
 
 No quedan bloqueos técnicos de despliegue. Los datos históricos inexistentes —inversiones, gastos no registrados, fechas exactas de cancelación y saldos históricos reconstruidos— conservan las limitaciones descritas; no se fabricaron valores para completarlos.
+
+## Ampliación solicitada: más registros y propiedades disponibles
+
+La carga `deployment/seed-reportes-disponibles.php` agrega otros 30 registros a cada una de las 18 tablas aisladas indicadas arriba; en pagos agrega los 32 abonos relacionados, conservando completos los saldos de las facturas. La ampliación suma **542 registros adicionales**: quedan **1,084 registros de negocio de demostración**, con **60 por tabla y 64 pagos**.
+
+Los 30 apartamentos nuevos están activos y disponibles, con sus publicaciones, condominios y edificios relacionados. Sus ocupaciones y contratos de demostración son históricos y están finalizados, por lo que no aparecen simultáneamente como ocupados. El reporte 11 muestra **40 propiedades disponibles**: Santiago 5, Santo Domingo 5, Punta Cana 10, La Vega 5, Puerto Plata 5 y Moca 10.
+
+La ampliación se consulta seleccionando **Solo demostración** en el módulo de Reportes. Se mantiene aislada de los registros operativos, sin crear operaciones de cobro ni notificaciones. La carga usa transacción, un bloqueo de ejecución y un identificador de lote que impide duplicaciones. `deployment/extend-reportes-demo.py` aplica la carga sobre Cloud SQL después del respaldo, repite la ejecución para verificar idempotencia y comprueba el reporte y su PDF en la URL publicada. La evidencia se guarda en `deployment/reportes-demo-ampliacion.json`.

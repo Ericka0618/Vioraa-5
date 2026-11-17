@@ -1,0 +1,75 @@
+{
+  "lote": "reportes-disponibles-v2",
+  "agregados": {
+    "condominio": 30,
+    "edificio": 30,
+    "apartamento": 30,
+    "persona": 30,
+    "usuario": 30,
+    "propiedad": 30,
+    "contrato": 30,
+    "factura": 30,
+    "factura_pago": 32,
+    "ocupacion": 30,
+    "solicitud_propiedad": 30,
+    "solicitud_mantenimiento": 30,
+    "mantenimiento": 30,
+    "suscripcion": 30,
+    "gasto": 30,
+    "inversion": 30,
+    "suscripcion_pago": 30,
+    "propiedad_info": 30
+  },
+  "totales": {
+    "condominio": 60,
+    "edificio": 60,
+    "apartamento": 60,
+    "persona": 60,
+    "usuario": 60,
+    "propiedad": 60,
+    "contrato": 60,
+    "factura": 60,
+    "factura_pago": 64,
+    "ocupacion": 60,
+    "solicitud_propiedad": 60,
+    "solicitud_mantenimiento": 60,
+    "mantenimiento": 60,
+    "suscripcion": 60,
+    "gasto": 60,
+    "inversion": 60,
+    "suscripcion_pago": 60,
+    "propiedad_info": 60
+  },
+  "propiedades_disponibles": 40,
+  "por_zona": [
+    {
+      "Zona": "Santiago",
+      "Disponibles": 5
+    },
+    {
+      "Zona": "Santo Domingo",
+      "Disponibles": 5
+    },
+    {
+      "Zona": "Punta Cana",
+      "Disponibles": 10
+    },
+    {
+      "Zona": "La Vega",
+      "Disponibles": 5
+    },
+    {
+      "Zona": "Puerto Plata",
+      "Disponibles": 5
+    },
+    {
+      "Zona": "Moca",
+      "Disponibles": 10
+    }
+  ],
+  "backup_id": "1794880437864",
+  "segunda_ejecucion_sin_duplicados": true,
+  "tablas_originales_sin_cambios_de_conteo": true,
+  "reporte_publicado_verificado": true,
+  "pdf_verificado": true
+}
