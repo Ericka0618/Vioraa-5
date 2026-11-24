@@ -11,6 +11,21 @@ $lock = 'viora.audit.' . substr(hash('sha256', $argv[1]), 0, 32);
 if (!(int)$conexion->execute_query('SELECT GET_LOCK(?, 15)', [$lock])->fetch_row()[0]) {
     throw new RuntimeException('Otra migración está en curso.');
 }
+$schema = [];
+foreach ($conexion->query("SELECT c.TABLE_NAME,c.COLUMN_NAME,c.COLUMN_KEY,t.ENGINE FROM information_schema.COLUMNS c
+    JOIN information_schema.TABLES t ON t.TABLE_SCHEMA=c.TABLE_SCHEMA AND t.TABLE_NAME=c.TABLE_NAME
+    WHERE c.TABLE_SCHEMA=DATABASE() ORDER BY c.ORDINAL_POSITION")->fetch_all(MYSQLI_ASSOC) as $column) {
+    $schema[$column['TABLE_NAME']][$column['COLUMN_NAME']] = $column;
+}
+$catalog = auditoria_catalogo();
+$missing = array_diff_key($catalog, $schema);
+if ($missing) throw new RuntimeException('Complete las migraciones previas. Faltan: ' . implode(', ', array_keys($missing)));
+foreach ($catalog as $table => $_) {
+    $fields = $schema[$table];
+    if (reset($fields)['ENGINE'] !== 'InnoDB' || !in_array('PRI', array_column($fields, 'COLUMN_KEY'), true)) {
+        throw new RuntimeException("Se requiere InnoDB y clave primaria en $table.");
+    }
+}
 $conexion->query("CREATE TABLE IF NOT EXISTS auditoria (
     id BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
     evento CHAR(36) CHARACTER SET ascii NOT NULL UNIQUE,
@@ -76,21 +91,11 @@ foreach (['auditoria', 'auditoria_referencia'] as $table) {
     }
 }
 
-$schema = [];
-foreach ($conexion->query("SELECT c.TABLE_NAME,c.COLUMN_NAME,c.COLUMN_KEY,t.ENGINE FROM information_schema.COLUMNS c
-    JOIN information_schema.TABLES t ON t.TABLE_SCHEMA=c.TABLE_SCHEMA AND t.TABLE_NAME=c.TABLE_NAME
-    WHERE c.TABLE_SCHEMA=DATABASE() ORDER BY c.ORDINAL_POSITION")->fetch_all(MYSQLI_ASSOC) as $column) {
-    $schema[$column['TABLE_NAME']][$column['COLUMN_NAME']] = $column;
-}
 $quote = static fn(string $v): string => "'" . $conexion->real_escape_string($v) . "'";
 $count = 0;
-foreach (auditoria_catalogo() as $table => [$module, $columns, $relationships]) {
-    if (!isset($schema[$table])) throw new RuntimeException("Falta la tabla $table. Complete las migraciones previas.");
+foreach ($catalog as $table => [$module, $columns, $relationships]) {
     $fields = $schema[$table];
     $keys = array_keys(array_filter($fields, static fn($c) => $c['COLUMN_KEY'] === 'PRI'));
-    if (!$keys || reset($fields)['ENGINE'] !== 'InnoDB') {
-        throw new RuntimeException("Se requiere InnoDB y clave primaria en $table.");
-    }
     $visible = array_intersect(explode(' ', $columns), array_keys($fields));
     $snapshot = static function (string $side) use ($visible, $quote): string {
         $pairs = [];

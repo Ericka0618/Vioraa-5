@@ -65,6 +65,7 @@ print("OK autenticación real, credenciales rechazadas y acceso administrativo")
 
 status, _, html = request(admin, panel + "?q=" + fixture["admin"] + "&orden=modulo&direccion=asc")
 assert status == 200 and b"Historial de operaciones" in html and b"Usuarios activos" in html
+assert b"session_start()" not in html
 csrf = token(html, rb'name="csrf" value="([a-f0-9]+)"')
 status, _, client_activity = request(admin, panel + "?" + urllib.parse.urlencode({"rol":"Cliente", "modulo":"Propiedades"}))
 assert status == 200 and b"GET catalogo.php" in client_activity and b"Cliente QA" in client_activity

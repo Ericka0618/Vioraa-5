@@ -10,8 +10,10 @@ require_once __DIR__ . '/../conf/auditoria_ia.php';
 header('Cache-Control: no-store, private');
 header('Referrer-Policy: same-origin');
 if (empty($_SESSION['auditoria_csrf'])) $_SESSION['auditoria_csrf'] = bin2hex(random_bytes(32));
+if (empty($_SESSION['chatbot_csrf'])) $_SESSION['chatbot_csrf'] = bin2hex(random_bytes(32));
 $csrf = $_SESSION['auditoria_csrf'];
 session_write_close();
+$menuSesionCerrada = true;
 
 function ae($value): string
 {
