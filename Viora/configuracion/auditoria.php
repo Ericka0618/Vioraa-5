@@ -156,7 +156,8 @@ auditoria_evento('Auditoría', $action, $success ? 'Operación administrativa' :
 $entities = auditoria_entidades();
 $get = static fn(string $key): string => is_scalar($input[$key] ?? null) ? (string)$input[$key] : '';
 $summaryLabels = ['total' => 'Total de operaciones', 'exitosas' => 'Exitosas', 'fallidas' => 'Fallidas',
-    'usuarios' => 'Usuarios activos', 'accesos' => 'Intentos de acceso fallidos', 'modificadas' => 'Registros modificados',
+    'usuarios' => 'Usuarios activos', 'accesos' => 'Intentos de acceso fallidos', 'modificadas' => 'Registros modificados', 'creadas' => 'Registros creados',
+    'fiscales' => 'Eventos fiscales', 'suscripciones' => 'Actividad de suscripciones',
     'eliminadas' => 'Registros eliminados', 'financieras' => 'Cambios financieros'];
 ?>
 <!doctype html>

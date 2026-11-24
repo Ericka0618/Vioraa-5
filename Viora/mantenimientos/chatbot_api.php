@@ -32,10 +32,11 @@ require_once __DIR__.'/chatbot_historial.php';
 $entrada=json_decode(file_get_contents('php://input'),true);
 if (!is_array($entrada)) responder_json(400,['error'=>'Solicitud JSON inválida.']);
 $usuarioId=(int)($_SESSION['id_usuario']??$_SESSION['id_usuarios']??0);
-$auth=$conexion->prepare('SELECT r.nombre FROM usuario u JOIN role r ON r.id_roles=u.id_rol WHERE u.id_usuarios=? AND u.activo=1');
+$auth=$conexion->prepare('SELECT r.nombre FROM usuario u JOIN role r ON r.id_roles=u.id_rol WHERE u.id_usuarios=? AND u.activo=1 AND r.activo=1');
 $auth->bind_param('i',$usuarioId);$auth->execute();$actual=$auth->get_result()->fetch_assoc();
 if(!$actual) responder_json(403,['error'=>'Usuario no autorizado.']);
 $_SESSION['rol']=$actual['nombre'];
+$esAdministrador = in_array(mb_strtolower(trim($actual['nombre'])), ['admin', 'administrador'], true);
 if(($entrada['accion']??'')==='nueva') {
     $q=$conexion->prepare("UPDATE conversacion_ia SET estado='Cerrada' WHERE usuario_id=? AND estado='Activa'");$q->bind_param('i',$usuarioId);$q->execute();
     unset($_SESSION['chatbot_conversacion'],$_SESSION['bi_contexto'],$_SESSION['chatbot_accion_pendiente']);
@@ -60,11 +61,14 @@ if (mb_strlen($mensaje, 'UTF-8') > $maxCaracteres) {
     responder_json(400, ['error' => "El mensaje no puede superar los $maxCaracteres caracteres."]);
 }
 
-require_once __DIR__ . '/../conf/trazabilidad_chat.php';
-$traceResult = trazabilidad_chat($conexion, $entrada, $mensaje);
-if ($traceResult !== null) {
-    chatbot_guardar_turno($conexion, $conversacionId, $mensaje, $traceResult['respuesta'], $usuarioId);
-    responder_json(200, $traceResult);
+if ($esAdministrador) {
+    require_once __DIR__ . '/../conf/trazabilidad_chat.php';
+    $traceResult = trazabilidad_chat($conexion, $entrada, $mensaje);
+    if ($traceResult !== null) responder_json(200, $traceResult);
+} elseif (preg_match('/\b(auditor[ií]a|trazabilidad|bit[aá]cora)\b/iu', $mensaje)) {
+    $GLOBALS['viora_audit_denied'] = true;
+    auditoria_evento('Seguridad', 'Acceso denegado', 'Consulta de auditoría mediante el chat', false);
+    responder_json(403, ['error' => 'La consulta de auditoría es exclusiva del panel administrativo.']);
 }
 
 if (empty($config['api_key']) || $config['api_key'] === 'UNCONFIGURED') {
@@ -97,7 +101,6 @@ $contenidos[] = ['role' => 'user', 'parts' => [['text' => $mensaje]]];
 
 $rol = (string)($_SESSION['rol'] ?? '');
 $nombreUsuario = (string)($_SESSION['nombre_usuario'] ?? 'Usuario');
-$esAdministrador = strcasecmp($rol, 'Administrador') === 0 || strcasecmp($rol, 'Admin') === 0;
 
 $pagina = is_array($entrada['pagina'] ?? null) ? $entrada['pagina'] : [];
 $tituloPagina = mb_substr(trim(strip_tags((string)($pagina['titulo'] ?? ''))), 0, 120, 'UTF-8');

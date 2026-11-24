@@ -38,7 +38,7 @@ function auditoria_entidades(): array
         'solicitud_propiedad' => 'Solicitud de compra o alquiler', 'solicitud_mantenimiento' => 'Solicitud de mantenimiento',
         'mantenimiento' => 'Mantenimiento', 'pago' => 'Pago', 'factura_pago' => 'Pago de factura',
         'viora_pago' => 'Pago VIORA', 'suscripcion' => 'Suscripción', 'encf' => 'Comprobante fiscal',
-        'usuario' => 'Usuario', 'condominio' => 'Condominio', 'edificio' => 'Edificio',
+        'usuario' => 'Usuario', 'role' => 'Rol y permisos', 'condominio' => 'Condominio', 'edificio' => 'Edificio',
         'visita_propiedad' => 'Visita', 'factura_ecf' => 'Comprobante fiscal', 'factura_ecf_nota' => 'Nota de crédito',
     ];
 }
@@ -85,7 +85,8 @@ function auditoria_indicadores(mysqli $db, string $where, array $params): array
     return $db->execute_query("SELECT COUNT(*) total, COUNT(DISTINCT actor_id) usuarios,
         COALESCE(SUM(estado='Exitosa'),0) exitosas, COALESCE(SUM(estado='Fallida'),0) fallidas,
         COALESCE(SUM(accion='Inicio de sesión' AND estado='Fallida'),0) accesos,
-        COALESCE(SUM(accion='Modificar'),0) modificadas, COALESCE(SUM(accion='Eliminar'),0) eliminadas,
+        COALESCE(SUM(accion='Crear'),0) creadas, COALESCE(SUM(modulo='Fiscal'),0) fiscales,
+        COALESCE(SUM(modulo='Suscripciones'),0) suscripciones, COALESCE(SUM(accion='Modificar'),0) modificadas, COALESCE(SUM(accion='Eliminar'),0) eliminadas,
         COALESCE(SUM(" . AUDITORIA_FINANCIERA . " AND tabla IS NOT NULL),0) financieras
         FROM auditoria a WHERE $where", $params)->fetch_assoc();
 }

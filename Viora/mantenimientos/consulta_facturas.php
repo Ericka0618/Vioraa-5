@@ -47,6 +47,8 @@ $joins = "FROM factura f
 try {
     require_once __DIR__ . '/factura_acceso.php';
     $identidad = factura_identidad($conexion);
+    require_once __DIR__ . '/../conf/trazabilidad.php';
+    $verTrazabilidad = $identidad['admin'] && !empty(trazabilidad_identidad($conexion)['admin']);
     $esMisFacturas = defined('VIORA_MIS_FACTURAS');
     if (!$esMisFacturas && !$identidad['admin']) { http_response_code(403); exit('Acceso exclusivo del administrador.'); }
     $propietarioSql = $identidad['admin'] ? '' : ' AND f.persona_id=' . (int)$identidad['persona_id'];
@@ -212,8 +214,8 @@ foreach ($facturas as $f) {
         </div>
         <div>
             <a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>">← Volver al listado</a>
-            <?php if ($detalle): ?><a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$idFactura ?>">Ver trazabilidad</a><?php endif; ?>
-            <?php if ($identidad['admin'] && !empty($detalle['id_factura_ecf'])): ?>
+            <?php if ($verTrazabilidad && $detalle): ?><a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$idFactura ?>">Ver trazabilidad</a><?php endif; ?>
+            <?php if ($verTrazabilidad && !empty($detalle['id_factura_ecf'])): ?>
                 <a href="trazabilidad.php?entidad=factura_ecf&amp;referencia=<?= (int)$detalle['id_factura_ecf'] ?>">Ver trazabilidad fiscal</a>
             <?php endif; ?>
             <?php if ($identidad['admin'] && $detalle && $detalle['id_contratos'] && $detalle['estado'] !== 'Anulada'): ?>
@@ -335,7 +337,7 @@ foreach ($facturas as $f) {
                     <td><?= esc($n['fecha_registro']) ?></td>
                     <td><?= empty($n['error_mensaje']) ? '—' : 'Pendiente de revisión' ?></td>
                     <td><?= $n['encf'] ? icono_ojo('factura_pdf.php?nota=' . (int)$n['id_factura_ecf_nota'], 'Ver PDF de la nota de crédito') : '—' ?>
-                    <?php if ($identidad['admin']): ?><a href="trazabilidad.php?entidad=factura_ecf_nota&amp;referencia=<?= (int)$n['id_factura_ecf_nota'] ?>">Ver trazabilidad</a><?php endif; ?></td>
+                    <?php if ($verTrazabilidad): ?><a href="trazabilidad.php?entidad=factura_ecf_nota&amp;referencia=<?= (int)$n['id_factura_ecf_nota'] ?>">Ver trazabilidad</a><?php endif; ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>
@@ -528,10 +530,10 @@ foreach ($facturas as $f) {
                     <td class="num"><?= pesos($f['total']) ?></td>
                     <td class="num"><?= pesos($f['monto_pagado']) ?></td><td class="num"><?= pesos($f['saldo_pendiente']) ?></td>
                     <td><span class="cf-estado <?= esc(strtolower(str_replace(' ', '', $f['estado']))) ?>"><?= esc($f['estado']) ?></span></td>
-                    <td><?php if ($identidad['admin'] && !empty($f['id_factura_ecf'])): ?>
+                    <td><?php if ($verTrazabilidad && !empty($f['id_factura_ecf'])): ?>
                     <a href="trazabilidad.php?entidad=factura_ecf&amp;referencia=<?= (int)$f['id_factura_ecf'] ?>">Ver trazabilidad fiscal <?= esc($f['encf']) ?></a>
                     <?php else: ?><?= esc($f['encf']) ?><?php endif; ?><br><?= $f['ecf_estado'] ? '<span class="cf-estado ' . esc(strtolower(str_replace(' ', '', $f['ecf_estado']))) . '">' . esc($f['ecf_estado']) . '</span>' : '<small>Sin enviar</small>' ?></td>
-                    <td><a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>?id=<?= (int)$f['id_facturas'] ?>">Ver</a><?= icono_ojo('factura_pdf.php?id=' . (int)$f['id_facturas'], 'Ver e imprimir PDF') ?><a class="cf-enlace" href="factura_pdf.php?id=<?= (int)$f['id_facturas'] ?>&amp;descargar=1">Descargar</a> <a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$f['id_facturas'] ?>">Ver trazabilidad</a></td>
+                    <td><a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>?id=<?= (int)$f['id_facturas'] ?>">Ver</a><?= icono_ojo('factura_pdf.php?id=' . (int)$f['id_facturas'], 'Ver e imprimir PDF') ?><a class="cf-enlace" href="factura_pdf.php?id=<?= (int)$f['id_facturas'] ?>&amp;descargar=1">Descargar</a> <?php if ($verTrazabilidad): ?><a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$f['id_facturas'] ?>">Ver trazabilidad</a><?php endif; ?></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

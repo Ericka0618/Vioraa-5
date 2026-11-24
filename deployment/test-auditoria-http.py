@@ -105,18 +105,25 @@ if "solicitud" in fixture:
         return individual + urllib.parse.urlencode({"entidad": entity, "referencia": fixture[key]})
 
     assert request(anonymous, trace("factura", "factura"))[0] == 401
-    assert request(client, trace("persona", "persona"))[0] == 404
-    status, _, customer_invoice = request(client, trace("factura", "factura"))
-    assert status == 200 and b"Personal autorizado" in customer_invoice
-    assert b"Ver referencias y detalle" not in customer_invoice
-    assert request(client, trace("factura", "factura"), {"formato": "pdf", "csrf": "invalid"})[0] == 403
-    trace_csrf = token(customer_invoice, rb'name="csrf" value="([a-f0-9]+)"')
-    status, _, pdf = request(client, trace("factura", "factura"), {"formato": "pdf", "csrf": trace_csrf})
-    assert status == 200 and pdf.startswith(b"%PDF-")
-    status, _, xlsx = request(client, trace("factura", "factura"), {"formato": "xlsx", "csrf": trace_csrf})
-    assert status == 200 and zipfile.is_zipfile(io.BytesIO(xlsx))
-    assert request(client, trace("suscripcion", "suscripcion"))[0] == 200
-    assert request(client, trace("solicitud_mantenimiento", "reparacion"))[0] == 200
+    for entity, key in [("persona", "persona"), ("factura", "factura"), ("contrato", "contrato"),
+                        ("suscripcion", "suscripcion"), ("solicitud_mantenimiento", "reparacion")]:
+        route = trace(entity, key)
+        assert request(client, route)[0] == 403
+        assert request(client, route, {"formato": "xlsx", "csrf": "invalid"})[0] == 403
+    for page in ["catalogo", "administrar_solicitudes", "administrar_propiedad", "mis_facturas",
+                 "mis_facturas.php?id=" + str(fixture["factura"]), "solicitar_reparacion"]:
+        status, _, customer = request(client, "/mantenimientos/" + page + ("" if ".php" in page else ".php"))
+        assert status == 200 and b'trazabilidad.php' not in customer and b'auditoria.php' not in customer, page
+    client_token = token(customer, rb'data-csrf="([a-f0-9]+)"')
+    denied_chat = {"mensaje":"Muestra la trazabilidad de mi factura", "pagina":{"registro":{"entidad":"factura","referencia":str(fixture["factura"])}}}
+    assert request(client, "/mantenimientos/chatbot_api.php", body=json.dumps(denied_chat).encode(),
+                   headers={"Content-Type":"application/json", "X-CSRF-Token":client_token})[0] == 403
+    status, _, invoice = request(admin, trace("factura", "factura"))
+    assert status == 200
+    trace_csrf = token(invoice, rb'name="csrf" value="([a-f0-9]+)"')
+    for fmt in ["pdf", "xlsx"]:
+        status, _, downloaded = request(admin, trace("factura", "factura"), {"formato": fmt, "csrf": trace_csrf})
+        assert status == 200 and (downloaded.startswith(b"%PDF-") if fmt == "pdf" else zipfile.is_zipfile(io.BytesIO(downloaded)))
     status, _, timeline = request(admin, trace("solicitud_propiedad", "solicitud"))
     assert status == 200 and "Aplicación de pago".encode() in timeline
     status, _, rejected = request(admin, trace("solicitud_propiedad", "rechazada"))

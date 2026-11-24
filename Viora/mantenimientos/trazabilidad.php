@@ -9,7 +9,8 @@ header('Referrer-Policy: same-origin');
 header('X-Content-Type-Options: nosniff');
 
 $user = trazabilidad_identidad($conexion);
-if (!$user) {
+if (empty($user['admin'])) {
+    $GLOBALS['viora_audit_denied'] = true;
     auditoria_evento('Seguridad', 'Acceso denegado', 'Consulta de trazabilidad individual', false);
     http_response_code(($_SESSION['logged_in'] ?? false) ? 403 : 401);
     exit('Se requiere una sesión autorizada.');

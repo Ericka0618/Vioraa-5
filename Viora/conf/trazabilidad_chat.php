@@ -4,8 +4,26 @@ require_once __DIR__ . '/trazabilidad.php';
 
 function trazabilidad_chat(mysqli $db, array $input, string $question): ?array
 {
-    $intent = '/\b(trazabilidad|historial|aprob[oó]|rechaz[oó]|rechazada|fall[oó]|modific[oó]|cambios|activ[oó]|ocurri[oó]|pas[oó]|registr[oó]|gener[oó])\b/iu';
+    $user = trazabilidad_identidad($db);
+    if (empty($user['admin'])) return null;
+    $intent = '/\b(trazabilidad|historial|modificaciones|auditor[ií]a|aprob[oó]|rechaz[oó]|rechazada|fall[oó]|modific[oó]|cambios|activ[oó]|ocurri[oó]|pas[oó]|registr[oó]|gener[oó])\b/iu';
     if (!preg_match($intent, $question)) return null;
+    if (preg_match('/\b(hoy|este mes)\b/iu', $question, $period)
+        && preg_match('/\b(cambios|modificaciones|auditor[ií]a|trazabilidad)\b/iu', $question)) {
+        $today = new DateTimeImmutable('now', new DateTimeZone('America/Santo_Domingo'));
+        $from = mb_strtolower($period[1]) === 'hoy' ? $today : $today->modify('first day of this month');
+        $filters = ['desde' => $from->format('Y-m-d'), 'hasta' => $today->format('Y-m-d'), 'reporte' => 7];
+        [$where, $params] = auditoria_filtros($filters);
+        $stats = auditoria_indicadores($db, $where, $params);
+        $rows = $db->execute_query("SELECT id,fecha,actor_nombre,origen,modulo,tabla FROM auditoria a WHERE $where
+            ORDER BY fecha DESC,id DESC LIMIT 5", $params)->fetch_all(MYSQLI_ASSOC);
+        $examples = array_map(static fn($r) => sprintf('• %s · %s · %s (evento #%s)',
+            auditoria_fecha($r['fecha']), $r['actor_nombre'] ?: $r['origen'], $r['modulo'], $r['id']), $rows);
+        auditoria_evento('Auditoría', 'Consultar IA', 'Chat general: modificaciones por período', true);
+        $result = ['respuesta' => 'Modificaciones registradas en el período: ' . $stats['total'] . "\n" . implode("\n", $examples)];
+        if (preg_match('/\b(reporte|informe|exportar)\b/iu', $question)) $result['auditoria_reporte'] = $filters;
+        return $result;
+    }
     $entities = [
         'solicitud_mantenimiento' => 'solicitud de (?:mantenimiento|reparaci[oó]n)',
         'solicitud_propiedad' => 'solicitud(?: de (?:alquiler|compra|venta))?',
@@ -21,15 +39,13 @@ function trazabilidad_chat(mysqli $db, array $input, string $question): ?array
     $id = $query['referencia'] ?? '';
     if (!is_string($type) || !is_string($id)) $type = $id = '';
     foreach ($entities as $candidate => $pattern) {
-        if (preg_match('/\b(?:' . $pattern . ')\s+#?([1-9][0-9]{0,18})\b/iu', $question, $matches)) {
+        if (preg_match('/\b(?:' . $pattern . ')\s+(?:(?:n[uú]mero|nro\.?)\s+)?#?([1-9][0-9]{0,18})\b/iu', $question, $matches)) {
             [$type, $id] = [$candidate, $matches[1]];
             break;
         }
     }
     if (preg_match('/\bE[0-9]{12}\b/i', $question, $matches)) [$type, $id] = ['encf', strtoupper($matches[0])];
     if ($id === '' && !preg_match('/\b(?:' . implode('|', $entities) . ')\b/iu', $question)) return null;
-    $user = trazabilidad_identidad($db);
-    if (!$user) return ['respuesta' => 'Tu sesión no tiene acceso a la trazabilidad.'];
 
     if ($id === '' && $user['admin'] && preg_match('/\b(?:solicitud|cliente)\s+de\s+([\p{L}][\p{L} .’\'-]+)[?.!]*$/iu', $question, $name)) {
         $isRequest = preg_match('/\bsolicitud\s+de\s+/iu', $question);

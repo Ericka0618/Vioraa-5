@@ -483,6 +483,7 @@ $result = $conexion->query(
                                 </td>
 
                                 <td class="tabla__acciones">
+                                    <a href="../mantenimientos/trazabilidad.php?entidad=usuario&amp;referencia=<?= (int)$row['id_usuarios'] ?>">Ver trazabilidad</a>
                                     <?php foreach ($suscripcionesPorUsuario[$row['id_usuarios']] ?? [] as $plan): ?>
                                         <a href="../mantenimientos/trazabilidad.php?entidad=suscripcion&amp;referencia=<?= (int)$plan['id_suscripcion'] ?>">Ver trazabilidad de suscripción #<?= (int)$plan['id_suscripcion'] ?></a>
                                     <?php endforeach; ?>

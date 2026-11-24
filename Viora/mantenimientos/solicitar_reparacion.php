@@ -291,7 +291,7 @@ $csrf = $_SESSION['csrf_reparacion'];
                             ?>
                                 <li class="rep-item">
                                     <div class="rep-item-cabecera">
-                                        <a href="trazabilidad.php?entidad=solicitud_mantenimiento&amp;referencia=<?= (int)$s['id_solicitudes'] ?>">Ver trazabilidad</a><br><strong>Solicitud #<?= (int)$s['id_solicitudes'] ?></strong>
+                                        <strong>Solicitud #<?= (int)$s['id_solicitudes'] ?></strong>
                                         <span class="rep-badge <?= rep_esc($claseEstado) ?>"><?= rep_esc($s['estado']) ?></span>
                                     </div>
                                     <p><?= rep_esc($s['edificio'] . ' · Apartamento ' . $s['numero']) ?><?= $s['ubicacion'] ? ' · ' . rep_esc($s['ubicacion']) : '' ?></p>

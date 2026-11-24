@@ -293,6 +293,7 @@ $result = $conexion->query(
                                 </td>
 
                                 <td class="tabla__acciones">
+                                    <a href="../mantenimientos/trazabilidad.php?entidad=role&amp;referencia=<?= (int)$row['id_roles'] ?>">Ver trazabilidad</a>
 
                                     <button type="button"
                                             class="btn-icono btn-icono--editar btn-edit"
