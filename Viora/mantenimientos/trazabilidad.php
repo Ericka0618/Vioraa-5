@@ -85,6 +85,7 @@ if ($type === 'contrato' && !empty($actual['tiene_pdf'])) $documents['PDF del co
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Trazabilidad · <?= $escape($record['etiqueta']) ?> | VIORA</title>
+    <link rel="stylesheet" href="../estilos/styleP.css?v=6">
     <link rel="stylesheet" href="../estilos/moderno.css">
     <link rel="stylesheet" href="../estilos/reportes.css">
     <link rel="stylesheet" href="../estilos/auditoria.css">
