@@ -22,6 +22,7 @@ function esc($valor) {
 }
 
 function responder($datos) {
+    if (($datos['ok'] ?? null) === false) auditoria_fallo();
     echo json_encode($datos, JSON_UNESCAPED_UNICODE);
     exit;
 }

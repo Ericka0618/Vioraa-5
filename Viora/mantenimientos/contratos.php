@@ -54,9 +54,11 @@ if($_SERVER['REQUEST_METHOD']==='POST'){
     $q=$conexion->prepare("INSERT INTO contrato (apartamento_id,propiedad_id,numero_contrato,fecha_inicio,fecha_fin,monto_alquiler,deposito,condiciones,estado,activo,solicitud_id,persona_id,tipo_operacion,archivo_contrato,monto_mantenimiento) VALUES (?,?,?,?,?,?,?,?,'Activo',1,?,?,?,?,?)");
     $q->bind_param('iiissddsiissd',$sol['apartamento_id'],$propiedadId,$numero,$inicio,$finSQL,$monto,$deposito,$condiciones,$id,$sol['persona_id'],$sol['tipo_operacion'],$archivo,$mantenimiento);
     $q->execute();
+    $idContratoAuditado = $conexion->insert_id;
     $conexion->commit();$guardado=null;
+    auditoria_evento('Documentos', 'Guardar PDF', 'Almacenamiento privado: contrato', true, [['contrato', (string)$idContratoAuditado]]);
     header('Location: contratos.php?creado=1');exit;
-  }catch(Throwable $e){try{$conexion->rollback();}catch(Throwable $ignored){}if($guardado&&is_file($guardado))@unlink($guardado);$error=$e instanceof mysqli_sql_exception?'No se pudo guardar el contrato. Verifica el número único y la estructura SQL.':$e->getMessage();$solicitudId=(int)($_POST['solicitud_id']??0);}
+  }catch(Throwable $e){try{$conexion->rollback();}catch(Throwable $ignored){}if($guardado&&is_file($guardado))@unlink($guardado);$error=$e instanceof mysqli_sql_exception?'No se pudo guardar el contrato. Verifica el número único y la estructura SQL.':$e->getMessage();$solicitudId=(int)($_POST['solicitud_id']??0);auditoria_fallo($solicitudId > 0 ? [['solicitud_propiedad', (string)$solicitudId]] : []);}
 }
 $sql="SELECT s.id_solicitudes,s.tipo_operacion,s.fecha_solicitud,p.nombres,p.apellidos,p.cedula,p.correo,p.telefono,a.numero AS apartamento,a.precio_alquiler,a.precio_venta,e.nombre AS edificio FROM solicitud_propiedad s JOIN persona p ON p.id_personas=s.persona_id JOIN apartamento a ON a.id_apartamentos=s.apartamento_id JOIN edificio e ON e.id_edificios=a.edificio_id LEFT JOIN contrato ct ON ct.solicitud_id=s.id_solicitudes WHERE s.estado='Aprobada' AND s.activo=1 AND ct.id_contratos IS NULL ORDER BY s.id_solicitudes DESC";
 $pendientes=$conexion->query($sql)->fetch_all(MYSQLI_ASSOC);

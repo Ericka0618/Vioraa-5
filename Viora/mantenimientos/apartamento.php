@@ -10,7 +10,11 @@ $nombre = $_SESSION['nombre_usuario'] ?? 'Usuario';
 $usuario = $_SESSION['usuario'] ?? '';
 $menuActivo = 'apartamentos';
 function esc($v) { return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8'); }
-function responder($data) { echo json_encode($data, JSON_UNESCAPED_UNICODE); exit; }
+function responder($data) {
+    if (($data['ok'] ?? null) === false) auditoria_fallo();
+    echo json_encode($data, JSON_UNESCAPED_UNICODE);
+    exit;
+}
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['ajax'] ?? '') === '1') {
     header('Content-Type: application/json; charset=utf-8');

@@ -23,6 +23,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $redireccion = 'reparaciones.php' . (isset($_GET['estado']) ? '?estado=' . urlencode((string)$_GET['estado']) : '');
         if (!hash_equals($_SESSION['csrf_reparacion_admin'], (string)($_POST['csrf'] ?? ''))) {
+            auditoria_fallo();
             $_SESSION['reparacion_flash_admin'] = ['tipo' => 'error', 'texto' => 'La sesión del formulario expiró. Intenta de nuevo.'];
             header('Location: ' . $redireccion);
             exit;
@@ -81,6 +82,9 @@ try {
             }
         }
 
+        if (($_SESSION['reparacion_flash_admin']['tipo'] ?? null) === 'error') {
+            auditoria_fallo($idSolicitud > 0 ? [['solicitud_mantenimiento', (string)$idSolicitud]] : []);
+        }
         header('Location: ' . $redireccion);
         exit;
     }

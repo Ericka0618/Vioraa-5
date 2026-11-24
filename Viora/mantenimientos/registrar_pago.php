@@ -57,6 +57,7 @@ try {
     if ($facturaId <= 0) {
         throw new Exception('Factura inválida');
     }
+    $GLOBALS['viora_audit_refs'] = [['factura', (string)$facturaId]];
 
     if (!preg_match('/^\d+(\.\d{1,2})?$/', $montoTexto) || (float)$montoTexto <= 0) {
         throw new Exception('El monto debe ser mayor que cero y tener máximo 2 decimales');

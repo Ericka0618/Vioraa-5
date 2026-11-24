@@ -33,6 +33,7 @@ try {
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $redireccion = 'mantenimiento_mensual.php?mes=' . urlencode($mes);
         if (!hash_equals($_SESSION['csrf_mantenimiento_mensual'], (string)($_POST['csrf'] ?? ''))) {
+            auditoria_fallo();
             $_SESSION['mantenimiento_flash'] = ['tipo' => 'error', 'texto' => 'La sesión del formulario expiró. Intenta de nuevo.'];
             header('Location: ' . $redireccion);
             exit;
@@ -43,6 +44,7 @@ try {
         if ($accion === 'generar') {
             $postMes = (string)($_POST['mes'] ?? '');
             if (!$mesValido($postMes)) {
+                auditoria_fallo();
                 $_SESSION['mantenimiento_flash'] = ['tipo' => 'error', 'texto' => 'El mes seleccionado no es válido.'];
             } else {
                 $fechaProgramada = $postMes . '-01';
@@ -87,6 +89,7 @@ try {
             $suplidorId = (int)($_POST['suplidor_id'] ?? 0);
 
             if (!in_array($estado, REP_ESTADOS_MENSUAL, true)) {
+                auditoria_fallo();
                 $_SESSION['mantenimiento_flash'] = ['tipo' => 'error', 'texto' => 'Selecciona un estado válido.'];
             } else {
                 $suplidorValor = null;
@@ -107,6 +110,7 @@ try {
                 $stmt->close();
 
                 if (!$existe) {
+                    auditoria_fallo();
                     $_SESSION['mantenimiento_flash'] = ['tipo' => 'error', 'texto' => 'El mantenimiento no existe o fue eliminado.'];
                 } else {
                     // Al marcar como realizado se guarda la fecha de hoy si no tenía una.

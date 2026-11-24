@@ -91,6 +91,7 @@ try {
             $errores[] = 'La ubicación no puede superar los 150 caracteres.';
         }
 
+        if ($errores) auditoria_fallo();
         if (!$errores) {
             $ubicacion = $valores['ubicacion'] !== '' ? $valores['ubicacion'] : null;
             $descripcion = $valores['descripcion'];

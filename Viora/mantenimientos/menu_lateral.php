@@ -55,7 +55,8 @@ $paginasCobros = [
 
 $paginasConfiguracion = [
     'usuarios.php',
-    'roles.php'
+    'roles.php',
+    'auditoria.php'
 ];
 
 ?>
@@ -245,6 +246,11 @@ $paginasConfiguracion = [
                 <a href="../Configuracion/usuarios.php"
                    class="menu__enlace <?= $paginaActual === 'usuarios.php' ? 'activo' : '' ?>">
                     Usuarios
+                </a>
+
+                <a href="../configuracion/auditoria.php"
+                   class="menu__enlace <?= $paginaActual === 'auditoria.php' ? 'activo' : '' ?>">
+                    Auditoría y Trazabilidad
                 </a>
 
                 <a href="../Configuracion/roles.php"

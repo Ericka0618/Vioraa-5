@@ -70,6 +70,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['ajax'] ?? '') === '1') {
         $stmt->execute();
         echo json_encode(['ok' => true, 'msg' => $action === 'create' ? 'Edificio registrado correctamente.' : 'Edificio actualizado correctamente.']);
     } catch (Throwable $e) {
+        auditoria_fallo();
         echo json_encode(['ok' => false, 'error' => $e instanceof mysqli_sql_exception ? 'No se pudo completar la operación. Comprueba las relaciones con otros registros.' : $e->getMessage()]);
     }
     exit;

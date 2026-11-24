@@ -54,6 +54,8 @@ try {
     if (!$factura || (!$identidad['admin'] && (int)$factura['persona_id'] !== $identidad['persona_id'])) {
         http_response_code(404); exit('Factura no encontrada.');
     }
+    $GLOBALS['viora_audit_refs'] = [['factura', (string)$idFactura]];
+    if ($nota) $GLOBALS['viora_audit_refs'][] = ['factura_ecf_nota', (string)$idNota];
 
     $st = $conexion->prepare("SELECT concepto, descripcion, periodo, monto FROM factura_detalle
                               WHERE factura_id = ? AND activo = 1 ORDER BY id_detalles");

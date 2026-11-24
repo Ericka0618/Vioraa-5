@@ -26,6 +26,16 @@ function bi_guardar(mysqli $db,array $r,int $uid,string $method='manual'): int {
     $q->bind_param('isisssssss',$r['id'],$r['nombre'],$uid,$filters,$method,$r['generado'],$json,$bytes,$hash,$file);$q->execute();$id=(int)$db->insert_id;
     // Cloud SQL is the durable private master; existing private GCS mount is a replica.
     $root=getenv('REPORT_PRIVATE_DIR')?:dirname(__DIR__,2).'/viora_documentos_privados';
-    try {if(!is_dir($root.'/reportes') && !mkdir($root.'/reportes',0770,true))throw new RuntimeException();if(file_put_contents($root.'/'.$file,$bytes)!==strlen($bytes))throw new RuntimeException();}catch(Throwable $e){error_log('VIORA reportes: réplica de almacenamiento pendiente; PDF conservado en Cloud SQL.');}
+    $replica = false;
+    try {
+        if (!is_dir($root.'/reportes') && !mkdir($root.'/reportes', 0770, true) && !is_dir($root.'/reportes')) throw new RuntimeException();
+        if (file_put_contents($root.'/'.$file, $bytes) !== strlen($bytes)) throw new RuntimeException();
+        $replica = true;
+    } catch (Throwable $e) {
+        error_log('VIORA reportes: réplica de almacenamiento pendiente; PDF conservado en Cloud SQL.');
+    }
+    if (function_exists('auditoria_evento')) {
+        auditoria_evento('Documentos', 'Replicar PDF', 'Almacenamiento privado: reporte BI', $replica, [['bi_reporte_historial', (string)$id]]);
+    }
     return $id;
 }

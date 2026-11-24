@@ -1,6 +1,8 @@
 <?php
 ini_set('display_errors', '0');
 header('Content-Type: application/json; charset=utf-8');
+require_once __DIR__ . '/../conf/auditoria.php';
+auditoria_arrancar_peticion_externa('Suscripciones');
 require_once __DIR__ . '/paypal_service.php';
 require_once __DIR__ . '/paypal_events.php';
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') { http_response_code(405); exit; }

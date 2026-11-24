@@ -5,6 +5,8 @@ ini_set('display_errors', '0');
 ini_set('log_errors', '1');
 
 session_start();
+require_once __DIR__ . '/../conf/auditoria.php';
+auditoria_arrancar_peticion_externa('Suscripciones');
 
 header('Content-Type: application/json; charset=utf-8');
 
@@ -85,6 +87,7 @@ if (!is_file($rutaConfig)) {
 require_once __DIR__ . '/paypal_service.php';
 try {
     require $rutaConexion;
+    $GLOBALS['viora_audit_refs'] = [['usuario', (string)$idUsuario]];
     $config = require $rutaConfig;
     $resultado = paypal_sincronizar($conexion, $config, $subscriptionId, $idUsuario);
     $_SESSION['paypal_subscription_id'] = $subscriptionId;

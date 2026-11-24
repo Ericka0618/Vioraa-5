@@ -169,6 +169,7 @@ if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
             }
         }
 
+        auditoria_fallo();
         echo json_encode([
             'ok' => false,
             'error' => 'Acción no válida.'
@@ -176,6 +177,7 @@ if (isset($_POST['ajax']) && $_POST['ajax'] === '1') {
         exit;
 
     } catch (Throwable $e) {
+        auditoria_fallo();
         echo json_encode([
             'ok' => false,
             'error' => $e instanceof mysqli_sql_exception

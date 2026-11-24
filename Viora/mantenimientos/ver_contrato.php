@@ -84,6 +84,7 @@ try {
         http_response_code(400);
         exit('Contrato inválido.');
     }
+    $GLOBALS['viora_audit_refs'] = [['contrato', (string)$id]];
 
     // Buscar el documento asociado al contrato.
     $q = $conexion->prepare("

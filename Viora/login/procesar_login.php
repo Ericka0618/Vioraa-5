@@ -9,6 +9,13 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     exit;
 }
 
+$auditLoginSuccess = false;
+register_shutdown_function(static function () use (&$auditLoginSuccess): void {
+    if (!$auditLoginSuccess) {
+        auditoria_evento('Autenticación', 'Inicio de sesión', 'Intento sin sesión autorizada', false, [], true);
+    }
+});
+
 // Protección contra fuerza bruta: validar intentos fallidos
 $maxIntentos = 5;
 $tiempoBloqueo = 900; // 15 minutos en segundos
@@ -159,6 +166,12 @@ $_SESSION['usuario'] = $row['usuario'];
 $_SESSION['rol'] = $rol;
 
 // Redirigir según el rol
+if (in_array($rol, ['Cliente', 'Administrador'], true)) {
+    $auditLoginSuccess = true;
+    auditoria_evento('Autenticación', 'Inicio de sesión', 'Sesión autorizada', true,
+        [['usuario', (string)$row['id_usuarios']]], false, auditoria_contexto());
+}
+
 if ($rol === 'Cliente') {
     header('Location: ../mantenimientos/catalogo.php');
     exit;

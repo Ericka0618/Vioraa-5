@@ -15,13 +15,25 @@ function factura_documento_guardar(mysqli $db, array $factura, array $lineas, ?a
     // Cloud SQL es la copia durable; Storage es una réplica privada opcional.
     $bucket = getenv('INVOICE_PDF_BUCKET') ?: '';
     if ($bucket !== '') {
-        try { factura_documento_storage($bucket, $tipo . '/' . $id . '/' . $hash . '.pdf', $bytes); }
-        catch (Throwable $e) { error_log('VIORA PDF Storage: réplica pendiente; copia disponible en SQL.'); }
+        $refs = [['factura', (string)$fid]];
+        if ($nota) $refs[] = ['factura_ecf_nota', (string)$id];
+        $replica = false;
+        try {
+            $replica = factura_documento_storage($bucket, $tipo . '/' . $id . '/' . $hash . '.pdf', $bytes);
+        } catch (Throwable $e) {
+            error_log('VIORA PDF Storage: réplica pendiente; copia disponible en SQL.');
+            if (function_exists('auditoria_evento')) {
+                auditoria_evento('Documentos', 'Replicar PDF', 'Cloud Storage: factura o nota', false, $refs, false, null, 'Integración');
+            }
+        }
+        if ($replica && function_exists('auditoria_evento')) {
+            auditoria_evento('Documentos', 'Replicar PDF', 'Cloud Storage: factura o nota', true, $refs, false, null, 'Integración');
+        }
     }
     return $bytes;
 }
 
-function factura_documento_storage(string $bucket, string $objeto, string $bytes): void
+function factura_documento_storage(string $bucket, string $objeto, string $bytes): bool
 {
     if (!preg_match('/^[a-z0-9][a-z0-9._-]{1,220}[a-z0-9]$/', $bucket)) throw new RuntimeException('Bucket inválido');
     $ch = curl_init('http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token');
@@ -35,6 +47,7 @@ function factura_documento_storage(string $bucket, string $objeto, string $bytes
     curl_setopt_array($ch, [CURLOPT_POST => true, CURLOPT_POSTFIELDS => $bytes, CURLOPT_RETURNTRANSFER => true, CURLOPT_HTTPHEADER => ['Authorization: Bearer ' . $token['access_token'], 'Content-Type: application/pdf'], CURLOPT_CONNECTTIMEOUT => 3, CURLOPT_TIMEOUT => 10]);
     curl_exec($ch); $status = curl_getinfo($ch, CURLINFO_HTTP_CODE); curl_close($ch);
     if (!in_array($status, [200, 201, 412], true)) throw new RuntimeException('Réplica no confirmada');
+    return $status !== 412;
 }
 
 function factura_documento_generar(mysqli $db, int $id): string

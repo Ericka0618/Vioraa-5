@@ -9,6 +9,7 @@ mysqli_report(MYSQLI_REPORT_ERROR | MYSQLI_REPORT_STRICT);
 
 // Función para mostrar errores
 function mostrarError($mensaje) {
+    auditoria_fallo();
     $_SESSION['registro_error'] = $mensaje;
     header("Location: registro.php");
     exit;
@@ -16,6 +17,7 @@ function mostrarError($mensaje) {
 
 // Permitir únicamente solicitudes POST
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    auditoria_fallo();
     header("Location: registro.php");
     exit;
 }

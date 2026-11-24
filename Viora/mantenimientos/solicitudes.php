@@ -48,6 +48,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['ajax'] ?? '') === '1') {
         throw new Exception('Acción no permitida.');
     } catch (Throwable $e) {
         http_response_code(400);
+        auditoria_fallo();
         echo json_encode(['ok'=>false,'error'=>$e instanceof mysqli_sql_exception?'No se pudo completar la operación en la base de datos.':$e->getMessage()],JSON_UNESCAPED_UNICODE);
     }
     exit;

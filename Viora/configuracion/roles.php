@@ -169,6 +169,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['ajax'] ?? '') === '1') {
         ]);
 
     } catch (Throwable $e) {
+        auditoria_fallo();
         $mensaje = $e instanceof mysqli_sql_exception
             ? 'No se pudo completar la operación. Verifica si el rol está relacionado con otros registros.'
             : $e->getMessage();

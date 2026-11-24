@@ -507,10 +507,18 @@ function ecf_mensaje_error(array $datos, string $raw, int $codigo): string
 // normalizado. No lanza excepciones por fallos de red o de DGII.
 function ecf_enviar_documento(array $cfg, array $payload, ?mysqli $conexion = null, ?int $facturaId = null, ?int $notaId = null): array
 {
+    $auditarResultado = static function (string $resultado, bool $confirmado) use ($facturaId, $notaId): void {
+        if (!$facturaId || !function_exists('auditoria_evento')) return;
+        $refs = [['factura', (string)$facturaId]];
+        if ($notaId) $refs[] = ['factura_ecf_nota', (string)$notaId];
+        auditoria_evento('Fiscal', 'Enviar e-CF', $resultado, $confirmado, $refs, false, null, 'Integración');
+    };
     if (getenv('ECF_ENABLED') !== 'true') {
+        $auditarResultado('Emisión deshabilitada por configuración', false);
         return ['estado' => 'PENDIENTE_CONFIGURACION', 'error' => 'Emisión fiscal deshabilitada; requiere autorización y configuración del proveedor.'];
     }
     if ($cfg['api_key'] === '') {
+        $auditarResultado('Credencial fiscal no configurada', false);
         return [
             'estado' => 'PENDIENTE_CONFIGURACION',
             'error' => 'Falta la variable de entorno ECF_API_KEY',
@@ -520,6 +528,7 @@ function ecf_enviar_documento(array $cfg, array $payload, ?mysqli $conexion = nu
     try {
         ecf_validar_configuracion($cfg, 'E' . ($payload['ECF']['Encabezado']['IdDoc']['TipoeCF'] ?? ''));
     } catch (InvalidArgumentException $e) {
+        $auditarResultado('Configuración fiscal inválida', false);
         return ['estado' => 'PENDIENTE_CONFIGURACION', 'error' => $e->getMessage()];
     }
     if (!$conexion || !$facturaId) throw new RuntimeException('La emisión requiere auditoría vinculada a una factura.');
@@ -528,6 +537,7 @@ function ecf_enviar_documento(array $cfg, array $payload, ?mysqli $conexion = nu
         $respuesta = ecf_post($cfg, '/api/v1/ecf/send', $payload);
         ecf_auditar_respuesta($conexion, $auditoriaId, $respuesta, $cfg['api_key']);
     } catch (RuntimeException $e) {
+        $auditarResultado('Envío sin confirmación de transporte', false);
         error_log('[VIORA e-CF] Fallo de transporte; conciliar antes de reenviar.');
         try {
             $q = $conexion->prepare("UPDATE ecf_envio SET estado='PENDIENTE_CONCILIACION' WHERE id_envio=?");
@@ -536,7 +546,10 @@ function ecf_enviar_documento(array $cfg, array $payload, ?mysqli $conexion = nu
         return ['estado' => 'PENDIENTE_CONCILIACION', 'error' => 'No se conoce si el proveedor recibió el documento. Consultar antes de reenviar.'];
     }
 
-    return ecf_normalizar_respuesta($respuesta);
+    $resultado = ecf_normalizar_respuesta($respuesta);
+    $confirmado = !in_array($resultado['estado'], ['Rechazado', 'PENDIENTE_CONCILIACION'], true);
+    $auditarResultado($confirmado ? 'Respuesta fiscal confirmada' : 'Respuesta fiscal rechazada o por conciliar', $confirmado);
+    return $resultado;
 }
 
 function ecf_normalizar_respuesta(array $respuesta): array
