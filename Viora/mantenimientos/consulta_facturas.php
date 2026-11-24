@@ -59,7 +59,7 @@ try {
     if ($idFactura > 0) {
         $st = $conexion->prepare("SELECT f.*, p.nombres, p.apellidos, p.cedula, p.telefono, p.correo,
                                          ct.id_contratos, ct.numero_contrato, a.numero AS apto, e.nombre AS edificio,
-                                         fe.encf, fe.estado AS ecf_estado, fe.codigo_seguridad, fe.dgii_url,
+                                         fe.id_factura_ecf, fe.encf, fe.estado AS ecf_estado, fe.codigo_seguridad, fe.dgii_url,
                                          fe.error_mensaje, fe.fecha_envio, fe.ecf_api_id, fe.tipo_ecf
                                   $joins
                                   WHERE f.id_facturas = ? $propietarioSql LIMIT 1");
@@ -121,7 +121,7 @@ try {
         // MySQL no permite bind_param para LIMIT/OFFSET, validar offset después de cálculo int
         $sql = "SELECT f.id_facturas, f.numero_documento, f.periodo, f.fecha, f.total, f.monto_pagado,
                        f.saldo_pendiente, f.estado, f.fecha_vencimiento, (SELECT GROUP_CONCAT(DISTINCT fd.concepto ORDER BY fd.concepto SEPARATOR ', ') FROM factura_detalle fd WHERE fd.factura_id=f.id_facturas AND fd.activo=1) AS conceptos, p.nombres, p.apellidos, p.cedula, a.numero AS apto,
-                       e.nombre AS edificio, fe.estado AS ecf_estado, fe.encf
+                       e.nombre AS edificio, fe.estado AS ecf_estado, fe.id_factura_ecf, fe.encf
                 $joins $whereSql
                 ORDER BY f.fecha_registro DESC, f.id_facturas DESC LIMIT 101 OFFSET " . (int)$offset;
 
@@ -213,6 +213,9 @@ foreach ($facturas as $f) {
         <div>
             <a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>">← Volver al listado</a>
             <?php if ($detalle): ?><a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$idFactura ?>">Ver trazabilidad</a><?php endif; ?>
+            <?php if ($identidad['admin'] && !empty($detalle['id_factura_ecf'])): ?>
+                <a href="trazabilidad.php?entidad=factura_ecf&amp;referencia=<?= (int)$detalle['id_factura_ecf'] ?>">Ver trazabilidad fiscal</a>
+            <?php endif; ?>
             <?php if ($identidad['admin'] && $detalle && $detalle['id_contratos'] && $detalle['estado'] !== 'Anulada'): ?>
                 <a class="cf-boton" href="facturacion_viora.php?contrato=<?= (int)$detalle['id_contratos'] ?>">Registrar pago</a>
             <?php endif; ?>
@@ -525,8 +528,8 @@ foreach ($facturas as $f) {
                     <td class="num"><?= pesos($f['total']) ?></td>
                     <td class="num"><?= pesos($f['monto_pagado']) ?></td><td class="num"><?= pesos($f['saldo_pendiente']) ?></td>
                     <td><span class="cf-estado <?= esc(strtolower(str_replace(' ', '', $f['estado']))) ?>"><?= esc($f['estado']) ?></span></td>
-                    <td><?php if ($identidad['admin'] && preg_match('/^E[0-9]{12}$/D', (string)$f['encf'])): ?>
-                    <a href="trazabilidad.php?entidad=encf&amp;referencia=<?= esc($f['encf']) ?>">Ver trazabilidad de <?= esc($f['encf']) ?></a>
+                    <td><?php if ($identidad['admin'] && !empty($f['id_factura_ecf'])): ?>
+                    <a href="trazabilidad.php?entidad=factura_ecf&amp;referencia=<?= (int)$f['id_factura_ecf'] ?>">Ver trazabilidad fiscal <?= esc($f['encf']) ?></a>
                     <?php else: ?><?= esc($f['encf']) ?><?php endif; ?><br><?= $f['ecf_estado'] ? '<span class="cf-estado ' . esc(strtolower(str_replace(' ', '', $f['ecf_estado']))) . '">' . esc($f['ecf_estado']) . '</span>' : '<small>Sin enviar</small>' ?></td>
                     <td><a class="cf-enlace" href="<?= $esMisFacturas ? 'mis_facturas.php' : 'consulta_facturas.php' ?>?id=<?= (int)$f['id_facturas'] ?>">Ver</a><?= icono_ojo('factura_pdf.php?id=' . (int)$f['id_facturas'], 'Ver e imprimir PDF') ?><a class="cf-enlace" href="factura_pdf.php?id=<?= (int)$f['id_facturas'] ?>&amp;descargar=1">Descargar</a> <a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$f['id_facturas'] ?>">Ver trazabilidad</a></td>
                 </tr>

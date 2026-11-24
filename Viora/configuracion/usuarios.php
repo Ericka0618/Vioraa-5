@@ -334,6 +334,11 @@ $personas = $conexion->query(
      ORDER BY id_personas ASC'
 );
 
+$suscripcionesPorUsuario = [];
+foreach ($conexion->query('SELECT id_suscripcion, usuario_id, estado FROM suscripcion ORDER BY id_suscripcion DESC') as $plan) {
+    $suscripcionesPorUsuario[$plan['usuario_id']][] = $plan;
+}
+
 // LISTADO DE USUARIOS
 $result = $conexion->query(
     'SELECT u.id_usuarios,
@@ -478,6 +483,9 @@ $result = $conexion->query(
                                 </td>
 
                                 <td class="tabla__acciones">
+                                    <?php foreach ($suscripcionesPorUsuario[$row['id_usuarios']] ?? [] as $plan): ?>
+                                        <a href="../mantenimientos/trazabilidad.php?entidad=suscripcion&amp;referencia=<?= (int)$plan['id_suscripcion'] ?>">Ver trazabilidad de suscripción #<?= (int)$plan['id_suscripcion'] ?></a>
+                                    <?php endforeach; ?>
 
                                     <button type="button"
                                             class="btn-icono btn-icono--editar btn-edit"

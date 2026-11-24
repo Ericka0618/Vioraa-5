@@ -612,6 +612,11 @@ async function guardarFactura() {
             abrirPdfFactura(resultado.id_facturas, ventanaPdf);
         }
 
+        const trazabilidad = document.createElement('a');
+        trazabilidad.href = 'trazabilidad.php?entidad=factura&referencia=' + encodeURIComponent(resultado.id_facturas);
+        trazabilidad.textContent = ' Ver trazabilidad';
+        $('mensaje').appendChild(trazabilidad);
+
         console.log(
             'Factura generada:',
             resultado
