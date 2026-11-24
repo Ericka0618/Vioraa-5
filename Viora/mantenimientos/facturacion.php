@@ -338,6 +338,7 @@ include __DIR__ . '/menu_lateral.php';
     <div class="encabezado-factura">
         <div>
             <h1>Facturación</h1>
+            <a href="consulta_facturas.php">Consultar facturas y su trazabilidad</a>
             <p>
                 Administración de alquileres
                 y mantenimiento

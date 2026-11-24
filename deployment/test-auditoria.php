@@ -4,6 +4,7 @@ if (PHP_SAPI !== 'cli' || getenv('DB_NAME') !== 'viora_audit_qa' || getenv('DB_H
 require __DIR__ . '/../Viora/conf/conexion.php';
 require __DIR__ . '/../Viora/conf/auditoria_consulta.php';
 require __DIR__ . '/../Viora/conf/auditoria_exportacion.php';
+require __DIR__ . '/../Viora/conf/trazabilidad.php';
 
 function verificar(bool $condition, string $message): void
 {
@@ -115,6 +116,26 @@ $maintenance = crear($db, "INSERT INTO mantenimiento(condominio_id,descripcion) 
 $db->execute_query("INSERT INTO mantenimiento_solicitud(mantenimiento_id,solicitud_id) VALUES (?,?)", [$maintenance,$repair]);
 [$repairEvents] = auditoria_linea($db, 'solicitud_mantenimiento', (string)$repair);
 verificar(!array_diff(['solicitud_mantenimiento','mantenimiento','mantenimiento_solicitud'], array_column($repairEvents, 'tabla')), 'La solicitud de mantenimiento conecta con su ejecución');
+$adminIdentity = trazabilidad_identidad($db);
+$owned = trazabilidad_registro($db, $adminIdentity, 'solicitud_propiedad', (string)$request);
+[$firstPage, $more] = trazabilidad_pagina($db, $owned, [], 2);
+$last = end($firstPage);
+[$nextPage] = trazabilidad_pagina($db, $owned, ['antes' => $last['id'], 'fecha_cursor' => $last['fecha']]);
+verificar($more && !array_intersect(array_column($firstPage, 'id'), array_column($nextPage, 'id'))
+    && !array_diff(['contrato', 'factura', 'factura_pago', 'factura_ecf'], array_column(array_merge($firstPage, $nextPage), 'tabla')),
+    'Historial individual con cursor y vínculos financieros exactos');
+[$unrelated] = trazabilidad_pagina($db, trazabilidad_registro($db, $adminIdentity, 'solicitud_propiedad', (string)$purchase));
+verificar(array_unique(array_column($unrelated, 'tabla')) === ['solicitud_propiedad'], 'El historial individual excluye otros trámites de la misma persona');
+$_SESSION['id_usuarios'] = $clientUser;
+$clientIdentity = trazabilidad_identidad($db);
+$clientInvoice = trazabilidad_registro($db, $clientIdentity, 'factura', (string)$invoice);
+[$ownRows] = trazabilidad_pagina($db, $clientInvoice);
+verificar($ownRows && !array_filter(array_column($ownRows, 'actor_nombre'))
+    && !trazabilidad_registro($db, $clientIdentity, 'persona', (string)$adminPerson)
+    && !trazabilidad_registro($db, array_replace($clientIdentity, ['persona_id' => $adminPerson]), 'factura', (string)$invoice),
+    'La vista de cliente comprueba titularidad y protege los actores internos');
+$_SESSION['id_usuarios'] = $admin;
+
 [$where, $params] = auditoria_filtros(['factura' => $invoice, 'estado' => 'Exitosa', 'reporte' => 12]);
 verificar((int)auditoria_indicadores($db, $where, $params)['total'] >= 4, 'Filtros combinados y reporte de facturas');
 [$where, $params] = auditoria_filtros(['q' => "' OR 1=1 /* QA"]);
@@ -138,5 +159,5 @@ foreach (auditoria_reportes() as $number => [$title]) {
 }
 if (isset($argv[1])) {
     file_put_contents($argv[1], json_encode(['admin'=>$tag,'cliente'=>$tag . '-C','password'=>$password,'contrato'=>$contract,
-        'factura'=>$invoice,'factura_web'=>$openInvoice,'persona'=>$client,'apartamento'=>$apartment,'detalle'=>$changes[0]['id']], JSON_THROW_ON_ERROR));
+        'solicitud'=>$request,'rechazada'=>$purchase,'reparacion'=>$repair,'suscripcion'=>$subscription,'factura'=>$invoice,'factura_web'=>$openInvoice,'persona'=>$client,'apartamento'=>$apartment,'detalle'=>$changes[0]['id']], JSON_THROW_ON_ERROR));
 }

@@ -136,7 +136,7 @@ function esc($valor) {
                                                 <?= $row['activo'] ? 'Activo' : 'Inactivo' ?>
                                             </span>
                                         </td>
-                                        <td class="tabla__acciones">
+                                        <td class="tabla__acciones"><a href="trazabilidad.php?entidad=edificio&amp;referencia=<?= (int)$row['id_edificios'] ?>">Ver trazabilidad</a>
                                             <button type="button" class="btn-icono btn-icono--editar btn-edit" data-id="<?= (int)$row['id_edificios'] ?>" title="Editar" aria-label="Editar edificio">✎</button>
                                             <button type="button" class="btn-icono btn-icono--eliminar btn-delete" data-id="<?= (int)$row['id_edificios'] ?>" title="Eliminar" aria-label="Eliminar edificio">🗑️</button>
                                         </td>

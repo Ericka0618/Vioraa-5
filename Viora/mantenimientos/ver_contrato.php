@@ -3,99 +3,26 @@ session_start();
 
 require_once '../conf/conexion.php';
 
-// Verificar que el usuario inició sesión.
-if (
-    empty($_SESSION['logged_in']) ||
-    $_SESSION['logged_in'] !== true
-) {
-    http_response_code(403);
-    exit('Acceso denegado. Debes iniciar sesión.');
-}
-
-// Identificar al usuario autenticado.
-$usuarioId = (int)(
-    $_SESSION['id_usuarios']
-    ?? $_SESSION['id_usuario']
-    ?? 0
-);
-
-// Si la sesión no tiene ID, buscar por nombre de usuario.
-$nombreUsuario = $_SESSION['usuario'] ?? '';
+require_once __DIR__ . '/../conf/trazabilidad.php';
 
 try {
-
-    // Verificar el rol administrador en la tabla role.
-    if ($usuarioId > 0) {
-
-        $check = $conexion->prepare("
-            SELECT r.nombre
-            FROM usuario u
-            INNER JOIN role r
-                ON r.id_roles = u.id_rol
-            WHERE u.id_usuarios = ?
-              AND u.activo = 1
-              AND r.activo = 1
-            LIMIT 1
-        ");
-
-        $check->bind_param("i", $usuarioId);
-
-    } elseif ($nombreUsuario !== '') {
-
-        $check = $conexion->prepare("
-            SELECT r.nombre
-            FROM usuario u
-            INNER JOIN role r
-                ON r.id_roles = u.id_rol
-            WHERE u.usuario = ?
-              AND u.activo = 1
-              AND r.activo = 1
-            LIMIT 1
-        ");
-
-        $check->bind_param("s", $nombreUsuario);
-
-    } else {
+    $user = trazabilidad_identidad($conexion);
+    if (!$user) {
         http_response_code(403);
-        exit('No se pudo identificar al usuario.');
+        exit('Acceso denegado.');
     }
-
-    $check->execute();
-
-    $rol = $check->get_result()->fetch_assoc();
-
-    // Permitir únicamente al administrador.
-    if (
-        !$rol ||
-        mb_strtolower(trim($rol['nombre'])) !== 'administrador'
-    ) {
-        http_response_code(403);
-        exit('Solo el administrador puede visualizar contratos.');
-    }
-
-    // Obtener el ID del contrato.
-    $id = filter_input(
-        INPUT_GET,
-        'id',
-        FILTER_VALIDATE_INT
-    );
-
+    $id = filter_input(INPUT_GET, 'id', FILTER_VALIDATE_INT);
     if (!$id || $id <= 0) {
         http_response_code(400);
         exit('Contrato inválido.');
     }
-    $GLOBALS['viora_audit_refs'] = [['contrato', (string)$id]];
-
-    // Buscar el documento asociado al contrato.
-    $q = $conexion->prepare("
-        SELECT archivo_contrato
-        FROM contrato
-        WHERE id_contratos = ?
-          AND activo = 1
-        LIMIT 1
-    ");
-
-    $q->bind_param("i", $id);
+    $q = $conexion->prepare('SELECT archivo_contrato FROM contrato WHERE id_contratos=? AND activo=1'
+        . ($user['admin'] ? '' : ' AND persona_id=?'));
+    if ($user['admin']) {
+        $q->bind_param('i', $id);
+    } else {
+        $q->bind_param('ii', $id, $user['persona_id']);
+    }
     $q->execute();
 
     $contrato = $q->get_result()->fetch_assoc();
@@ -104,6 +31,8 @@ try {
         http_response_code(404);
         exit('Contrato no encontrado.');
     }
+
+    $GLOBALS['viora_audit_refs'] = [['contrato', (string)$id]];
 
     // Validar el nombre del archivo PDF.
     $nombreArchivo = (string)(

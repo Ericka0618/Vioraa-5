@@ -83,6 +83,18 @@
 
   async function enviarMensaje(mensaje) {
     agregarMensaje('user', mensaje);
+    function registroTrazabilidad() {
+      const params = new URLSearchParams(window.location.search);
+      const page = window.location.pathname.split('/').pop();
+      if (page === 'trazabilidad.php') {
+        return { entidad: params.get('entidad'), referencia: params.get('referencia') };
+      }
+      const type = { 'consulta_facturas.php': 'factura', 'mis_facturas.php': 'factura' }[page];
+      if (type) return { entidad: type, referencia: params.get('id') };
+      if (page === 'facturacion_viora.php') return { entidad: 'contrato', referencia: params.get('contrato') };
+      return null;
+    }
+
     const burbujaRespuesta = agregarMensaje('assistant', 'Escribiendo…');
     burbujaRespuesta.classList.add('cb__mensaje--pendiente');
 
@@ -93,7 +105,11 @@
         headers: { 'Content-Type': 'application/json', 'X-CSRF-Token': raiz.dataset.csrf },
         body: JSON.stringify({
           mensaje: mensaje,
-          pagina: { titulo: document.title, ruta: window.location.pathname }
+          pagina: {
+            titulo: document.title,
+            ruta: window.location.pathname,
+            registro: registroTrazabilidad()
+          }
         })
       });
       const datos = await respuesta.json().catch(function () { return {}; });

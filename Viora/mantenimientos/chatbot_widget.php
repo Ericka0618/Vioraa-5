@@ -37,4 +37,4 @@ if (empty($_SESSION['chatbot_csrf'])) $_SESSION['chatbot_csrf'] = bin2hex(random
   </button>
 </div>
 
-<script src="../mantenimientos/chatbot.js?v=6" defer></script>
+<script src="../mantenimientos/chatbot.js?v=7" defer></script>

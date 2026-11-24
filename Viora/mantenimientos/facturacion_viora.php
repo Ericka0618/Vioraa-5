@@ -130,7 +130,7 @@ try {
     $ecfReenviable = !$ecfAceptado && empty($f['ecf_api_id']);
 ?>
 <tr>
-    <td><strong><?= esc($f['numero_documento']) ?></strong><small><?= esc($f['fecha']) ?></small></td>
+    <td><strong><?= esc($f['numero_documento']) ?></strong><small><?= esc($f['fecha']) ?></small><a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$f['id_facturas'] ?>">Ver trazabilidad</a></td>
     <td><?= esc($f['periodo']) ?></td>
     <td><?= pesos($f['total']) ?></td>
     <td><?= pesos($f['monto_pagado']) ?></td>

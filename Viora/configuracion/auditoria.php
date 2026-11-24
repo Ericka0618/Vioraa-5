@@ -39,6 +39,7 @@ $limited = false;
 $ai = null;
 $history = $charts = [];
 $metrics = [];
+$exportSnapshot = 0;
 $report = 1;
 $auditRefs = [];
 $success = false;
@@ -99,15 +100,28 @@ try {
                 3 => 'modulo,fecha DESC,id DESC',
                 default => $auditRefs ? 'fecha,id' : 'fecha DESC,id DESC',
             };
-            $rows = $conexion->execute_query("SELECT * FROM auditoria a WHERE $where ORDER BY $sortExport LIMIT 2001", $params)->fetch_all(MYSQLI_ASSOC);
-            if (count($rows) > 2000) throw new InvalidArgumentException('Acote los filtros para exportar hasta 2,000 operaciones.');
-            $body = $intent === 'pdf' ? auditoria_pdf($rows, $reports[$report][0]) : auditoria_xlsx($rows, $reports[$report][0]);
+            $batch = filter_var($_POST['lote'] ?? 1, FILTER_VALIDATE_INT, ['options' => ['min_range' => 1]]);
+            $snapshot = filter_var($_POST['corte'] ?? null, FILTER_VALIDATE_INT, ['options' => ['min_range' => 0]]);
+            if (!$batch || ($batch > 1 && $snapshot === false) || $batch > intdiv(PHP_INT_MAX, 2000)) {
+                throw new InvalidArgumentException('Lote de exportación inválido.');
+            }
+            if ($snapshot !== false) {
+                $where .= ' AND a.id<=?';
+                $params[] = $snapshot;
+            }
+            $offsetExport = ($batch - 1) * 2000;
+            $rows = $conexion->execute_query("SELECT * FROM auditoria a WHERE $where ORDER BY $sortExport LIMIT 2001 OFFSET $offsetExport", $params)->fetch_all(MYSQLI_ASSOC);
+            $exportContinues = count($rows) > 2000;
+            if ($exportContinues) array_pop($rows);
+            $exportTitle = $reports[$report][0] . ($batch > 1 || $exportContinues ? ' · Lote ' . $batch : '');
+            $body = $intent === 'pdf' ? auditoria_pdf($rows, $exportTitle) : auditoria_xlsx($rows, $exportTitle);
             auditoria_evento('Auditoría', $action, $reports[$report][0], true, $auditRefs);
             header('Content-Type: ' . ($intent === 'pdf' ? 'application/pdf' : 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'));
-            header('Content-Disposition: attachment; filename="VIORA-auditoria.' . $intent . '"');
+            header('Content-Disposition: attachment; filename="VIORA-auditoria-' . $batch . '.' . $intent . '"');
             echo $body;
             exit;
         }
+        $exportSnapshot = (int)$conexion->query('SELECT COALESCE(MAX(id),0) FROM auditoria')->fetch_row()[0];
         $metrics = auditoria_indicadores($conexion, $where, $params);
         $orderOptions = ['fecha' => 'fecha', 'usuario' => 'actor_nombre', 'modulo' => 'modulo', 'accion' => 'accion', 'estado' => 'estado'];
         $order = is_string($_GET['orden'] ?? null) ? ($orderOptions[$_GET['orden']] ?? 'fecha') : 'fecha';
@@ -211,7 +225,10 @@ $summaryLabels = ['total' => 'Total de operaciones', 'exitosas' => 'Exitosas', '
         <section class="bi-panel">
             <h2>Línea de tiempo</h2>
             <?php if (!$timeline): ?><p>Sin eventos registrados para esta referencia.</p><?php endif; ?>
-            <?php if ($limited): ?><p role="status">La consulta alcanzó el límite de expansión. Busque por una referencia más específica.</p><?php endif; ?>
+            <?php if ($limited): ?><p role="status">El resumen alcanzó el límite de expansión.</p><?php endif; ?>
+            <?php if (preg_match('/^(?:[1-9][0-9]{0,18}|E[0-9]{12})$/D', $get('referencia'))): ?>
+                <a href="../mantenimientos/trazabilidad.php?<?= ae(http_build_query(['entidad' => $get('entidad'), 'referencia' => $get('referencia')])) ?>">Abrir historial paginado del registro</a>
+            <?php endif; ?>
             <ol class="audit-timeline">
                 <?php foreach ($timeline as $event): ?>
                     <li><time><?= ae(auditoria_fecha($event['fecha'])) ?></time>
@@ -274,6 +291,12 @@ $summaryLabels = ['total' => 'Total de operaciones', 'exitosas' => 'Exitosas', '
                 <h2>Historial de operaciones</h2>
                 <form method="post" action="<?= ae('auditoria.php?' . http_build_query($input)) ?>">
                     <input type="hidden" name="csrf" value="<?= ae($csrf) ?>">
+                    <input type="hidden" name="corte" value="<?= $exportSnapshot ?>">
+                    <?php if ((int)$metrics['total'] > 2000): ?>
+                        <label>Lote de hasta 2,000 eventos
+                            <input type="number" min="1" max="<?= (int)ceil($metrics['total'] / 2000) ?>" value="1" name="lote" required>
+                        </label>
+                    <?php endif; ?>
                     <button name="operacion" value="pdf">Descargar PDF</button>
                     <button name="operacion" value="xlsx">Descargar Excel</button>
                 </form>

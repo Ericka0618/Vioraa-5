@@ -216,7 +216,7 @@ $claseEstado = static function ($estado) {
                         <?php foreach ($solicitudes as $s): ?>
                             <tr>
                                 <td>
-                                    <strong>#<?= (int)$s['id_solicitudes'] ?></strong>
+                                    <a href="trazabilidad.php?entidad=solicitud_mantenimiento&amp;referencia=<?= (int)$s['id_solicitudes'] ?>">Ver trazabilidad</a><br><strong>#<?= (int)$s['id_solicitudes'] ?></strong>
                                     <span class="rep-meta"><?= rep_esc(date('d/m/Y H:i', strtotime($s['fecha_solicitud']))) ?></span>
                                     <span class="rep-badge <?= rep_esc($claseEstado($s['prioridad'])) ?>"><?= rep_esc($s['prioridad']) ?></span>
                                 </td>

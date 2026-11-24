@@ -194,7 +194,7 @@ try {
                     <td><?= esc($c['referencia']) ?: '—' ?></td>
                     <td class="num"><?= pesos($c['monto']) ?></td>
                     <td><?= esc($c['registrado_por']) ?: '—' ?></td>
-                    <td><a class="cb-enlace" href="consulta_facturas.php?id=<?= (int)$c['id_facturas'] ?>">Ver factura</a></td>
+                    <td><a class="cb-enlace" href="consulta_facturas.php?id=<?= (int)$c['id_facturas'] ?>">Ver factura</a> <a href="trazabilidad.php?entidad=factura&amp;referencia=<?= (int)$c['id_facturas'] ?>">Ver trazabilidad</a></td>
                 </tr>
             <?php endforeach; ?>
             </tbody>

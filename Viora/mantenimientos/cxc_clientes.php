@@ -129,7 +129,7 @@ unset($f);
 <td><strong><?= esc($f['edificio'].' · Apto. '.$f['numero']) ?></strong><small><?= esc($f['condominio']) ?> · Contrato <?= esc($f['numero_contrato']) ?></small></td>
 <td><span class="cxc-tipo <?= $f['tipo_operacion']==='Venta'?'compra':'' ?>"><?= esc($f['tipo_operacion']==='Venta'?'Compra':'Alquiler') ?></span></td>
 <td><?= pesos($f['renta']) ?></td><td><?= pesos($f['mantenimiento']) ?></td><td><strong><?= pesos($f['total']) ?></strong></td>
-<td><button type="button" class="cxc-boton" data-cliente="<?= esc($f['nombres'].' '.$f['apellidos']) ?>" data-propiedad="<?= esc($f['edificio'].' · Apto. '.$f['numero']) ?>" data-contrato="<?= (int)$f['id_contratos'] ?>" data-renta="<?= pesos($f['renta']) ?>" data-mantenimiento="<?= pesos($f['mantenimiento']) ?>" data-total="<?= pesos($f['total']) ?>">Procesar cobro</button></td>
+<td><button type="button" class="cxc-boton" data-cliente="<?= esc($f['nombres'].' '.$f['apellidos']) ?>" data-propiedad="<?= esc($f['edificio'].' · Apto. '.$f['numero']) ?>" data-contrato="<?= (int)$f['id_contratos'] ?>" data-renta="<?= pesos($f['renta']) ?>" data-mantenimiento="<?= pesos($f['mantenimiento']) ?>" data-total="<?= pesos($f['total']) ?>">Procesar cobro</button> <a href="trazabilidad.php?entidad=contrato&amp;referencia=<?= (int)$f['id_contratos'] ?>">Ver trazabilidad</a></td>
 </tr>
 <?php endforeach; ?>
 </tbody></table></div>

@@ -28,6 +28,11 @@ if (empty($_SESSION['csrf_catalogo'])) {
     $_SESSION['csrf_catalogo'] = bin2hex(random_bytes(32));
 }
 
+$suscripciones = [];
+if (strcasecmp((string)($_SESSION['rol'] ?? ''), 'cliente') === 0) {
+    $suscripciones = $conexion->execute_query('SELECT id_suscripcion, estado FROM suscripcion WHERE usuario_id=? ORDER BY id_suscripcion DESC',
+        [(int)($_SESSION['id_usuario'] ?? $_SESSION['id_usuarios'] ?? 0)])->fetch_all(MYSQLI_ASSOC);
+}
 function esc($v) { return htmlspecialchars((string)($v ?? ''), ENT_QUOTES, 'UTF-8'); }
 
 function fotoApartamento($archivo) {
@@ -347,6 +352,9 @@ sort($condominios, SORT_NATURAL | SORT_FLAG_CASE);
 <?php include 'menu_lateral.php'; ?>
 
 <main class="contenido catalogo">
+<?php foreach ($suscripciones as $suscripcion): ?>
+    <p><a href="trazabilidad.php?entidad=suscripcion&amp;referencia=<?= (int)$suscripcion['id_suscripcion'] ?>">Ver trazabilidad de suscripción #<?= (int)$suscripcion['id_suscripcion'] ?> · <?= esc($suscripcion['estado']) ?></a></p>
+<?php endforeach; ?>
 
   <header class="catalogo-encabezado">
 

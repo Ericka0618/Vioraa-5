@@ -50,10 +50,10 @@ function auditoria_xlsx(array $rows, string $title): string
         $xmlRows .= '</row>';
     };
     $append(['VIORA · ' . $title], 1);
-    $append(['ID', 'Fecha y hora (Santo Domingo)', 'Usuario', 'Rol', 'Módulo', 'Acción', 'Descripción', 'Estado', 'Tabla', 'Registro', 'Seguimiento', 'Origen', 'Referencias'], 1);
+    $append(['ID', 'Fecha y hora (Santo Domingo)', 'Usuario', 'Rol', 'Módulo', 'Acción', 'Descripción', 'Estado', 'Tabla', 'Registro', 'Seguimiento', 'Origen', 'Referencias', 'Antes', 'Después'], 1);
     foreach ($rows as $r) {
         $append([$r['id'], auditoria_fecha($r['fecha']), $r['actor_nombre'], $r['rol'], $r['modulo'], $r['accion'],
-            $r['descripcion'], $r['estado'], $r['tabla'], $r['registro'], $r['seguimiento'], $r['origen'], $r['referencias']]);
+            $r['descripcion'], $r['estado'], $r['tabla'], $r['registro'], $r['seguimiento'], $r['origen'], $r['referencias'], $r['anterior'], $r['nuevo']]);
     }
     $tmp = tempnam(sys_get_temp_dir(), 'viora_audit_');
     if ($tmp === false) throw new RuntimeException('No se pudo preparar el archivo.');
@@ -66,7 +66,7 @@ function auditoria_xlsx(array $rows, string $title): string
             'xl/workbook.xml' => "<workbook xmlns=\"$ns\" xmlns:r=\"$rel\"><sheets><sheet name=\"Auditoría\" sheetId=\"1\" r:id=\"rId1\"/></sheets></workbook>",
             'xl/_rels/workbook.xml.rels' => "<Relationships xmlns=\"$packageRel\"><Relationship Id=\"rId1\" Type=\"$rel/worksheet\" Target=\"worksheets/sheet1.xml\"/><Relationship Id=\"rId2\" Type=\"$rel/styles\" Target=\"styles.xml\"/></Relationships>",
             'xl/styles.xml' => "<styleSheet xmlns=\"$ns\">" . '<fonts count="2"><font><sz val="11"/><name val="Calibri"/></font><font><b/><color rgb="FFFFFFFF"/><sz val="11"/><name val="Calibri"/></font></fonts><fills count="3"><fill><patternFill patternType="none"/></fill><fill><patternFill patternType="gray125"/></fill><fill><patternFill patternType="solid"><fgColor rgb="FF123F2E"/><bgColor indexed="64"/></patternFill></fill></fills><borders count="1"><border><left/><right/><top/><bottom/><diagonal/></border></borders><cellStyleXfs count="1"><xf numFmtId="0" fontId="0" fillId="0" borderId="0"/></cellStyleXfs><cellXfs count="2"><xf numFmtId="0" fontId="0" fillId="0" borderId="0" xfId="0"/><xf numFmtId="0" fontId="1" fillId="2" borderId="0" xfId="0" applyFont="1" applyFill="1"/></cellXfs><cellStyles count="1"><cellStyle name="Normal" xfId="0" builtinId="0"/></cellStyles></styleSheet>',
-            'xl/worksheets/sheet1.xml' => "<worksheet xmlns=\"$ns\"><cols><col min=\"1\" max=\"13\" width=\"24\" customWidth=\"1\"/></cols><sheetData>$xmlRows</sheetData><autoFilter ref=\"A2:M" . (count($rows) + 2) . "\"/></worksheet>",
+            'xl/worksheets/sheet1.xml' => "<worksheet xmlns=\"$ns\"><cols><col min=\"1\" max=\"15\" width=\"24\" customWidth=\"1\"/></cols><sheetData>$xmlRows</sheetData><autoFilter ref=\"A2:O" . (count($rows) + 2) . "\"/></worksheet>",
         ];
         foreach ($files as $path => $contents) $zip->addFromString($path, $contents);
         if (!$zip->close()) throw new RuntimeException('No se pudo guardar el archivo.');

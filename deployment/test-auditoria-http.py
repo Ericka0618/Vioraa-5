@@ -99,6 +99,41 @@ with zipfile.ZipFile(io.BytesIO(xlsx)) as workbook:
     assert all("factura" in " ".join(t.text or "" for t in row.findall(".//s:t", ns)).lower() for row in rows[2:])
 print("OK descargas HTTP de PDF y XLSX filtrados")
 
+if "solicitud" in fixture:
+    individual = "/mantenimientos/trazabilidad.php?"
+    def trace(entity, key):
+        return individual + urllib.parse.urlencode({"entidad": entity, "referencia": fixture[key]})
+
+    assert request(anonymous, trace("factura", "factura"))[0] == 401
+    assert request(client, trace("persona", "persona"))[0] == 404
+    status, _, customer_invoice = request(client, trace("factura", "factura"))
+    assert status == 200 and b"Personal autorizado" in customer_invoice
+    assert b"Ver referencias y detalle" not in customer_invoice
+    assert request(client, trace("factura", "factura"), {"formato": "pdf", "csrf": "invalid"})[0] == 403
+    trace_csrf = token(customer_invoice, rb'name="csrf" value="([a-f0-9]+)"')
+    status, _, pdf = request(client, trace("factura", "factura"), {"formato": "pdf", "csrf": trace_csrf})
+    assert status == 200 and pdf.startswith(b"%PDF-")
+    status, _, xlsx = request(client, trace("factura", "factura"), {"formato": "xlsx", "csrf": trace_csrf})
+    assert status == 200 and zipfile.is_zipfile(io.BytesIO(xlsx))
+    assert request(client, trace("suscripcion", "suscripcion"))[0] == 200
+    assert request(client, trace("solicitud_mantenimiento", "reparacion"))[0] == 200
+    status, _, timeline = request(admin, trace("solicitud_propiedad", "solicitud"))
+    assert status == 200 and "Aplicación de pago".encode() in timeline
+    status, _, rejected = request(admin, trace("solicitud_propiedad", "rechazada"))
+    assert status == 200 and b"Rechazada" in rejected and b"factura_pdf.php" not in rejected
+    chat_csrf = token(timeline, rb'data-csrf="([a-f0-9]+)"')
+    for message, report_expected in [
+        (f"¿Quién modificó el precio del apartamento #{fixture['apartamento']}?", False),
+        ("Genera un reporte de trazabilidad de la solicitud seleccionada.", True),
+    ]:
+        data = {"mensaje": message, "pagina": {"registro": {"entidad": "solicitud_propiedad", "referencia": str(fixture["solicitud"])}}}
+        status, _, answer = request(admin, "/mantenimientos/chatbot_api.php", body=json.dumps(data).encode(),
+                                    headers={"Content-Type": "application/json", "X-CSRF-Token": chat_csrf})
+        result = json.loads(answer)
+        assert status == 200 and "evento #" in result["respuesta"], result
+        assert ("trazabilidad" in result) == report_expected
+    print("OK trazabilidad individual, permisos, aislamiento, exportación y chat general")
+
 status, _, billing = request(admin, "/mantenimientos/facturacion.php")
 assert status == 200
 billing_csrf = token(billing, rb'name="ecf-csrf" content="([a-f0-9]+)"')

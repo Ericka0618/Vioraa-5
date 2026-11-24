@@ -171,6 +171,7 @@ body{margin:0;background:var(--fondo);color:#203f33;font-family:Arial,sans-serif
       <?php elseif ($estado === 'Rechazada'): ?><p>Tu solicitud no fue aprobada.</p>
       <?php elseif ($estado === 'Cancelada'): ?><p>Esta solicitud fue cancelada.</p>
       <?php elseif ($estado === 'Aprobada'): ?><p><?= $s['categoria'] === 'visita' ? 'Tu visita fue aprobada.' : 'Tu solicitud de propiedad fue aprobada.' ?></p><?php endif; ?>
+      <a class="accion" href="trazabilidad.php?entidad=<?= $s['categoria'] === 'visita' ? 'visita_propiedad' : 'solicitud_propiedad' ?>&amp;referencia=<?= (int)$s['id'] ?>">Ver trazabilidad</a>
       <?php if ($aprobada): ?><a class="accion" href="administrar_propiedad.php">Administrar mi propiedad →</a><?php endif; ?>
     </article>
     <?php endforeach; ?>

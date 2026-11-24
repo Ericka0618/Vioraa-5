@@ -103,6 +103,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['ajax'] ?? '') === '1') {
             if ($nuevaImagen) @unlink(__DIR__ . '/../uploads/apartamentos/' . $nuevaImagen);
             throw $e;
         }
+        if ($nuevaImagen) {
+            $imagenId = $action === 'create' ? $conexion->insert_id : $id;
+            auditoria_evento('Propiedades', 'Guardar imagen', 'Imagen del apartamento actualizada', true, [['apartamento', (string)$imagenId]]);
+        }
         if ($nuevaImagen && !empty($anterior['imagen']) && preg_match('/^[a-f0-9]{32}\.(jpg|png|webp)$/', $anterior['imagen'])) {
             @unlink(__DIR__ . '/../uploads/apartamentos/' . $anterior['imagen']);
         }
@@ -110,6 +114,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['ajax'] ?? '') === '1') {
     } catch (Throwable $e) {
         responder(['ok'=>false, 'error'=>$e instanceof mysqli_sql_exception ? 'Error de base de datos. Verifica que agregaste las columnas nuevas y que las relaciones sean válidas.' : $e->getMessage()]);
     }
+}
+$publicaciones = [];
+foreach ($conexion->query('SELECT id_propiedades, apartamento_id, tipo_operacion FROM propiedad ORDER BY id_propiedades') as $publicacion) {
+    $publicaciones[$publicacion['apartamento_id']][] = $publicacion;
 }
 $edificios = $conexion->query('SELECT e.id_edificios,e.nombre,c.nombre AS condominio FROM edificio e JOIN condominio c ON c.id_condominios=e.condominio_id ORDER BY c.nombre,e.nombre');
 $result = $conexion->query('SELECT a.*,e.nombre AS nombre_edificio,c.nombre AS nombre_condominio FROM apartamento a JOIN edificio e ON e.id_edificios=a.edificio_id JOIN condominio c ON c.id_condominios=e.condominio_id ORDER BY a.id_apartamentos DESC');
@@ -139,7 +147,11 @@ $result = $conexion->query('SELECT a.*,e.nombre AS nombre_edificio,c.nombre AS n
 $publicado = (int)$row['activo']===1 && (int)$row['disponible']===1 && $row['estado']==='Disponible';
 $foto = !empty($row['imagen']) ? '../uploads/apartamentos/'.rawurlencode($row['imagen']) : '';
 ?>
-<tr><td><?= (int)$row['id_apartamentos'] ?></td><td><?php if($foto): ?><img class="tabla__miniatura" src="<?= esc($foto) ?>" alt="Foto del apartamento" loading="lazy"><?php else: ?>—<?php endif; ?></td><td><?= esc($row['numero']) ?></td><td><?= esc($row['nombre_edificio']) ?></td><td><?= esc($row['nombre_condominio']) ?></td><td><?= esc($row['piso'] ?? '—') ?></td><td><?= esc($row['habitaciones'] ?? '—') ?></td><td><?= esc($row['banos'] ?? '—') ?></td><td><?= esc($row['metros_cuadrados'] ?? '—') ?></td><td><?= esc($row['tipo_operacion']) ?></td><td><?= $row['precio_alquiler'] === null ? '—' : 'RD$ '.number_format((float)$row['precio_alquiler'],2) ?></td><td><?= $row['precio_venta'] === null ? '—' : 'RD$ '.number_format((float)$row['precio_venta'],2) ?></td><td><?= esc($row['estado']) ?></td><td><span class="badge <?= $row['activo'] ? 'badge--activo':'badge--inactivo' ?>"><?= $row['activo'] ? 'Activo':'Inactivo' ?></span></td><td><?= $row['disponible'] ? 'Sí':'No' ?></td><td><?= $publicado ? 'Visible':'Oculto' ?></td><td class="tabla__acciones"><button type="button" class="btn-icono btn-icono--editar btn-edit" data-id="<?= (int)$row['id_apartamentos'] ?>" title="Editar">✎</button><button type="button" class="btn-icono btn-icono--eliminar btn-delete" data-id="<?= (int)$row['id_apartamentos'] ?>" title="Desactivar">🗑️</button></td></tr>
+<tr><td><?= (int)$row['id_apartamentos'] ?></td><td><?php if($foto): ?><img class="tabla__miniatura" src="<?= esc($foto) ?>" alt="Foto del apartamento" loading="lazy"><?php else: ?>—<?php endif; ?></td><td><?= esc($row['numero']) ?></td><td><?= esc($row['nombre_edificio']) ?></td><td><?= esc($row['nombre_condominio']) ?></td><td><?= esc($row['piso'] ?? '—') ?></td><td><?= esc($row['habitaciones'] ?? '—') ?></td><td><?= esc($row['banos'] ?? '—') ?></td><td><?= esc($row['metros_cuadrados'] ?? '—') ?></td><td><?= esc($row['tipo_operacion']) ?></td><td><?= $row['precio_alquiler'] === null ? '—' : 'RD$ '.number_format((float)$row['precio_alquiler'],2) ?></td><td><?= $row['precio_venta'] === null ? '—' : 'RD$ '.number_format((float)$row['precio_venta'],2) ?></td><td><?= esc($row['estado']) ?></td><td><span class="badge <?= $row['activo'] ? 'badge--activo':'badge--inactivo' ?>"><?= $row['activo'] ? 'Activo':'Inactivo' ?></span></td><td><?= $row['disponible'] ? 'Sí':'No' ?></td><td><?= $publicado ? 'Visible':'Oculto' ?></td><td class="tabla__acciones"><a href="trazabilidad.php?entidad=apartamento&amp;referencia=<?= (int)$row['id_apartamentos'] ?>">Ver trazabilidad</a><button type="button" class="btn-icono btn-icono--editar btn-edit" data-id="<?= (int)$row['id_apartamentos'] ?>" title="Editar">✎</button><button type="button" class="btn-icono btn-icono--eliminar btn-delete" data-id="<?= (int)$row['id_apartamentos'] ?>" title="Desactivar">🗑️</button>
+<?php foreach ($publicaciones[$row['id_apartamentos']] ?? [] as $pub): ?>
+    <a href="trazabilidad.php?entidad=propiedad&amp;referencia=<?= (int)$pub['id_propiedades'] ?>">Ver trazabilidad · <?= esc($pub['tipo_operacion']) ?></a>
+<?php endforeach; ?>
+</td></tr>
 <?php endwhile; else: ?><tr><td colspan="17" class="tabla__vacio">No hay apartamentos registrados.</td></tr><?php endif; ?>
 </tbody></table></div></section>
 </main></div>

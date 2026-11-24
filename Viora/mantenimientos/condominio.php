@@ -358,7 +358,7 @@ if (!$result) {
                                     <?php endif; ?>
                                 </td>
 
-                                <td class="tabla__acciones">
+                                <td class="tabla__acciones"><a href="trazabilidad.php?entidad=condominio&amp;referencia=<?= (int)$row['id_condominios'] ?>">Ver trazabilidad</a>
 
                                     <button type="button"
                                             class="btn-icono btn-icono--editar btn-edit"

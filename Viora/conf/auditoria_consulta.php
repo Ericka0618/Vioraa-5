@@ -38,7 +38,8 @@ function auditoria_entidades(): array
         'solicitud_propiedad' => 'Solicitud de compra o alquiler', 'solicitud_mantenimiento' => 'Solicitud de mantenimiento',
         'mantenimiento' => 'Mantenimiento', 'pago' => 'Pago', 'factura_pago' => 'Pago de factura',
         'viora_pago' => 'Pago VIORA', 'suscripcion' => 'Suscripción', 'encf' => 'Comprobante fiscal',
-        'usuario' => 'Usuario',
+        'usuario' => 'Usuario', 'condominio' => 'Condominio', 'edificio' => 'Edificio',
+        'visita_propiedad' => 'Visita', 'factura_ecf' => 'Comprobante fiscal', 'factura_ecf_nota' => 'Nota de crédito',
     ];
 }
 

@@ -54,6 +54,9 @@ try {
     // Si no existe contrato coincidente, el valor será NULL.
     $stmt = $conexion->prepare("SELECT
             sp.id_solicitudes,
+            (SELECT ct.id_contratos FROM contrato ct WHERE ct.solicitud_id = sp.id_solicitudes
+             AND ct.persona_id = sp.persona_id AND ct.apartamento_id = sp.apartamento_id
+             AND ct.activo = 1 ORDER BY ct.id_contratos DESC LIMIT 1) AS contrato_trazable,
             sp.apartamento_id,
             sp.tipo_operacion,
             sp.fecha_solicitud,
@@ -189,6 +192,10 @@ foreach ($propiedades as $propiedad) {
                                 <div class="propiedad-fila"><span>Mantenimiento mensual</span><strong><?= ($p['cuota_mantenimiento'] === null || (float)$p['cuota_mantenimiento'] <= 0) ? 'Por definir' : 'RD$ ' . number_format((float)$p['cuota_mantenimiento'], 2) ?></strong></div>
                             </div>
                             <p class="propiedad-aviso">Esta solicitud de compra fue aprobada. No se aplica renta mensual. El mantenimiento se consulta del contrato activo correspondiente; los cobros aún no están habilitados.</p>
+                        <?php endif; ?>
+                        <a href="trazabilidad.php?entidad=solicitud_propiedad&amp;referencia=<?= (int)$p['id_solicitudes'] ?>">Ver trazabilidad</a>
+                        <?php if (!empty($p['contrato_trazable'])): ?>
+                            <a href="trazabilidad.php?entidad=contrato&amp;referencia=<?= (int)$p['contrato_trazable'] ?>">Historial y trazabilidad del contrato</a>
                         <?php endif; ?>
                     </article>
                 <?php endforeach; ?>

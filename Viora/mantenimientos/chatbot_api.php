@@ -49,10 +49,6 @@ if(isset($entrada['reportes_filtros']) && in_array(strtolower($actual['nombre'])
     catch(InvalidArgumentException $e){responder_json(422,['error'=>$e->getMessage()]);}
 } else unset($_SESSION['bi_filtros_pagina']);
 
-if (empty($config['api_key']) || $config['api_key'] === 'UNCONFIGURED') {
-    responder_json(503, ['error' => 'El asistente no está disponible temporalmente (credenciales no configuradas).']);
-}
-
 $maxCaracteres = $config['max_caracteres_mensaje'];
 if (!is_string($entrada['mensaje'] ?? null)) responder_json(400, ['error' => 'El mensaje debe ser texto.']);
 $mensaje = trim($entrada['mensaje']);
@@ -62,6 +58,17 @@ if ($mensaje === '') {
 }
 if (mb_strlen($mensaje, 'UTF-8') > $maxCaracteres) {
     responder_json(400, ['error' => "El mensaje no puede superar los $maxCaracteres caracteres."]);
+}
+
+require_once __DIR__ . '/../conf/trazabilidad_chat.php';
+$traceResult = trazabilidad_chat($conexion, $entrada, $mensaje);
+if ($traceResult !== null) {
+    chatbot_guardar_turno($conexion, $conversacionId, $mensaje, $traceResult['respuesta'], $usuarioId);
+    responder_json(200, $traceResult);
+}
+
+if (empty($config['api_key']) || $config['api_key'] === 'UNCONFIGURED') {
+    responder_json(503, ['error' => 'El asistente no está disponible temporalmente (credenciales no configuradas).']);
 }
 
 $historial = chatbot_historial($conexion, $conversacionId, $config['max_mensajes_historial'], $usuarioId);

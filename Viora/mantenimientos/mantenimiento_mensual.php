@@ -258,7 +258,7 @@ $claseEstado = static function ($estado) {
                                     <form method="post" action="mantenimiento_mensual.php?mes=<?= rep_esc(urlencode($mes)) ?>" style="display:flex; gap:6px; flex-wrap:wrap;">
                                         <input type="hidden" name="csrf" value="<?= rep_esc($csrf) ?>">
                                         <input type="hidden" name="accion" value="actualizar">
-                                        <input type="hidden" name="id_mantenimientos" value="<?= (int)$r['id_mantenimientos'] ?>">
+                                        <a href="trazabilidad.php?entidad=mantenimiento&amp;referencia=<?= (int)$r['id_mantenimientos'] ?>">Ver trazabilidad</a><input type="hidden" name="id_mantenimientos" value="<?= (int)$r['id_mantenimientos'] ?>">
                                         <select name="suplidor_id" aria-label="Suplidor">
                                             <option value="0">Sin asignar</option>
                                             <?php foreach ($suplidores as $sup): ?>
